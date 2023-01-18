@@ -1,27 +1,3 @@
-<i18n>
-en:
-  results: 'Results'
-  settings: 'Experiment conditions'
-  title: 'Emissions Scenario Calculator'
-  risk-calculator: 'Personal Risk Calculator'
-  badpage: 'That page not found, sorry!'
-  released: 'Released'
-  estimated-risk: 'Estimated Infection Risk'
-  explore-scenarios: 'Explore typical scenarios'
-  try-combos: '...or try different combinations below.'
-  remarks: 'Remarks'
-de:
-  results: 'Ergebnis'
-  settings: 'Experiment conditions'
-  risk-calculator: 'Personalrisiko Rechner'
-  badpage: 'Seite wurde nicht gefunden.'
-  released: 'Veröffentlicht'
-  explore-scenarios: 'Typische Szenarien erforschen'
-  try-combos: '...oder versuchen Sie verschiedene Kombinationen unten.'
-  estimated-risk: 'Geschätztes Infektionsrisiko'
-  remarks: 'Bemerkungen'
-</i18n>
-
 <template lang="pug">
 #sounding-board
   //- .banner
@@ -37,9 +13,9 @@ de:
     h2 {{ $t('results')  }}
 
     .metrics
-      .metric(v-for="metric in metrics")
-        h4.metric-title {{ metric.title  }}
-        .metric-value {{ metric.value }}
+      .metric(v-for="metric,i in metrics")
+        h4.metric-title {{ metric.title }}
+        .metric-value {{ displayedValues[i].toFixed(3) }}
 
   .configurator
     h2 {{ $t('settings')  }}
@@ -47,9 +23,37 @@ de:
     .factors
       .factor(v-for="factor in Object.keys(yaml.inputColumns)")
         h4.metric-title {{ factor  }}
-          b-button.factor-option(v-for="option in factors[factor]") {{ option }}
+        b-button.is-small.factor-option(
+          v-for="option of factors[factor]"
+          :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
+          @click="setFactor(factor, option)"
+        ) {{ option }}
 
 </template>
+
+<i18n>
+  en:
+    results: 'Results'
+    settings: 'Experiment conditions'
+    title: 'Emissions Scenario Calculator'
+    risk-calculator: 'Personal Risk Calculator'
+    badpage: 'That page not found, sorry!'
+    released: 'Released'
+    estimated-risk: 'Estimated Infection Risk'
+    explore-scenarios: 'Explore typical scenarios'
+    try-combos: '...or try different combinations below.'
+    remarks: 'Remarks'
+  de:
+    results: 'Ergebnis'
+    settings: 'Experiment conditions'
+    risk-calculator: 'Personalrisiko Rechner'
+    badpage: 'Seite wurde nicht gefunden.'
+    released: 'Veröffentlicht'
+    explore-scenarios: 'Typische Szenarien erforschen'
+    try-combos: '...oder versuchen Sie verschiedene Kombinationen unten.'
+    estimated-risk: 'Geschätztes Infektionsrisiko'
+    remarks: 'Bemerkungen'
+  </i18n>
 
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
@@ -104,19 +108,23 @@ export default class VueComponent extends Vue {
   private lang = 'en'
   private mdParser = new MarkdownIt()
 
-  private sliders: { [measure: string]: { title: string; value: number } } = {}
-  private lookup: { [measure: string]: { title: string; value: number }[] } = {}
   private factors: { [measure: string]: any } = {}
-  private divFactors: { [measure: string]: number } = {}
+  private currentConfiguration: { [measure: string]: { title: string; value: any } } = {}
+  private displayedValues: any[] = []
 
-  private finalR = 0
-  private adjustedR = 0
   private title = ''
   private metrics: { column: string; title: string; value: any }[] = []
   private data: any[] = []
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
     this.buildPageForURL()
+  }
+
+  private setFactor(factor: string, option: any) {
+    console.log(factor, option)
+    this.currentConfiguration[factor] = option
+    this.currentConfiguration = Object.assign({}, this.currentConfiguration)
+    this.updateValues()
   }
 
   private mounted() {
@@ -130,10 +138,11 @@ export default class VueComponent extends Vue {
 
   private async buildPageForURL() {
     this.yaml = await this.getYAML()
-    this.buildUI()
     this.data = await this.loadDataset()
+    this.buildUI()
     this.buildOptions()
     this.setInitialValues()
+    this.updateValues()
   }
 
   private async getYAML() {
@@ -185,7 +194,6 @@ export default class VueComponent extends Vue {
         skipEmptyLines: true,
         delimitersToGuess: ['\t', ';', ','],
       })
-      console.log({ csv })
       return csv.data
     } catch (e) {
       console.log('' + e)
@@ -199,21 +207,76 @@ export default class VueComponent extends Vue {
   private buildOptions() {
     const inputColumns = Object.keys(this.yaml.inputColumns)
 
+    const f = {} as any
     for (const column of inputColumns) {
-      this.factors[column] = new Set()
+      f[column] = new Set()
     }
 
     for (const row of this.data) {
       for (const column of inputColumns) {
-        this.factors[column].add(row[column])
+        f[column].add(row[column])
       }
     }
 
+    // convert set to array
+    for (const factor of Object.keys(f)) this.factors[factor] = Array.from(f[factor])
+
     this.factors = Object.assign({}, this.factors)
+    console.log(2, this.factors)
   }
 
   private setInitialValues() {
     for (const factor of Object.keys(this.factors)) {
+      this.currentConfiguration[factor] = this.factors[factor][0]
+    }
+  }
+
+  private updateValues() {
+    let answerRow = this.data
+    for (const factor of Object.keys(this.factors)) {
+      answerRow = answerRow.filter(row => row[factor] === this.currentConfiguration[factor])
+    }
+    console.log(answerRow)
+    if (answerRow.length !== 1) {
+      throw Error('Should only have one row:' + answerRow)
+    }
+
+    const row = answerRow[0]
+
+    for (const metric of this.metrics) {
+      metric.value = row[metric.column]
+    }
+    this.animateTowardNewValues()
+  }
+
+  private animateTowardNewValues() {
+    // first time, just set them
+    if (!this.displayedValues.length) {
+      this.metrics.forEach(metric => {
+        this.displayedValues.push(metric.value)
+      })
+      this.displayedValues = [...this.displayedValues]
+      return
+    }
+
+    // otherwise, animate the change in values
+    let maxDiff = 0
+    this.metrics.forEach((metric, i) => {
+      const diff = metric.value - this.displayedValues[i]
+      const step = this.displayedValues[i] + diff * 0.2
+      this.displayedValues[i] = step
+
+      const pctDiff = Math.abs((this.displayedValues[i] - metric.value) / metric.value)
+      maxDiff = Math.max(maxDiff, pctDiff)
+    })
+    this.displayedValues = [...this.displayedValues]
+
+    if (maxDiff < 0.001) {
+      this.metrics.forEach((metric, i) => {
+        this.displayedValues[i] = metric.value
+      })
+    } else {
+      setTimeout(this.animateTowardNewValues, 16)
     }
   }
 
@@ -279,18 +342,6 @@ export default class VueComponent extends Vue {
   //   this.finalR = Math.min(99, r * 100.0) // percentage
   //   this.animateTowardNewRValue()
   // }
-
-  private animateTowardNewRValue() {
-    const diff = this.finalR - this.adjustedR
-    const step = this.adjustedR + diff * 0.2
-    this.adjustedR = step
-
-    if (Math.abs(this.adjustedR - this.finalR) < 0.01) {
-      this.adjustedR = this.finalR
-    } else {
-      setTimeout(this.animateTowardNewRValue, 16)
-    }
-  }
 
   // private buildUI() {
   // // multiplicative factors
@@ -500,6 +551,8 @@ li.notes-item {
   width: max-content;
   padding: 1rem;
   margin: 0.5rem;
+  display: flex;
+  flex-direction: column;
 }
 
 .metric-value {
@@ -521,11 +574,13 @@ li.notes-item {
   padding: 1rem;
   background-color: white;
   margin: 0.5rem;
+  // display: flex;
+  // flex-direction: column;
 }
 
 .factor-option {
   color: #227;
-  background-color: #cc3;
+  // background-color: #cc3;
   margin: 0.25rem;
   cursor: pointer;
 }
