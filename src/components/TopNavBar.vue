@@ -17,22 +17,16 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
     #navbarBasicExample.navbar-menu(
       :class="{'is-active': isBurgerActive}"
-      @click='clickedBurger')
+      @click='clickedBurger'
+    )
+
       .navbar-start
-        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
-            a.navbar-link  2022.12.02
-            .navbar-dropdown
-              a.navbar-item(:href="'/cologne/2022-11-18/3-mandates'") Mask and isolation mandate. Report December 02
-              a.navbar-item(:href="'/cologne/2022-11-23/variants'") Variant soup. Report December 02
-              a.navbar-item(:href="'/cologne/2022-11-23/variants2'") No immune escape. Report December 02
 
         .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
           a.navbar-link  Visualizations
           .navbar-dropdown
             a.navbar-item(:href="'/v3?day=5'") Infection Traces
             a.navbar-item(:href="'/timelapse'") 90 Day Time Lapse
-
-        //- router-link.navbar-item(to="/r-calcs-v2/2021-01-24b" :style="{color: 'white'}") Calculator
 
         .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
           a.navbar-link  Mobility
@@ -49,6 +43,9 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
             a.navbar-item(:href="'/r-calcs/2020-10-23'") R-Calculator (23.Oct)
             hr
             a.navbar-item(:href="'/risk-calcs/2020-11-11'") Activity Risk Calculator
+
+      .navbar-end
+        router-link.navbar-item(to="/" :style="{color: 'white'}") About
 
 </template>
 

@@ -4,18 +4,18 @@
 
   .center-area
     router-view.main-view
-    
+
   .footer(v-if="!state.isFullScreen")
     //- a(href="https://vsp.tu-berlin.de")
     //-   img(alt="TU-Berlin logo" src="@/assets/images/vsp-logo.png" width=225)
     a(href="https://matsim.org")
-      img(alt="MATSim logo" src="@/assets/images/matsim-logo-white.png" width=250)
+      img(alt="MATSim logo" src="@/assets/images/matsim-logo-white.png" width=150)
 
-    p COVID-19 Scenario Viewer <br/>&copy; 2020 VSP TU-Berlin
+    p Emissions Scenario Explorer <br/>&copy; 2023 VSP TU-Berlin
     p GDPR: This site does not collect, store, or analyze any personal information.
     p For more info about VSP at TU Berlin, see
-      a(href="https://www.vsp.tu-berlin.de") &nbsp;https://vsp.tu-berlin.de
-    
+      a(href="https://www.vsp.tu-berlin.de") &nbsp;vsp.tu-berlin.de
+
     p: router-link(to="/imprint") Imprint
 
 </template>
@@ -147,9 +147,8 @@ h3 {
 #app .footer {
   grid-column: 1 / 2;
   grid-row: 5 / 6;
-  text-align: center;
-  padding: 2rem 0.5rem 3rem 0.5rem;
-  background-color: #648cb4;
+  padding: 2rem 0.5rem 3rem 2rem;
+  background-color: #29333d;
 }
 
 .footer p {
@@ -159,12 +158,11 @@ h3 {
 }
 
 .footer a {
-  color: #043b26;
+  color: #17a5ec;
 }
 
 .footer img {
   margin: 1rem auto;
-  padding: 0 1rem;
 }
 
 .vue-slider-rail {

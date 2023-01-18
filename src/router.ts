@@ -19,13 +19,12 @@ const routes = [
     component: Imprint,
   },
   {
-    // REDIRECT for old */covid-sim/* links
-    path: '/covid-sim/*',
-    redirect: '/*',
-  },
-  {
     path: '/calculators',
     component: () => import(/* webpackChunkName: "calculators" */ '@/views/Calculators.vue'),
+  },
+  {
+    path: '/scenarios/:runId',
+    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/ScenarioCalculator.vue'),
   },
   {
     path: '/calculator',
