@@ -1,8 +1,6 @@
-const ThreadsPlugin = require('threads-plugin')
-
 module.exports = {
   publicPath: '/sounding-board/',
-  productionSourceMap: false,
+  productionSourceMap: true,
   chainWebpack: config => {
     /*
      * the default loaders for worker files must be disabled. Otherwise both the default and the loaders defined below
@@ -23,7 +21,7 @@ module.exports = {
       .end()
   },
   configureWebpack: {
-    plugins: [new ThreadsPlugin()],
+    plugins: [],
     module: {
       rules: [
         {
@@ -37,14 +35,6 @@ module.exports = {
               options: {
                 /* your options here */
               },
-            },
-          ],
-        },
-        {
-          test: /\.(csv|vert|frag)$/,
-          use: [
-            {
-              loader: 'raw-loader',
             },
           ],
         },
