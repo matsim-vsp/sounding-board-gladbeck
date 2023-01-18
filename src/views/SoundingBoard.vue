@@ -4,9 +4,8 @@
   //-   h2 VSP / Technische Universität Berlin
   //-   h3 {{ $t('title') }}
 
-  //- .center-area(v-if="yaml")
   .heading
-    h2 {{ title }}
+    h2: b {{ title }}
     p some explanatory text
 
   .results
@@ -22,7 +21,7 @@
 
     .factors
       .factor(v-for="factor in Object.keys(yaml.inputColumns)")
-        h4.metric-title {{ factor  }}
+        h4.metric-title {{ factorTitle[factor]  }}
         b-button.is-small.factor-option(
           v-for="option of factors[factor]"
           :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
@@ -109,6 +108,7 @@ export default class VueComponent extends Vue {
   private mdParser = new MarkdownIt()
 
   private factors: { [measure: string]: any } = {}
+  private factorTitle: any = {}
   private currentConfiguration: { [measure: string]: { title: string; value: any } } = {}
   private displayedValues: any[] = []
 
@@ -128,7 +128,10 @@ export default class VueComponent extends Vue {
   }
 
   private mounted() {
+    console.log({ locale: this.$i18n.locale })
+
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
+    console.log({ lang: this.lang })
     this.buildPageForURL()
   }
 
@@ -174,13 +177,14 @@ export default class VueComponent extends Vue {
       const metric = {
         column,
         title:
-          this.lang == 'de'
+          this.lang === 'de'
             ? config.title_de || config.title || config.title_en || column
             : config.title_en || config.title || config.title_de || column,
         value: '...',
       }
       this.metrics.push(metric)
     }
+    console.log(21, this.metrics)
   }
 
   private async loadDataset() {
@@ -219,10 +223,17 @@ export default class VueComponent extends Vue {
     }
 
     // convert set to array
-    for (const factor of Object.keys(f)) this.factors[factor] = Array.from(f[factor])
+    for (const factor of Object.keys(f)) {
+      this.factors[factor] = Array.from(f[factor])
+
+      const definition = this.yaml.inputColumns[factor]
+      this.factorTitle[factor] =
+        this.lang == 'de'
+          ? definition.title_de || definition.title || definition.title_en || factor
+          : definition.title_en || definition.title || definition.title_de || factor
+    }
 
     this.factors = Object.assign({}, this.factors)
-    console.log(2, this.factors)
   }
 
   private setInitialValues() {
@@ -279,120 +290,6 @@ export default class VueComponent extends Vue {
       setTimeout(this.animateTowardNewValues, 16)
     }
   }
-
-  // private async handleDivFactorButton(measure: string) {
-  //   const slider = this.sliders[measure]
-  //   this.divFactors[measure] = slider.value
-  //   this.updateR()
-  //   this.$forceUpdate()
-  // }
-
-  // private async handleFactorButton(measure: string) {
-  //   const slider = this.sliders[measure]
-  //   this.factors[measure] = slider.value
-  //   this.updateR()
-  //   this.$forceUpdate()
-  // }
-
-  // // private async handlePreset(scenario: string) {
-  // //   this.selectedScenario = this.yaml.scenarios[scenario]
-  // //   for (const measure of Object.keys(this.selectedScenario.presets) as any) {
-  // //     const title = this.selectedScenario.presets[measure]
-
-  // //     //@ts-ignore:
-  // //     const value = this.lookup[measure].find((a: any) => a.title === title).value
-
-  // //     console.log(measure, title, value)
-
-  // //     if (this.multipliers.indexOf(measure) > -1) this.factors[measure] = value
-  // //     if (this.divisors.indexOf(measure) > -1) this.divFactors[measure] = value
-
-  // //     // find this entry for the slider!
-  // //     for (const choice of this.lookup[measure]) {
-  // //       if (choice.title === title) {
-  // //         this.sliders[measure] = choice
-  // //         break
-  // //       }
-  // //     }
-  // //   }
-
-  //   this.updateR()
-  //   this.$forceUpdate()
-  // }
-
-  // private get multipliers() {
-  //   return Object.keys(this.yaml.multipliers)
-  // }
-
-  // private get divisors() {
-  //   return Object.keys(this.yaml.divisors)
-  // }
-
-  // private updateR() {
-  //   let r = this.yaml.calibrationParam
-
-  //   // multiplicative factors
-  //   for (const factor of Object.values(this.factors)) r *= factor
-  //   // divisors factors, already 1/x
-  //   for (const factor of Object.values(this.divFactors)) r *= factor
-  //   // exp result
-  //   r = 1.0 - Math.exp(-1.0 * r)
-
-  //   // fancy!
-  //   this.finalR = Math.min(99, r * 100.0) // percentage
-  //   this.animateTowardNewRValue()
-  // }
-
-  // private buildUI() {
-  // // multiplicative factors
-  // for (const measureName of Object.keys(this.yaml.multipliers)) {
-  //   const measures = this.yaml.multipliers[measureName]
-  //   this.lookup[measureName] = []
-  //   for (const option of measures.options) {
-  //     const title = Object.keys(option)[0]
-  //     const value = option[title]
-  //     if (!isNaN(value)) {
-  //       this.lookup[measureName].push({ title, value })
-  //       // first?
-  //       if (this.yaml.multipliers[measureName].options === undefined) {
-  //         this.factors[measureName] = value
-  //         this.sliders[measureName] = this.lookup[measureName][0]
-  //       }
-  //     } else {
-  //       // user specified a default with an asterisk* after the number
-  //       const trimAsterisk = parseFloat(value.substring(0, value.length - 1))
-  //       const choice = { title, value: trimAsterisk }
-  //       this.lookup[measureName].push(choice)
-  //       this.sliders[measureName] = choice
-  //       this.factors[measureName] = trimAsterisk
-  //     }
-  //   }
-  // }
-  // // divisors
-  // for (const measureName of Object.keys(this.yaml.divisors)) {
-  //   const measures = this.yaml.divisors[measureName]
-  //   this.lookup[measureName] = []
-  //   for (const option of measures.options) {
-  //     const title = Object.keys(option)[0]
-  //     const value = option[title]
-  //     if (!isNaN(value)) {
-  //       this.lookup[measureName].push({ title, value: 1.0 / value })
-  //       // first?
-  //       if (this.yaml.divisors[measureName].options === undefined) {
-  //         this.divFactors[measureName] = value
-  //         this.sliders[measureName] = this.lookup[measureName][0]
-  //       }
-  //     } else {
-  //       // user specified a default with an asterisk* after the number
-  //       const trimAsterisk = 1.0 / parseFloat(value.substring(0, value.length - 1))
-  //       const choice = { title, value: trimAsterisk }
-  //       this.lookup[measureName].push(choice)
-  //       this.sliders[measureName] = choice
-  //       this.divFactors[measureName] = trimAsterisk
-  //     }
-  //   }
-  // }
-  // }
 }
 </script>
 
@@ -406,26 +303,6 @@ export default class VueComponent extends Vue {
 .center-area {
   max-width: 70rem;
   padding: 1rem 3rem 1rem 3rem;
-}
-
-.option-groups {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-}
-
-.option-group {
-  border: solid 1px #bbf;
-  border-radius: 4px;
-  background-color: #fff;
-  padding: 0.5rem 0.5rem;
-}
-
-.measures {
-  padding: 0.5rem 0;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
 }
 
 h2 {
@@ -445,11 +322,6 @@ h4 {
   font-weight: bold;
   margin: 0 0 0 0;
   padding: 0 0;
-}
-
-.button {
-  padding: 0 0.5rem;
-  margin: 0 0.15rem 0.15rem 0;
 }
 
 p {
@@ -490,16 +362,6 @@ p.factor {
   width: max-content;
 }
 
-.base-buttons {
-  margin-bottom: 1rem;
-}
-
-.greenbig {
-  color: #596;
-  font-weight: bold;
-  font-size: 2.5rem;
-}
-
 .notes-item {
   list-style-type: square;
   margin-left: 1rem;
@@ -523,17 +385,6 @@ li.notes-item {
   background-color: #eee;
   padding-top: 0;
   padding-bottom: 0rem;
-}
-
-.slider {
-  margin: 0.5rem 0.5rem;
-}
-
-.slider-label {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #383ab1;
-  margin: 0 0;
 }
 
 .results {
