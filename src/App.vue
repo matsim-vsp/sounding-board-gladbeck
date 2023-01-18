@@ -1,6 +1,6 @@
 <template lang="pug">
 #app(:class="{'full-screen-app' : state.isFullScreen }")
-  top-nav-bar#nav(:style="{paddingLeft: state.isFullScreen ? '0rem':''}" )
+  //- top-nav-bar#nav(:style="{paddingLeft: state.isFullScreen ? '0rem':''}" )
 
   .center-area
     router-view.main-view
