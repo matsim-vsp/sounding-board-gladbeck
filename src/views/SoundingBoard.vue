@@ -23,7 +23,7 @@ de:
 </i18n>
 
 <template lang="pug">
-#scenario-calculator
+#sounding-board
   //- .banner
   //-   h2 VSP / Technische Universität Berlin
   //-   h3 {{ $t('title') }}
@@ -36,9 +36,10 @@ de:
   .results
     h2 {{ $t('results')  }}
 
-    .metric(v-for="metric in metrics")
-      h4.metric-title {{ metric.title  }}
-      .metric-value {{ metric.value }}
+    .metrics
+      .metric(v-for="metric in metrics")
+        h4.metric-title {{ metric.title  }}
+        .metric-value {{ metric.value }}
 
   .configurator
     h2 {{ $t('settings')  }}
@@ -46,7 +47,7 @@ de:
     .factors
       .factor(v-for="factor in Object.keys(yaml.inputColumns)")
         h4.metric-title {{ factor  }}
-        .factor-option(v-for="option in factors[factor]") {{ option }}
+          b-button.factor-option(v-for="option in factors[factor]") {{ option }}
 
 </template>
 
@@ -61,7 +62,7 @@ import 'vue-slider-component/theme/default.css'
 
 const PUBLIC_SVN = 'http://localhost:8002'
 // const PUBLIC_SVN =
-//   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/projects/emissions-scenarios'
+//   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/projects/sounding-board'
 
 type ScenarioYaml = {
   data: string
@@ -132,7 +133,7 @@ export default class VueComponent extends Vue {
     this.buildUI()
     this.data = await this.loadDataset()
     this.buildOptions()
-    // this.updateR()
+    this.setInitialValues()
   }
 
   private async getYAML() {
@@ -209,6 +210,11 @@ export default class VueComponent extends Vue {
     }
 
     this.factors = Object.assign({}, this.factors)
+  }
+
+  private setInitialValues() {
+    for (const factor of Object.keys(this.factors)) {
+    }
   }
 
   // private async handleDivFactorButton(measure: string) {
@@ -342,7 +348,7 @@ export default class VueComponent extends Vue {
 <style scoped lang="scss">
 @import '@/styles.scss';
 
-#scenario-calculator {
+#sounding-board {
   background-color: #224;
   color: #eee;
 }
@@ -493,6 +499,7 @@ li.notes-item {
   background-color: white;
   width: max-content;
   padding: 1rem;
+  margin: 0.5rem;
 }
 
 .metric-value {
@@ -505,7 +512,8 @@ li.notes-item {
   padding: 2rem;
 }
 
-.factors {
+.factors,
+.metrics {
   display: flex;
 }
 

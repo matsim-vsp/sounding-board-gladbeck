@@ -12,6 +12,7 @@
     "@aftersim/pako": "^1.0.11-3",
     "@statnett/vue-plotly": "^0.3.2",
     "blob-util": "^2.0.2",
+    "buefy": "^0.9.22",
     "bulma": "^0.8.0",
     "convert-seconds": "^1.0.1",
     "core-js": "^3.6.4",

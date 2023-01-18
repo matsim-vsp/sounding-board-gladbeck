@@ -4,6 +4,10 @@ import router from '@/router'
 import store from '@/store'
 import VueI18n from 'vue-i18n'
 
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
+Vue.use(Buefy)
+
 Vue.config.productionTip = false
 
 Vue.use(VueI18n)
