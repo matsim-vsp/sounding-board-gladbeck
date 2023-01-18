@@ -9,18 +9,13 @@ const latestRCalculator = '/r-calcs-v2/2021-01-24b'
 
 const routes = [
   {
-    path: '/',
-    name: 'Home',
-    component: HomeIndex,
-  },
-  {
     path: '/:runId',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
     // catch-all back to home page
     path: '*',
-    redirect: '/',
+    redirect: '/ccc',
   },
 ]
 
