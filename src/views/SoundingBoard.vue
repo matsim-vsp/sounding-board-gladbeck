@@ -64,9 +64,9 @@ import VueSlider from 'vue-slider-component'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
 
-const PUBLIC_SVN = 'http://localhost:8002'
-// const PUBLIC_SVN =
-//   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/projects/sounding-board'
+// const PUBLIC_SVN = 'http://localhost:8002'
+const PUBLIC_SVN =
+  'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
 type ScenarioYaml = {
   data: string
