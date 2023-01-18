@@ -16,7 +16,8 @@
     p For more info about VSP at TU Berlin, see
       a(href="https://www.vsp.tu-berlin.de") &nbsp;vsp.tu-berlin.de
 
-    p: router-link(to="/imprint") Imprint
+    p
+      router-link(to="/imprint") Imprint
 
 </template>
 
