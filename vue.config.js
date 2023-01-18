@@ -1,7 +1,7 @@
 const ThreadsPlugin = require('threads-plugin')
 
 module.exports = {
-  publicPath: '/',
+  publicPath: '/sounding-board/',
   productionSourceMap: false,
   chainWebpack: config => {
     /*
