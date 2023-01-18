@@ -13,6 +13,10 @@ const routes = [
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
+    path: '/:runId/',
+    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
+  },
+  {
     // catch-all back to home page
     path: '*',
     redirect: '/ccc',
