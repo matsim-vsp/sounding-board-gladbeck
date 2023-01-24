@@ -8,6 +8,15 @@
     h2: b {{ title }}
     p some explanatory text
 
+  .presets(v-if="Object.keys(presets).length")
+    h2 {{ $t('scenarios')  }}
+    b-button.is-huge.factor-option(
+          v-for="preset in Object.keys(presets)"
+          :class="preset == currentPreset ? 'is-success' : ''"
+          @click="setPreset(preset)"
+        ) {{ presets[preset].title }}
+
+
   .results
     h2 {{ $t('results')  }}
 
@@ -42,6 +51,7 @@
     explore-scenarios: 'Explore typical scenarios'
     try-combos: '...or try different combinations below.'
     remarks: 'Remarks'
+    scenarios: 'Typical Scenarios'
   de:
     results: 'Ergebnis'
     settings: 'Experiment conditions'
@@ -107,8 +117,12 @@ export default class VueComponent extends Vue {
   private lang = 'en'
   private mdParser = new MarkdownIt()
 
+  private presets: { [id: string]: { title: string; items: any } } = {}
+  private currentPreset = ''
+
   private factors: { [measure: string]: any } = {}
   private factorTitle: any = {}
+
   private currentConfiguration: { [measure: string]: { title: string; value: any } } = {}
   private displayedValues: any[] = []
 
@@ -117,7 +131,26 @@ export default class VueComponent extends Vue {
   private data: any[] = []
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
-    this.buildPageForURL()
+    if (to.path === from.path) {
+      console.log('same path')
+    } else {
+      this.buildPageForURL()
+    }
+  }
+
+  private setPreset(preset: string) {
+    console.log(preset)
+
+    const factors = this.presets[preset].items
+    for (const factor of Object.keys(factors)) {
+      this.currentConfiguration[factor] = factors[factor]
+    }
+
+    this.currentConfiguration = Object.assign({}, this.currentConfiguration)
+    this.updateValues()
+    this.currentPreset = preset
+
+    this.setURLQuery()
   }
 
   private setFactor(factor: string, option: any) {
@@ -125,6 +158,10 @@ export default class VueComponent extends Vue {
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
+
+    // disable the preset if user mucks with the settings
+    this.currentPreset = ''
+    this.setURLQuery()
   }
 
   private mounted() {
@@ -135,18 +172,19 @@ export default class VueComponent extends Vue {
     this.buildPageForURL()
   }
 
-  private parseMarkdown(text: string) {
-    return this.mdParser.render(text)
-  }
-
   private async buildPageForURL() {
     this.yaml = await this.getYAML()
     this.data = await this.loadDataset()
     this.buildUI()
     this.buildOptions()
+    this.buildPresets()
     this.setInitialValues()
     this.updateValues()
   }
+
+  // private parseMarkdown(text: string) {
+  //   return this.mdParser.render(text)
+  // }
 
   private async getYAML() {
     this.badPage = false
@@ -236,10 +274,60 @@ export default class VueComponent extends Vue {
     this.factors = Object.assign({}, this.factors)
   }
 
-  private setInitialValues() {
-    for (const factor of Object.keys(this.factors)) {
-      this.currentConfiguration[factor] = this.factors[factor][0]
+  private buildPresets() {
+    const presets: any = {}
+
+    for (const key of Object.keys(this.yaml.presets || {})) {
+      const preset = this.yaml.presets[key]
+      // extract titles
+      const { title, title_en, title_de, ...items } = preset
+      const finalTitle =
+        this.lang == 'de'
+          ? title_de || title || title_en || key
+          : title_en || title || title_de || key
+
+      presets[key] = { title: finalTitle, items }
     }
+    this.presets = presets
+  }
+
+  private setInitialValues() {
+    const presets = Object.keys(this.presets)
+    const preset = this.$route.query.preset as string
+    // preset given? use it
+    if (preset) {
+      this.setPreset(preset)
+    } else {
+      // go thru query settings
+      let hasQuery = false
+      for (const factor of Object.keys(this.factors)) {
+        let query = this.$route.query[factor] as any
+        if (query) {
+          hasQuery = true
+          this.factors[factor].forEach((f: string, i: number) => {
+            if (query === f) query = f
+          })
+        }
+        this.currentConfiguration[factor] = query || this.factors[factor][0]
+      }
+      // if NO queries were given, use the first preset
+      if (!hasQuery) this.setPreset(presets[0])
+    }
+  }
+
+  private setURLQuery() {
+    // preset is easy
+    if (this.currentPreset) {
+      this.$router.replace({ query: { preset: this.currentPreset } })
+      return
+    }
+
+    // individual factors if no preset
+    const query = {} as any
+    for (const factor of Object.keys(this.factors)) {
+      query[factor] = this.currentConfiguration[factor]
+    }
+    this.$router.replace({ query })
   }
 
   private updateValues() {
@@ -249,7 +337,7 @@ export default class VueComponent extends Vue {
     }
     console.log(answerRow)
     if (answerRow.length !== 1) {
-      throw Error('Should only have one row:' + answerRow)
+      throw Error('Should have exactly one row:' + answerRow)
     }
 
     const row = answerRow[0]
@@ -385,6 +473,11 @@ li.notes-item {
   background-color: #eee;
   padding-top: 0;
   padding-bottom: 0rem;
+}
+
+.presets {
+  background-color: #747768;
+  padding: 1rem 2rem 2rem 2rem;
 }
 
 .results {
