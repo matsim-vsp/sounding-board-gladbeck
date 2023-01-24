@@ -23,7 +23,10 @@
     .metrics
       .metric(v-for="metric,i in metrics")
         h4.metric-title {{ metric.title }}
-        .metric-value {{ displayedValues[i].toFixed(3) }}
+        .metric-value {{ formattedValue(displayedValues[i]) }} %
+        bar-chart(
+          :data="[{x: ['boop'], y: [displayedValues[i]-1], type: 'bar'}]"
+        )
 
   .configurator
     h2 {{ $t('settings')  }}
@@ -73,7 +76,9 @@ import VueSlider from 'vue-slider-component'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
 
-// const PUBLIC_SVN = 'http://localhost:8002'
+import BarChart from '@/components/BarChart.vue'
+
+// const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
@@ -100,7 +105,7 @@ type ScenarioYaml = {
   presets: any
 }
 
-@Component({ components: { VueSlider }, props: {} })
+@Component({ components: { BarChart, VueSlider }, props: {} })
 export default class VueComponent extends Vue {
   private runId = ''
   private selectedScenario = ''
@@ -136,6 +141,12 @@ export default class VueComponent extends Vue {
     } else {
       this.buildPageForURL()
     }
+  }
+
+  private formattedValue(v: number) {
+    const percent = 100 * (v - 1)
+    const sign = percent < 0 ? '' : '+'
+    return sign + percent.toFixed(1)
   }
 
   private setPreset(preset: string) {

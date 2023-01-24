@@ -40,5 +40,5 @@ declare module '@deck.gl/geo-layers'
 declare module '@luma.gl/constants'
 declare module '@luma.gl/core'
 declare module '@math.gl/polygon'
-
+declare module '@twelve-co/vue-plotly'
 declare module '@aftersim/pako'
