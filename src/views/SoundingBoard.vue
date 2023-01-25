@@ -386,7 +386,7 @@ export default class VueComponent extends Vue {
         this.displayedValues[i] = metric.value
       })
     } else {
-      setTimeout(this.animateTowardNewValues, 16)
+      setTimeout(this.animateTowardNewValues, 8.333)
     }
   }
 }
@@ -396,8 +396,8 @@ export default class VueComponent extends Vue {
 @import '@/styles.scss';
 
 #sounding-board {
-  background-color: #224;
-  color: #eee;
+  background-color: white;
+  color: #224;
 }
 .center-area {
   max-width: 70rem;
@@ -436,7 +436,7 @@ p.factor {
   display: flex;
   flex-direction: column;
   padding: 4rem 3rem 1rem 3rem;
-  background-color: #1e1f2c;
+  // background-color: #1e1f2c;
   color: white;
   background: url(../assets/images/banner.jpg);
   background-repeat: no-repeat;
@@ -446,7 +446,7 @@ p.factor {
 .banner h2 {
   margin-bottom: 0rem;
   font-size: 1.6rem;
-  background-color: #1e1f2c;
+  // background-color: #1e1f2c;
   line-height: 1.6rem;
   margin-right: auto;
 }
@@ -487,17 +487,17 @@ li.notes-item {
 }
 
 .presets {
-  background-color: #747768;
+  background-color: #eee;
   padding: 1rem 2rem 2rem 2rem;
 }
 
 .results {
-  background-color: #154b30;
+  // background-color: #154b30;
   padding: 1rem 2rem 2rem 2rem;
 }
 
 .configurator {
-  background-color: #441b5d;
+  background-color: #eee;
   padding: 1rem 2rem 2rem 2rem;
 }
 

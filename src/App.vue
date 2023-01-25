@@ -6,18 +6,23 @@
     router-view.main-view
 
   .footer(v-if="!state.isFullScreen")
-    //- a(href="https://vsp.tu-berlin.de")
-    //-   img(alt="TU-Berlin logo" src="@/assets/images/vsp-logo.png" width=225)
+    a(href="https://tu.berlin")
+      img(alt="TU-Berlin logo" src="@/assets/images/tu-logo.jpg" width=180)
+    a(href="https://vsp.berlin")
+      img(alt="VSP TU-Berlin logo" src="@/assets/images/vsp-logo.png" width=100)
+    a(href="https://www.tu.berlin/arte")
+      img(alt="ARTE logo" src="@/assets/images/arte-logo.jpg" width=125)
     a(href="https://matsim.org")
-      img(alt="MATSim logo" src="@/assets/images/matsim-logo-white.png" width=150)
+      img(alt="MATSim logo" src="@/assets/images/matsim-logo-blue.png" width=200)
 
-    p Emissions Scenario Explorer <br/>&copy; 2023 VSP TU-Berlin
-    p GDPR: This site does not collect, store, or analyze any personal information.
-    p For more info about VSP at TU Berlin, see
-      a(href="https://www.vsp.tu-berlin.de") &nbsp;vsp.tu-berlin.de
+    p: b Emissions Sounding Board <br/>&copy; 2023 VSP TU-Berlin
+    p This site does not collect, store, or analyze any personal information.
+      |<br/> For more info about VSP at TU Berlin, see our website at
+      a(href="https://vsp.berlin") &nbsp;vsp.berlin
 
     p
-      router-link(to="/imprint") Imprint
+      router-link(to="https://vsp.berlin/impressum/") Impressum
+      router-link(to="https://vsp.tu-berlin.de/privacy") Privacy
 
 </template>
 
@@ -52,6 +57,7 @@ html {
   padding: 0px 0px;
   height: 100%;
   overscroll-behavior: contain;
+  background-color: white;
 }
 
 canvas {
@@ -60,7 +66,6 @@ canvas {
 
 html {
   overflow-y: auto;
-  background-color: #ccc;
   box-sizing: border-box;
 }
 
@@ -149,17 +154,18 @@ h3 {
   grid-column: 1 / 2;
   grid-row: 5 / 6;
   padding: 2rem 0.5rem 3rem 2rem;
-  background-color: #29333d;
+  background-color: white;
 }
 
 .footer p {
   line-height: 1.2rem;
   margin-top: 0.5rem;
-  color: white;
+  // color: white;
 }
 
 .footer a {
-  color: #17a5ec;
+  // color: #17a5ec;
+  margin-right: 2rem;
 }
 
 .footer img {
