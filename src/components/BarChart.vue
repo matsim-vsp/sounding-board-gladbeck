@@ -36,7 +36,7 @@ export default {
           // note this gets overwritten when the scale changes - see updateScale()
           //fixedrange: window.innerWidth < 700,
           fixedrange: true,
-          range: [-0.4, 0.4],
+          range: [-1.0, 0.2],
           title: '% Diff',
         } as any,
         plot_bgcolor: '#f8f8f8',
