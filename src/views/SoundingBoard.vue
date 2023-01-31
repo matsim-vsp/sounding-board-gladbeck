@@ -6,7 +6,7 @@
 
   .heading
     h2: b {{ title }}
-    p some explanatory text
+    p {{ description }}
 
   .presets(v-if="Object.keys(presets).length")
     h2 {{ $t('scenarios')  }}
@@ -87,6 +87,9 @@ type ScenarioYaml = {
   title?: string
   title_en?: string
   title_de?: string
+  description?: string
+  description_en?: string
+  description_de?: string
   inputColumns: {
     [column: string]: {
       type?: string
@@ -132,6 +135,8 @@ export default class VueComponent extends Vue {
   private displayedValues: any[] = []
 
   private title = ''
+  private description = ''
+
   private metrics: { column: string; title: string; value: any }[] = []
   private data: any[] = []
 
@@ -219,6 +224,11 @@ export default class VueComponent extends Vue {
       this.lang == 'de'
         ? this.yaml.title_de || this.yaml.title || this.yaml.title_en || this.runId
         : this.yaml.title_en || this.yaml.title || this.yaml.title_de || this.runId
+
+    this.description =
+      this.lang == 'de'
+        ? this.yaml.description_de || this.yaml.description || this.yaml.description_en || ''
+        : this.yaml.description_en || this.yaml.description || this.yaml.description_de || ''
 
     // metrics
     for (const column of Object.keys(this.yaml.outputColumns)) {
@@ -518,6 +528,12 @@ li.notes-item {
 
 .heading {
   padding: 2rem;
+}
+
+.heading p {
+  color: #33b;
+  font-size: 1rem;
+  text-transform: none;
 }
 
 .factors,
