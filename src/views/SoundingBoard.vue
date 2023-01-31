@@ -6,7 +6,7 @@
 
   .heading
     h2: b {{ title }}
-    p {{ description }}
+    p(v-html="description")
 
   .presets(v-if="Object.keys(presets).length")
     h2 {{ $t('scenarios')  }}
