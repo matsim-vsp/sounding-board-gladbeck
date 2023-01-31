@@ -25,7 +25,7 @@
         h4.metric-title {{ metric.title }}
         .metric-value {{ formattedValue(displayedValues[i]) }} %
         bar-chart(
-          :data="[{x: ['boop'], y: [displayedValues[i]-1], type: 'bar'}]"
+          :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
         )
 
   .configurator
@@ -151,7 +151,7 @@ export default class VueComponent extends Vue {
   private formattedValue(v: number) {
     const percent = 100 * (v - 1)
     const sign = percent < 0 ? '' : '+'
-    return sign + percent.toFixed(1)
+    return sign + percent.toFixed(0)
   }
 
   private setPreset(preset: string) {
