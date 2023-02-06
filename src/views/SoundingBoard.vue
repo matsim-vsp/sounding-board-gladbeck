@@ -532,6 +532,11 @@ li.notes-item {
   // background-color: #154b30;
   padding: 1rem 2rem 2rem 2rem;
   display: flex;
+  width: 100%;
+}
+
+.left-results {
+  width: calc(100% - 300px);
 }
 
 .configurator {
@@ -568,6 +573,7 @@ li.notes-item {
 .factors,
 .metrics {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .factor {
