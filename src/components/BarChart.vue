@@ -1,5 +1,5 @@
 <template lang="pug">
-vue-plotly(
+vue-plotly(class="bar-plot"
   :data="data"
   :layout="layout"
   :options="options"
@@ -18,8 +18,8 @@ export default {
   data: () => {
     return {
       layout: {
-        width: 200,
-        height: 200,
+        width: 250,
+        height: 250,
         barmode: 'relative',
         autosize: true,
         showlegend: false,
@@ -28,7 +28,7 @@ export default {
         //   size: 12,
         //   color: '#000',
         // },
-        margin: { t: 25, r: 25, b: 25, l: 25 },
+        margin: { t: 25, r: 25, b: 25, l: 60 },
         xaxis: {
           //fixedrange: window.innerWidth < 700,
         },
@@ -37,10 +37,13 @@ export default {
           //fixedrange: window.innerWidth < 700,
           fixedrange: true,
           range: [-1.0, 0.2],
-          title: '% Diff',
+          title: {
+            text: '% Diff',
+            standoff: 500,
+          },
         } as any,
-        plot_bgcolor: '#f8f8f8',
-        paper_bgcolor: '#f8f8f8',
+        plot_bgcolor: '#ffffff',
+        paper_bgcolor: '#ffffff',
       },
       options: {
         displayModeBar: false,

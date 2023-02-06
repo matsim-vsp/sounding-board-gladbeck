@@ -29,7 +29,7 @@
         div(class="parking-spot parking-spot-right parking-spot-row-5")
         div(class="parking-spot parking-spot-right parking-spot-row-6")
 
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-1" class="car-viz-car car-viz-car-left car-viz-car-row-1" :class="{ 'car-viz-grey': showParking(1)}")
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-1" class="car-viz-car car-viz-car-left car-viz-car-row-1" :class="{ 'car-viz-grey': showParking(1)}" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-2" class="car-viz-car car-viz-car-left car-viz-car-row-2" :class="{ 'car-viz-grey': showParking(5)}")
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-3" class="car-viz-car car-viz-car-left car-viz-car-row-3" :class="{ 'car-viz-grey': showParking(8)}")
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-4" class="car-viz-car car-viz-car-left car-viz-car-row-4" :class="{ 'car-viz-grey': showParking(2)}")
@@ -258,6 +258,12 @@ export default class VueComponent extends Vue {
 
 .car-viz-grey {
   filter: invert(80%);
+  transition: all 1s;
+}
+
+.car-viz-black {
+  filter: invert(0%);
+  transition: all 0.7s;
 }
 
 @media only screen and (max-width: 640px) {

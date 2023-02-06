@@ -22,13 +22,13 @@
       h2 {{ $t('results')  }}
       .metrics
         .metric(v-for="metric,i in metrics")
-          bar-chart(
-              :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
-            )
           h4.metric-title {{ metric.title }}
           // The percentage sign is not displayed when it comes to costs
           .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
           .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
+          bar-chart(
+              :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
+            )
           
     .right-results
       car-viz(:numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
@@ -552,6 +552,7 @@ li.notes-item {
   display: flex;
   flex-direction: column;
   max-width: 300px;
+  border: 2px solid black;
 }
 
 .metric-value {
@@ -570,10 +571,18 @@ li.notes-item {
   text-transform: none;
 }
 
-.factors,
+.factors {
+  display: flex;
+  flex-wrap: wrap;
+}
 .metrics {
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+.metric-title {
+  height: 3.4rem;
 }
 
 .factor {
