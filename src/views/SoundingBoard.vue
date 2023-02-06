@@ -18,15 +18,20 @@
 
 
   .results
-    h2 {{ $t('results')  }}
-
-    .metrics
-      .metric(v-for="metric,i in metrics")
-        h4.metric-title {{ metric.title }}
-        .metric-value {{ formattedValue(displayedValues[i]) }} %
-        bar-chart(
-          :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
-        )
+    .left-results   
+      h2 {{ $t('results')  }}
+      .metrics
+        .metric(v-for="metric,i in metrics")
+          bar-chart(
+              :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
+            )
+          h4.metric-title {{ metric.title }}
+          // The percentage sign is not displayed when it comes to costs
+          .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
+          .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
+          
+    .right-results
+      car-viz(:numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
 
   .configurator
     h2 {{ $t('settings')  }}
@@ -77,6 +82,7 @@ import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
 
 import BarChart from '@/components/BarChart.vue'
+import CarViz from '@/components/CarViz.vue'
 
 // const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
@@ -108,7 +114,7 @@ type ScenarioYaml = {
   presets: any
 }
 
-@Component({ components: { BarChart, VueSlider }, props: {} })
+@Component({ components: { BarChart, VueSlider, CarViz }, props: {} })
 export default class VueComponent extends Vue {
   private runId = ''
   private selectedScenario = ''
@@ -139,6 +145,9 @@ export default class VueComponent extends Vue {
 
   private metrics: { column: string; title: string; value: any }[] = []
   private data: any[] = []
+
+  private numberOfDrivingCars = 10
+  private numberOfParkingCars = 10
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
     if (to.path === from.path) {
@@ -366,7 +375,25 @@ export default class VueComponent extends Vue {
     for (const metric of this.metrics) {
       metric.value = row[metric.column]
     }
+
+    console.log(this.metrics)
+
+    for (const metric of this.metrics) {
+      if (metric.title == 'Parkende Autos') {
+        this.numberOfParkingCars = this.calculateNumberOfCars(metric.value)
+      }
+      if (metric.title == 'Fahrender Autoverkehr') {
+        this.numberOfDrivingCars = this.calculateNumberOfCars(metric.value)
+      }
+    }
+
     this.animateTowardNewValues()
+  }
+
+  private calculateNumberOfCars(n: number) {
+    var tempNumber = Math.ceil(n * 10) / 10
+
+    return tempNumber * 10
   }
 
   private animateTowardNewValues() {
@@ -504,6 +531,7 @@ li.notes-item {
 .results {
   // background-color: #154b30;
   padding: 1rem 2rem 2rem 2rem;
+  display: flex;
 }
 
 .configurator {
@@ -518,6 +546,7 @@ li.notes-item {
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
+  max-width: 300px;
 }
 
 .metric-value {

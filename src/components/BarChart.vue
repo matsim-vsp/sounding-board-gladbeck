@@ -18,8 +18,8 @@ export default {
   data: () => {
     return {
       layout: {
-        width: 160,
-        height: 160,
+        width: 200,
+        height: 200,
         barmode: 'relative',
         autosize: true,
         showlegend: false,
