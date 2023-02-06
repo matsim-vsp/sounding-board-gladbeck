@@ -22,11 +22,11 @@
 
     .metrics
       .metric(v-for="metric,i in metrics")
-        h4.metric-title {{ metric.title }}
-        .metric-value {{ formattedValue(displayedValues[i]) }} %
         bar-chart(
           :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
         )
+        .metric-value {{ formattedValue(displayedValues[i]) }} %
+        h4.metric-title {{ metric.title }}
 
   .configurator
     h2 {{ $t('settings')  }}
