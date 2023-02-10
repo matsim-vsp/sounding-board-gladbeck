@@ -403,7 +403,6 @@ export default class VueComponent extends Vue {
 
   private calculateNumberOfCars(n: number) {
     var tempNumber = Math.ceil(n * 10) / 10
-
     return tempNumber * 10
   }
 

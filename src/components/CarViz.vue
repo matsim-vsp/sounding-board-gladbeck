@@ -52,7 +52,7 @@
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-7" class="car-viz-car car-viz-car-right car-viz-car-parking-row-2" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-8" class="car-viz-car car-viz-car-right car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-9" class="car-viz-car car-viz-car-right car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(14) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-11" class="car-viz-car car-viz-car-left car-viz-car-parking-row-6" :class="{ 'car-viz-grey': showParking(1), 'car-viz-black': !showParking(1) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-12" class="car-viz-car car-viz-car-left car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(5), 'car-viz-black': !showParking(5) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-13" class="car-viz-car car-viz-car-left car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(8), 'car-viz-black': !showParking(8) }" )
@@ -62,7 +62,7 @@
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-17" class="car-viz-car car-viz-car-right car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-18" class="car-viz-car car-viz-car-right car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-19" class="car-viz-car car-viz-car-right car-viz-car-parking-row-9" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-10" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(14) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-10" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
 
         img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-1" class="car-viz-car car-viz-car-middle-left car-viz-car-row-1" :class="{ 'car-viz-grey': showDriving(4), 'car-viz-black': !showDriving(4) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-2" class="car-viz-car car-viz-car-middle-left car-viz-car-row-2" :class="{ 'car-viz-grey': showDriving(7), 'car-viz-black': !showDriving(7) }" )
@@ -85,6 +85,7 @@ export default class VueComponent extends Vue {
   @Prop({ required: true }) private numberOfParkingCars!: number
 
   private showParking(n: number) {
+    console.log(this.numberOfParkingCars)
     return Math.abs(10 - this.numberOfParkingCars) > n - 1
   }
 
