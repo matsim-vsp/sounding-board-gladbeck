@@ -18,23 +18,33 @@
 
 
   .results
-    .left-results   
+    .left-results
       h2 {{ $t('results')  }}
-      .metrics
-        .metric(v-for="metric,i in metrics")
-          h4.metric-title {{ metric.title }}
-          // The percentage sign is not displayed when it comes to costs
-          .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
-          .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
-          bar-chart(
-              :data="[{x: [' '], y: [displayedValues[i]-1], type: 'bar'}]"
-            )
+      //- .costs 
+      //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Kosten')")
+      //-     //- h4 {{ metric.title }} {{ formattedValue(displayedValues[i]) }}
+      //-     h4(v-if="metric.title.includes('Monat')") Die Kosten pro Kopf werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
+      //-     h4(v-if="metric.title.includes('Jahr')") Die Kosten pro Jahr in Mio. Euro werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
+      .charts
+        .metrics
+          .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Kosten')")
+            h4.metric-title {{ metric.title }}
+            // The percentage sign is not displayed when it comes to costs
+            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
+            .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
+            bar-chart(:data="[{x: [' '], y: [displayedValues[i] - 1], type: 'bar', base: '1'}]")
+          .metric
+            h4.metric-title {{ metrics[3].title }}
+            .metric-value {{ formattedValue(displayedValues[3]) }} €
+            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
+            .metric-value(:style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4]) }} €
+
           
     .right-results
-      car-viz(:numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
+      car-viz.car-viz-styles(:numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
 
   .configurator
-    h2 {{ $t('settings')  }}
+    h2 {{ $t('settings') }}
 
     .factors
       .factor(v-for="factor in Object.keys(yaml.inputColumns)")
@@ -44,6 +54,7 @@
           :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
           @click="setFactor(factor, option)"
         ) {{ option }}
+        //- p.factor-description(v-if="factorTitle[factor] == 'Parkraum'") Das ist eine Beschreibung. Das ist eine Beschreibung. Das ist eine Beschreibung.
 
 </template>
 
@@ -539,6 +550,11 @@ li.notes-item {
   width: calc(100% - 300px);
 }
 
+.right-results {
+  height: fit-content;
+  margin: 3.4rem 0 auto 0;
+}
+
 .configurator {
   background-color: #eee;
   padding: 1rem 2rem 2rem 2rem;
@@ -552,7 +568,7 @@ li.notes-item {
   display: flex;
   flex-direction: column;
   max-width: 300px;
-  border: 2px solid black;
+  border: 1px solid black;
 }
 
 .metric-value {
@@ -578,7 +594,7 @@ li.notes-item {
 .metrics {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around;
+  //justify-content: space-around;
 }
 
 .metric-title {
@@ -598,6 +614,11 @@ li.notes-item {
   // background-color: #cc3;
   margin: 0.25rem;
   cursor: pointer;
+}
+
+.factor-description {
+  margin-top: 1rem;
+  margin-bottom: 0;
 }
 
 @media only screen and (max-width: 850px) {

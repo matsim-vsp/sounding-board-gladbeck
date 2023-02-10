@@ -18,7 +18,7 @@ export default {
   data: () => {
     return {
       layout: {
-        width: 250,
+        width: 270,
         height: 250,
         barmode: 'relative',
         autosize: true,
@@ -32,11 +32,18 @@ export default {
         xaxis: {
           //fixedrange: window.innerWidth < 700,
         },
+        font: {
+          size: 13,
+          color: '#000000',
+        },
         yaxis: {
           // note this gets overwritten when the scale changes - see updateScale()
           //fixedrange: window.innerWidth < 700,
+          showgrid: true,
+          gridwidth: 1,
+          gridcolor: '#000000',
           fixedrange: true,
-          range: [-1.0, 0.2],
+          range: [0.0, 1.05],
           title: {
             text: '% Diff',
             standoff: 500,
