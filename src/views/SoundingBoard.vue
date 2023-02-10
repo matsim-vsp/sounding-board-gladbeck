@@ -170,7 +170,7 @@ export default class VueComponent extends Vue {
 
   private formattedValue(v: number) {
     const percent = 100 * (v - 1)
-    const sign = percent < 0 ? '' : '+'
+    const sign = percent <= 0 ? '' : '+'
     return sign + percent.toFixed(0)
   }
 
