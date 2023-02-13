@@ -28,7 +28,7 @@ export default {
         //   size: 12,
         //   color: '#000',
         // },
-        margin: { t: 25, r: 25, b: 25, l: 60 },
+        margin: { t: 25, r: 25, b: 25, l: 50 },
         xaxis: {
           //fixedrange: window.innerWidth < 700,
         },
@@ -46,7 +46,7 @@ export default {
           range: [0.0, 1.05],
           tickformat: ',.0%',
           title: {
-            text: '% Diff',
+            //text: '% Diff',
             standoff: 500,
           },
         } as any,

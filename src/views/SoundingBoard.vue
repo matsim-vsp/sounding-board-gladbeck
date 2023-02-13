@@ -54,7 +54,7 @@
           :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
           @click="setFactor(factor, option)"
         ) {{ option }}
-        p.factor-description {{factor.description}}
+        p.factor-description {{factor.description}} Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. 
 
 </template>
 
@@ -599,6 +599,7 @@ li.notes-item {
   padding: 1rem;
   background-color: white;
   margin: 0.5rem;
+  max-width: 600px;
   // display: flex;
   // flex-direction: column;
 }
