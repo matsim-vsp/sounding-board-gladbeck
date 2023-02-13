@@ -44,6 +44,7 @@ export default {
           gridcolor: '#000000',
           fixedrange: true,
           range: [0.0, 1.05],
+          tickformat: ',.0%',
           title: {
             text: '% Diff',
             standoff: 500,

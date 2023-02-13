@@ -85,7 +85,6 @@ export default class VueComponent extends Vue {
   @Prop({ required: true }) private numberOfParkingCars!: number
 
   private showParking(n: number) {
-    console.log(this.numberOfParkingCars)
     return Math.abs(10 - this.numberOfParkingCars) > n - 1
   }
 
@@ -110,7 +109,7 @@ export default class VueComponent extends Vue {
 
 #car-viz-total {
   position: relative;
-  width: 270px;
+  width: 280px;
   height: 504px;
 }
 
@@ -126,7 +125,7 @@ export default class VueComponent extends Vue {
 .car-viz-middle {
   position: absolute;
   background-color: black;
-  left: 133px;
+  left: 138px;
   width: 4px;
   height: 30px;
 }
@@ -226,7 +225,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-middle-left {
-  left: 88px;
+  left: 91px;
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -235,7 +234,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-middle-right {
-  right: 88px;
+  right: 91px;
 }
 
 .car-viz-car-row-1 {

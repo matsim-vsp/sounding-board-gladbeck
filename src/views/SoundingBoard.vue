@@ -32,8 +32,9 @@
             // The percentage sign is not displayed when it comes to costs
             .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
             .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
-            bar-chart(:data="[{x: [' '], y: [displayedValues[i] - 1], type: 'bar', base: '1'}]")
-          .metric
+            bar-chart(v-if="metric.title.includes('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
+            bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i] - 1], type: 'bar', base: '1'}]")
+          .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
             .metric-value {{ formattedValue(displayedValues[3]) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
@@ -54,7 +55,7 @@
           :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
           @click="setFactor(factor, option)"
         ) {{ option }}
-        //- p.factor-description(v-if="factorTitle[factor] == 'Parkraum'") Das ist eine Beschreibung. Das ist eine Beschreibung. Das ist eine Beschreibung.
+        p.factor-description {{factor.description}}
 
 </template>
 
@@ -162,7 +163,6 @@ export default class VueComponent extends Vue {
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
     if (to.path === from.path) {
-      console.log('same path')
     } else {
       this.buildPageForURL()
     }
@@ -175,8 +175,6 @@ export default class VueComponent extends Vue {
   }
 
   private setPreset(preset: string) {
-    console.log(preset)
-
     const factors = this.presets[preset].items
     for (const factor of Object.keys(factors)) {
       this.currentConfiguration[factor] = factors[factor]
@@ -263,7 +261,6 @@ export default class VueComponent extends Vue {
       }
       this.metrics.push(metric)
     }
-    console.log(21, this.metrics)
   }
 
   private async loadDataset() {
@@ -376,7 +373,6 @@ export default class VueComponent extends Vue {
     for (const factor of Object.keys(this.factors)) {
       answerRow = answerRow.filter(row => row[factor] === this.currentConfiguration[factor])
     }
-    console.log(answerRow)
     if (answerRow.length !== 1) {
       throw Error('Should have exactly one row:' + answerRow)
     }
@@ -386,8 +382,6 @@ export default class VueComponent extends Vue {
     for (const metric of this.metrics) {
       metric.value = row[metric.column]
     }
-
-    console.log(this.metrics)
 
     for (const metric of this.metrics) {
       if (metric.title == 'Parkende Autos') {
