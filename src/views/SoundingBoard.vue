@@ -30,15 +30,14 @@
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Kosten')")
             h4.metric-title {{ metric.title }}
             // The percentage sign is not displayed when it comes to costs
-            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i]) }}
-            .metric-value(v-else) {{ formattedValue(displayedValues[i]) }} %
-            bar-chart(v-if="metric.title.includes('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
-            bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i] - 1], type: 'bar', base: '1'}]")
+            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i], true) }}
+            .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %
+            bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value {{ formattedValue(displayedValues[3]) }} €
+            .metric-value {{ formattedValue(displayedValues[3], true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value(:style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4]) }} €
+            .metric-value(:style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4], true) }} €
 
           
     .right-results
@@ -168,9 +167,11 @@ export default class VueComponent extends Vue {
     }
   }
 
-  private formattedValue(v: number) {
+  private formattedValue(v: number, showPlus: boolean) {
     const percent = 100 * (v - 1)
-    const sign = percent <= 0 ? '' : '+'
+    let sign
+    if (showPlus) sign = percent <= 0 ? '' : '+'
+    else sign = percent <= 0 ? '' : ''
     return sign + percent.toFixed(0)
   }
 
