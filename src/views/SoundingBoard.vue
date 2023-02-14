@@ -47,14 +47,17 @@
     h2 {{ $t('settings') }}
 
     .factors
-      .factor(v-for="factor in Object.keys(yaml.inputColumns)")
-        h4.metric-title {{ factorTitle[factor]  }}
+      .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
+        h4.metric-title {{ factorTitle[key]  }}
         b-button.is-small.factor-option(
-          v-for="option of factors[factor]"
-          :class="option == currentConfiguration[factor] ? 'is-danger' : ''"
-          @click="setFactor(factor, option)"
+          v-for="option of factors[key]"
+          :class="option == currentConfiguration[key] ? 'is-danger' : ''"
+          @click="setFactor(key, option)"
         ) {{ option }}
-        p.factor-description {{factor.description}} Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. Das ist ein Test. 
+        // br
+        // div.information.icon(@click="showInformation(key)")
+        //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
+        p.factor-description {{value.description}}
 
 </template>
 
@@ -113,6 +116,8 @@ type ScenarioYaml = {
       title?: string
       title_en?: string
       title_de?: string
+      description?: string
+      showDescription?: boolean
     }
   }
   outputColumns: {
@@ -210,6 +215,7 @@ export default class VueComponent extends Vue {
   private async buildPageForURL() {
     this.yaml = await this.getYAML()
     this.data = await this.loadDataset()
+    this.addDescriptionToggle()
     this.buildUI()
     this.buildOptions()
     this.buildPresets()
@@ -431,6 +437,18 @@ export default class VueComponent extends Vue {
       setTimeout(this.animateTowardNewValues, 8.333)
     }
   }
+
+  private addDescriptionToggle() {
+    for (const value of Object.values(this.yaml.inputColumns)) {
+      value.showDescription = true
+    }
+  }
+
+  /*   private showInformation(text: string) {
+    for (const [key, value] of Object.entries(this.yaml.inputColumns)) {
+      if (text == key) value.showDescription = !value.showDescription
+    }
+  } */
 }
 </script>
 
@@ -605,7 +623,8 @@ li.notes-item {
 }
 
 .factor-option {
-  color: #227;
+  //color: #227;
+  //color: white;
   // background-color: #cc3;
   margin: 0.25rem;
   cursor: pointer;
