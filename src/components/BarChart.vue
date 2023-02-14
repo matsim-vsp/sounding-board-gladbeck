@@ -18,8 +18,8 @@ export default {
   data: () => {
     return {
       layout: {
-        width: 270,
-        height: 250,
+        width: 150,
+        height: 150,
         barmode: 'relative',
         autosize: true,
         showlegend: false,
@@ -28,23 +28,28 @@ export default {
         //   size: 12,
         //   color: '#000',
         // },
-        margin: { t: 25, r: 25, b: 25, l: 50 },
+        margin: { t: 15, r: 15, b: 10, l: 30 },
         xaxis: {
           //fixedrange: window.innerWidth < 700,
+          linewidth: 2,
+          linecolor: '#000000',
         },
         font: {
-          size: 13,
+          size: 10,
           color: '#000000',
         },
         yaxis: {
           // note this gets overwritten when the scale changes - see updateScale()
           //fixedrange: window.innerWidth < 700,
           showgrid: true,
-          gridwidth: 1,
+          zeroline: true,
+          //showline: true,
+          gridwidth: 2,
           gridcolor: '#000000',
           fixedrange: true,
-          range: [0.0, 1.05],
+          range: [0, 1.05],
           tickformat: ',.0%',
+          tickvals: [0, 0.25, 0.5, 0.75, 1],
           title: {
             //text: '% Diff',
             standoff: 500,

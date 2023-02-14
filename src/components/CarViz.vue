@@ -109,8 +109,8 @@ export default class VueComponent extends Vue {
 
 #car-viz-total {
   position: relative;
-  width: 280px;
-  height: 504px;
+  width: 150px;
+  height: 253px;
 }
 
 #car-viz-left {
@@ -119,51 +119,51 @@ export default class VueComponent extends Vue {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 4px;
+  width: 3px;
 }
 
 .car-viz-middle {
   position: absolute;
   background-color: black;
-  left: 138px;
-  width: 4px;
-  height: 30px;
+  left: 73px;
+  width: 3px;
+  height: 15px;
 }
 
 #car-viz-middle-1 {
 }
 
 #car-viz-middle-2 {
-  top: 60px;
+  top: 30px;
 }
 
 #car-viz-middle-3 {
-  top: 120px;
+  top: 60px;
 }
 
 #car-viz-middle-4 {
-  top: 180px;
+  top: 90px;
 }
 
 #car-viz-middle-5 {
-  top: 240px;
+  top: 120px;
 }
 
 #car-viz-middle-6 {
-  top: 300px;
+  top: 150px;
 }
 
 #car-viz-middle-7 {
-  top: 360px;
+  top: 180px;
 }
 
 #car-viz-middle-8 {
-  top: 420px;
+  top: 210px;
 }
 
 #car-viz-middle-9 {
-  top: 480px;
-  height: 24px;
+  top: 240px;
+  height: 13px;
 }
 
 #car-viz-middle-10 {
@@ -176,8 +176,8 @@ export default class VueComponent extends Vue {
 
 #car-viz-middle-right {
   position: absolute;
-  right: 80px;
-  width: 4px;
+  right: 45px;
+  width: 3px;
   top: 0;
   bottom: 0;
   background-color: black;
@@ -185,8 +185,8 @@ export default class VueComponent extends Vue {
 
 #car-viz-middle-left {
   position: absolute;
-  left: 80px;
-  width: 4px;
+  left: 45px;
+  width: 3px;
   top: 0;
   bottom: 0;
   background-color: black;
@@ -198,16 +198,16 @@ export default class VueComponent extends Vue {
   top: 0;
   bottom: 0;
   right: 0;
-  width: 4px;
+  width: 3px;
 }
 
 .car-viz-car {
   position: absolute;
-  width: 40px;
+  width: 20px;
 }
 
 .car-viz-car-left {
-  left: 22px;
+  left: 15px;
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
@@ -216,7 +216,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-right {
-  right: 22px;
+  right: 15px;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -225,7 +225,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-middle-left {
-  left: 91px;
+  left: 51px;
   -webkit-transform: rotate(180deg);
   -moz-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -234,93 +234,93 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-middle-right {
-  right: 91px;
+  right: 51px;
 }
 
 .car-viz-car-row-1 {
-  top: 10px;
+  top: 5px;
 }
 
 .car-viz-car-row-2 {
-  top: 110px;
+  top: 55px;
 }
 
 .car-viz-car-row-3 {
-  top: 210px;
+  top: 105px;
 }
 
 .car-viz-car-row-4 {
-  top: 310px;
+  top: 155px;
 }
 
 .car-viz-car-row-5 {
-  top: 410px;
+  top: 205px;
 }
 
 .car-viz-car-row-6 {
-  top: 30px;
+  top: 15px;
 }
 
 .car-viz-car-row-7 {
-  top: 130px;
+  top: 65px;
 }
 
 .car-viz-car-row-8 {
-  top: 230px;
+  top: 115px;
 }
 
 .car-viz-car-row-9 {
-  top: 330px;
+  top: 165px;
 }
 
 .car-viz-car-row-10 {
-  top: 430px;
+  top: 215px;
 }
 
 .car-viz-car-parking-row-1 {
-  top: -5px;
+  top: -2px;
 }
 
 .car-viz-car-parking-row-2 {
-  top: 45px;
+  top: 23px;
 }
 
 .car-viz-car-parking-row-3 {
-  top: 95px;
+  top: 48px;
 }
 
 .car-viz-car-parking-row-4 {
-  top: 145px;
+  top: 73px;
 }
 
 .car-viz-car-parking-row-5 {
-  top: 195px;
+  top: 98px;
 }
 
 .car-viz-car-parking-row-6 {
-  top: 245px;
+  top: 123px;
 }
 
 .car-viz-car-parking-row-7 {
-  top: 295px;
+  top: 148px;
 }
 
 .car-viz-car-parking-row-8 {
-  top: 345px;
+  top: 173px;
 }
 
 .car-viz-car-parking-row-9 {
-  top: 395px;
+  top: 198px;
 }
 
 .car-viz-car-parking-row-10 {
-  top: 445px;
+  top: 223px;
 }
 
 .parking-spot {
   position: absolute;
-  width: 80px;
-  height: 4px;
+  width: 45px;
+  height: 3px;
   background-color: black;
 }
 
@@ -335,47 +335,47 @@ export default class VueComponent extends Vue {
 }
 
 .parking-spot-row-2 {
-  top: 50px;
+  top: 25px;
 }
 
 .parking-spot-row-3 {
-  top: 100px;
+  top: 50px;
 }
 
 .parking-spot-row-4 {
-  top: 150px;
+  top: 75px;
 }
 
 .parking-spot-row-5 {
-  top: 200px;
+  top: 100px;
 }
 
 .parking-spot-row-6 {
-  top: 250px;
+  top: 125px;
 }
 
 .parking-spot-row-7 {
-  top: 300px;
+  top: 150px;
 }
 
 .parking-spot-row-8 {
-  top: 350px;
+  top: 175px;
 }
 
 .parking-spot-row-9 {
-  top: 400px;
+  top: 200px;
 }
 
 .parking-spot-row-10 {
-  top: 450px;
+  top: 225px;
 }
 
 .parking-spot-row-11 {
-  top: 500px;
+  top: 250px;
 }
 
 .parking-spot-row-12 {
-  top: 550px;
+  top: 275px;
 }
 
 .car-viz-grey {

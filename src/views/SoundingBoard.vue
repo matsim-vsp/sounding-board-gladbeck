@@ -5,11 +5,11 @@
   //-   h3 {{ $t('title') }}
 
   .heading
-    h2: b {{ title }}
+    h2.section-title: b {{ title }}
     p(v-html="description")
 
   .presets(v-if="Object.keys(presets).length")
-    h2 {{ $t('scenarios')  }}
+    h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option(
           v-for="preset in Object.keys(presets)"
           :class="preset == currentPreset ? 'is-success' : ''"
@@ -19,7 +19,7 @@
 
   .results
     .left-results
-      h2 {{ $t('results')  }}
+      h2.section-title {{ $t('results')  }}
       //- .costs 
       //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Kosten')")
       //-     //- h4 {{ metric.title }} {{ formattedValue(displayedValues[i]) }}
@@ -41,10 +41,10 @@
 
           
     .right-results
-      car-viz.car-viz-styles(:numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
+      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
 
   .configurator
-    h2 {{ $t('settings') }}
+    h2.section-title {{ $t('settings') }}
 
     .factors
       .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
@@ -553,18 +553,18 @@ li.notes-item {
 
 .results {
   // background-color: #154b30;
-  padding: 1rem 2rem 2rem 2rem;
+  padding: 1rem 2rem 1rem 2rem;
   display: flex;
   width: 100%;
 }
 
 .left-results {
-  width: calc(100% - 300px);
+  width: calc(100% - 170px);
 }
 
 .right-results {
   height: fit-content;
-  margin: 3.4rem 0 auto 0;
+  margin: 2rem 0 auto 0;
 }
 
 .configurator {
@@ -579,18 +579,22 @@ li.notes-item {
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  max-width: 300px;
+  max-width: 180px;
   border: 1px solid black;
 }
 
 .metric-value {
   font-weight: bold;
-  font-size: 2rem;
+  font-size: 1.1rem;
   color: #222;
 }
 
 .heading {
   padding: 2rem;
+}
+
+.section-title {
+  font-size: 1rem;
 }
 
 .heading p {
@@ -610,14 +614,15 @@ li.notes-item {
 }
 
 .metric-title {
-  height: 3.4rem;
+  height: 2.7rem;
+  font-size: 0.9rem;
 }
 
 .factor {
-  padding: 1rem;
+  padding: 0.5rem;
   background-color: white;
   margin: 0.5rem;
-  max-width: 600px;
+  max-width: fit-content;
   // display: flex;
   // flex-direction: column;
 }
@@ -627,11 +632,15 @@ li.notes-item {
   //color: white;
   // background-color: #cc3;
   margin: 0.25rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0rem;
+  font-size: 0.5rem;
   cursor: pointer;
+  font-style: normal;
 }
 
 .factor-description {
-  margin-top: 1rem;
+  //margin-top: 0.5rem;
   margin-bottom: 0;
 }
 
