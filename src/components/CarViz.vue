@@ -114,7 +114,6 @@ export default class VueComponent extends Vue {
     const carHeight = document.getElementsByClassName('car-viz-styles')[0].clientHeight
     this.plotHeight = document.getElementsByClassName('metric')[0]?.clientHeight
     const factorHeight = this.plotHeight / carHeight
-    console.log(this.plotHeight)
     const carWidth = document.getElementsByClassName('car-viz-styles')[0].clientWidth
     this.plotWidth = document.getElementsByClassName('metric')[0]?.clientWidth - 30
     const factorWidth = this.plotWidth / carWidth
