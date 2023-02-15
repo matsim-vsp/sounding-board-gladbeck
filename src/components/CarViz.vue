@@ -118,18 +118,12 @@ export default class VueComponent extends Vue {
     this.plotWidth = document.getElementsByClassName('metric')[0]?.clientWidth - 30
     const factorWidth = this.plotWidth / carWidth
 
+    const htmlElement = document.getElementsByClassName('car-viz-styles')[0] as HTMLElement
+
     if (factorHeight > factorWidth) {
-      document.getElementsByClassName('car-viz-styles')[0].style.scale = factorWidth.toString()
-      /*       document.getElementsByClassName('car-viz-metric')[0].style.scale = factorHeight.toString()
-      document.getElementsByClassName('car-viz-metric')[0].style.height = (
-        this.plotHeight - 90
-      ).toString() */
+      htmlElement.style.scale = factorWidth.toString()
     } else {
-      document.getElementsByClassName('car-viz-styles')[0].style.scale = factorHeight.toString()
-      /*       document.getElementsByClassName('car-viz-metric')[0].style.scale = factorWidth.toString()
-      document.getElementsByClassName('car-viz-metric')[0].style.height = (
-        this.plotHeight - 90
-      ).toString() */
+      htmlElement.style.scale = factorHeight.toString()
     }
   }
 
