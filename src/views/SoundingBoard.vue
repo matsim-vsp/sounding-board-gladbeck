@@ -30,9 +30,8 @@
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Kosten')")
             h4.metric-title {{ metric.title }}
             // The percentage sign is not displayed when it comes to costs
-<!--            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i], true) }}-->
-<!--            .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %-->
-            .metric-value {{ formattedValue(displayedValues[i] + 1, false) }} %
+            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i], true) }}
+            .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
