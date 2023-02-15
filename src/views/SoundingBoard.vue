@@ -210,14 +210,14 @@ export default class VueComponent extends Vue {
     }, 1000)
   }
 
-  private formattedValue(v: number, showPlus: boolean) {
+  private formattedValue(v: number, isCosts: boolean) {
     let percent = 100 * (v - 1)
 
-    if (showPlus) percent = v
+    if (isCosts) percent = v
     else percent = 100 * (v - 1)
 
     let sign
-    if (showPlus) sign = percent <= 0.5 ? '' : '+'
+    if (isCosts) sign = percent <= 0 ? '' : '+'
     else sign = percent <= 0 ? '' : ''
     return sign + percent.toFixed(0)
   }
