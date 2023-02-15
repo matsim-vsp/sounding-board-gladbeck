@@ -16,13 +16,13 @@
       img(alt="MATSim logo" src="@/assets/images/matsim-logo-blue.png" width=200)
 
     p: b Sounding Board <br/>&copy; 2023 VSP TU-Berlin
-    p {{ $t('dataInformation1') }}
-      |<br/> {{ $t('dataInformation2') }}
+    p Diese Seite sammelt, speichert oder analysiert keine persönlichen Daten.
+      |<br/> Weitere Informationen über VSP an der TU Berlin finden Sie auf unserer Website unter
       a(href="https://vsp.berlin") &nbsp;vsp.berlin
 
     p
       router-link(to="https://vsp.berlin/impressum/") Impressum
-      router-link(to="https://vsp.tu-berlin.de/privacy") Privacy
+      router-link(to="https://vsp.tu-berlin.de/privacy") Datenschutz
 
 </template>
 
