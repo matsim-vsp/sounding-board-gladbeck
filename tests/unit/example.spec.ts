@@ -8,6 +8,6 @@ describe('App.vue', () => {
       propsData: {},
       stubs: ['router-link', 'router-view'],
     })
-    return expect(wrapper.text().substring(0, 5)).toMatch('Emiss')
+    return expect(wrapper.text().substring(0, 5)).toMatch('Sounding')
   })
 })
