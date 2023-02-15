@@ -12,6 +12,7 @@
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option(
           v-for="preset in Object.keys(presets)"
+          :key="preset"
           :class="preset == currentPreset ? 'is-success' : ''"
           @click="setPreset(preset)"
         ) {{ presets[preset].title }}
@@ -35,7 +36,7 @@
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value {{ formattedValue(displayedValues[3], true) }} €
+            .metric-value {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
             .metric-value(:style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4], true) }} €
 
@@ -51,6 +52,7 @@
         h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
         b-button.is-small.factor-option(
           v-for="option of factors[key]"
+          :key="option"
           :class="option == currentConfiguration[key] ? 'is-danger' : ''"
           @click="setFactor(key, option)"
         ) {{ option }}
@@ -137,6 +139,9 @@ export default class VueComponent extends Vue {
   private runId = ''
   private selectedScenario = ''
 
+  // OePNV,"kiezblocks","Fahrrad","fahrenderVerkehr","DRT","Parkraum","CO2","Kosten","traffic","parking","KostenProKopf"
+  // base,"base","base","base","base","Besucher_teuer_Anwohner_teuer",0.2,-4699999,0.2,0.2,-0.229473684210526
+
   private yaml: ScenarioYaml = {
     data: '',
     title: '',
@@ -206,9 +211,13 @@ export default class VueComponent extends Vue {
   }
 
   private formattedValue(v: number, showPlus: boolean) {
-    const percent = 100 * (v - 1)
+    let percent = 100 * (v - 1)
+
+    if (showPlus) percent = v
+    else percent = 100 * (v - 1)
+
     let sign
-    if (showPlus) sign = percent <= 0 ? '' : '+'
+    if (showPlus) sign = percent <= 0.5 ? '' : '+'
     else sign = percent <= 0 ? '' : ''
     return sign + percent.toFixed(0)
   }
@@ -235,6 +244,9 @@ export default class VueComponent extends Vue {
     // disable the preset if user mucks with the settings
     this.currentPreset = ''
     this.setURLQuery()
+    console.log(this.displayedValues)
+    console.log(this.metrics)
+    // 3599999
   }
 
   private mounted() {
