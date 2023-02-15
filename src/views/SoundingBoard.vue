@@ -57,7 +57,7 @@
         // br
         // div.information.icon(@click="showInformation(key)")
         //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
-        p.factor-description {{value.description}} Hier steht eine beispielhafte Beschreibung.
+        p.factor-description {{value.description}}
 
 </template>
 
