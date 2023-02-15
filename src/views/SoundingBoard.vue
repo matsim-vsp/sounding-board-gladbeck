@@ -6,7 +6,7 @@
 
   .heading
     h2.section-title: b {{ title }}
-    p(v-html="description")
+    p.header-description(v-html="description")
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -41,14 +41,14 @@
 
           
     .right-results
-      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars")
+      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
   .configurator
     h2.section-title {{ $t('settings') }}
 
     .factors
       .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
-        h4.metric-title {{ factorTitle[key]  }}
+        h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
         b-button.is-small.factor-option(
           v-for="option of factors[key]"
           :class="option == currentConfiguration[key] ? 'is-danger' : ''"
@@ -57,7 +57,7 @@
         // br
         // div.information.icon(@click="showInformation(key)")
         //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
-        p.factor-description {{value.description}}
+        p.factor-description {{value.description}} Hier steht eine beispielhafte Beschreibung.
 
 </template>
 
@@ -76,7 +76,7 @@
     scenarios: 'Typical Scenarios'
   de:
     results: 'Ergebnis'
-    settings: 'Experiment conditions'
+    settings: 'Versuchsbedingungen'
     risk-calculator: 'Personalrisiko Rechner'
     badpage: 'Seite wurde nicht gefunden.'
     released: 'Veröffentlicht'
@@ -84,6 +84,7 @@
     try-combos: '...oder versuchen Sie verschiedene Kombinationen unten.'
     estimated-risk: 'Geschätztes Infektionsrisiko'
     remarks: 'Bemerkungen'
+    scenarios: 'Typische Szenarien'
   </i18n>
 
 <script lang="ts">
@@ -92,6 +93,7 @@ import MarkdownIt from 'markdown-it'
 import Papaparse from 'papaparse'
 import { Route } from 'vue-router'
 import VueSlider from 'vue-slider-component'
+import { debounce } from 'debounce'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
 
@@ -172,6 +174,37 @@ export default class VueComponent extends Vue {
     }
   }
 
+  private handleResize = debounce(this.realHandleResize, 250)
+
+  private plotHeight = 1
+  private plotWidth = 1
+
+  private async realHandleResize(c: Event) {
+    this.updateWidth()
+  }
+
+  private updateWidth() {
+    const firstPlot = document.getElementsByClassName('metric')[0] as HTMLElement
+
+    if (firstPlot) {
+      if (!(Math.abs(firstPlot.clientHeight - this.plotHeight) < 20))
+        this.plotHeight = firstPlot.clientHeight
+      if (!(Math.abs(firstPlot.clientWidth - this.plotWidth) < 20))
+        this.plotWidth = firstPlot.clientWidth
+
+      const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
+      if (leftSide) {
+        leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+      }
+    }
+  }
+
+  private updateSize() {
+    window.setInterval(() => {
+      this.updateWidth()
+    }, 1000)
+  }
+
   private formattedValue(v: number, showPlus: boolean) {
     const percent = 100 * (v - 1)
     let sign
@@ -210,6 +243,8 @@ export default class VueComponent extends Vue {
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
     this.buildPageForURL()
+    window.addEventListener('resize', this.handleResize)
+    this.updateSize()
   }
 
   private async buildPageForURL() {
@@ -564,7 +599,11 @@ li.notes-item {
 
 .right-results {
   height: fit-content;
-  margin: 2rem 0 auto 0;
+  margin: 3.5rem 0 0 0;
+}
+
+.car-viz-styles {
+  transform-origin: 0 0;
 }
 
 .configurator {
@@ -574,18 +613,21 @@ li.notes-item {
 
 .metric {
   background-color: white;
-  width: max-content;
+  //width: max-content;
+  //width: 320px;
   padding: 1rem;
   margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  max-width: 180px;
+  min-width: 100px;
+  flex: 1;
+  height: fit-content;
   border: 1px solid black;
 }
 
 .metric-value {
   font-weight: bold;
-  font-size: 1.1rem;
+  font-size: 1.6rem;
   color: #222;
 }
 
@@ -594,7 +636,8 @@ li.notes-item {
 }
 
 .section-title {
-  font-size: 1rem;
+  font-size: 1.7rem;
+  margin-bottom: 0.5rem;
 }
 
 .heading p {
@@ -609,13 +652,20 @@ li.notes-item {
 }
 .metrics {
   display: flex;
-  flex-wrap: wrap;
+  //flex-wrap: wrap;
+  flex-wrap: nowrap;
   //justify-content: space-around;
+  height: fit-content;
 }
 
 .metric-title {
-  height: 2.7rem;
-  font-size: 0.9rem;
+  height: 4rem;
+  font-size: 1.2rem;
+}
+
+.metric-title-factor {
+  height: 4rem;
+  font-size: 1.2rem;
 }
 
 .factor {
@@ -632,16 +682,152 @@ li.notes-item {
   //color: white;
   // background-color: #cc3;
   margin: 0.25rem;
-  margin-top: -0.5rem;
+  margin-top: 0rem;
   margin-bottom: 0rem;
-  font-size: 0.5rem;
+  font-size: 0.8rem;
   cursor: pointer;
   font-style: normal;
 }
 
 .factor-description {
-  //margin-top: 0.5rem;
+  margin-top: 0.5rem;
   margin-bottom: 0;
+}
+
+@media only screen and (max-width: 1440px) {
+  .factor-option {
+    font-size: 0.7rem;
+  }
+
+  .section-title {
+    // margin-bottom: 0;
+  }
+
+  .metric-title {
+    // height: 1.5rem;
+    // font-size: 0.7rem;
+  }
+
+  .metric-title-factor {
+    height: 1.9rem;
+    font-size: 0.9rem;
+  }
+
+  .metric-value {
+    margin-top: -1rem;
+    font-size: 1.4rem;
+  }
+
+  .factor-description {
+    font-size: 0.8rem;
+    // margin-top: 0rem;
+    // margin-bottom: 0;
+  }
+
+  .results {
+    // padding-bottom: 0;
+    // margin-bottom: -2rem;
+  }
+
+  .option-groups {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 1280px) {
+  .factor-option {
+    font-size: 0.6rem;
+  }
+
+  .section-title {
+    margin-bottom: 0;
+  }
+
+  .metric-title {
+    height: 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .metric-title-factor {
+    height: 1.5rem;
+    font-size: 0.8rem;
+    margin-bottom: 0.3rem;
+  }
+
+  .metric-value {
+    margin-top: 0rem;
+    font-size: 1rem;
+  }
+
+  .factor-description {
+    font-size: 0.7rem;
+    margin-top: 0.4rem;
+    margin-bottom: 0;
+  }
+
+  .results {
+    padding-bottom: 0;
+    margin-bottom: 1rem;
+  }
+
+  .right-results {
+    height: fit-content;
+    margin: 3.1rem 0 0 0;
+  }
+
+  .option-groups {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  .factor-option {
+    font-size: 0.5rem;
+  }
+
+  .section-title {
+    margin-bottom: 0;
+    font-size: 1rem;
+  }
+
+  .metric-title {
+    height: 1.5rem;
+    font-size: 0.7rem;
+  }
+
+  .metric-title-factor {
+    height: 1.3rem;
+    font-size: 0.7rem;
+  }
+
+  .metric-value {
+    margin-top: 0rem;
+    font-size: 1rem;
+  }
+
+  .factor-description {
+    font-size: 0.6rem;
+    margin-top: 0rem;
+    margin-bottom: 0;
+  }
+
+  .results {
+    padding-bottom: 0;
+    margin-bottom: -3rem;
+  }
+
+  .right-results {
+    height: fit-content;
+    margin: 2rem 0 0 0;
+  }
+
+  .metric {
+    padding: 0.5rem;
+  }
+
+  .option-groups {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
 @media only screen and (max-width: 850px) {

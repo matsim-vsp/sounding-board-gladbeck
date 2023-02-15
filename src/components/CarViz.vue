@@ -83,6 +83,8 @@ import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 export default class VueComponent extends Vue {
   @Prop({ required: true }) private numberOfDrivingCars!: number
   @Prop({ required: true }) private numberOfParkingCars!: number
+  @Prop({ required: true }) private plotWidth!: any
+  @Prop({ required: true }) private plotHeight!: any
 
   private showParking(n: number) {
     return Math.abs(10 - this.numberOfParkingCars) > n - 1
@@ -98,6 +100,38 @@ export default class VueComponent extends Vue {
 
   @Watch('$numberOfParkingCars') updateNumberOfParkingCars() {
     this.mounted()
+  }
+
+  @Watch('plotWidth') updateWidth() {
+    this.resizeCarViz()
+  }
+
+  @Watch('plotHeight') updateHeight() {
+    this.resizeCarViz()
+  }
+
+  private resizeCarViz() {
+    const carHeight = document.getElementsByClassName('car-viz-styles')[0].clientHeight
+    this.plotHeight = document.getElementsByClassName('metric')[0]?.clientHeight
+    const factorHeight = this.plotHeight / carHeight
+    console.log(this.plotHeight)
+    const carWidth = document.getElementsByClassName('car-viz-styles')[0].clientWidth
+    this.plotWidth = document.getElementsByClassName('metric')[0]?.clientWidth - 30
+    const factorWidth = this.plotWidth / carWidth
+
+    if (factorHeight > factorWidth) {
+      document.getElementsByClassName('car-viz-styles')[0].style.scale = factorWidth.toString()
+      /*       document.getElementsByClassName('car-viz-metric')[0].style.scale = factorHeight.toString()
+      document.getElementsByClassName('car-viz-metric')[0].style.height = (
+        this.plotHeight - 90
+      ).toString() */
+    } else {
+      document.getElementsByClassName('car-viz-styles')[0].style.scale = factorHeight.toString()
+      /*       document.getElementsByClassName('car-viz-metric')[0].style.scale = factorWidth.toString()
+      document.getElementsByClassName('car-viz-metric')[0].style.height = (
+        this.plotHeight - 90
+      ).toString() */
+    }
   }
 
   private mounted() {}

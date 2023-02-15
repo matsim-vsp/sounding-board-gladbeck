@@ -15,9 +15,9 @@
     a(href="https://matsim.org")
       img(alt="MATSim logo" src="@/assets/images/matsim-logo-blue.png" width=200)
 
-    p: b Emissions Sounding Board <br/>&copy; 2023 VSP TU-Berlin
-    p This site does not collect, store, or analyze any personal information.
-      |<br/> For more info about VSP at TU Berlin, see our website at
+    p: b Sounding Board <br/>&copy; 2023 VSP TU-Berlin
+    p {{ $t('dataInformation1') }}
+      |<br/> {{ $t('dataInformation2') }}
       a(href="https://vsp.berlin") &nbsp;vsp.berlin
 
     p
@@ -25,6 +25,19 @@
       router-link(to="https://vsp.tu-berlin.de/privacy") Privacy
 
 </template>
+
+<i18n>
+  de:
+    dataInformation1: 'Diese Seite sammelt, speichert oder analysiert keine persönlichen Daten.'
+    dataInformation2: 'Weitere Informationen über VSP an der TU Berlin finden Sie auf unserer Website unter'
+    imprint: 'Imprint'
+    privacy: 'Privacy'
+  en:
+    dataInformation1: 'This site does not collect, store, or analyze any personal information.'
+    dataInformation2: 'For more info about VSP at TU Berlin, see our website at'
+    imprint: 'Impressum'
+    privacy: 'Datenschutz'
+  </i18n>
 
 <script lang="ts">
 import TopNavBar from '@/components/TopNavBar.vue'
