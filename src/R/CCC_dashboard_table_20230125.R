@@ -342,11 +342,11 @@ measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measur
 measures$traffic <- round( measures$traffic * 10 ) / 10
 measures$parking <- round( measures$parking * 10 ) / 10
 
-measures$Kosten <- round( measures$Kosten /100 ) * 100
+measures$Kosten <- round( measures$Kosten /10 ) * 10
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
-measures$"Kosten" <- (measures$"Kosten"/100)+1
-measures$"KostenProKopfUndMonat" <- (measures$"KostenProKopfUndMonat"/100)+1
+# measures$"Kosten" <- (measures$"Kosten"/100)+1
+# measures$"KostenProKopfUndMonat" <- (measures$"KostenProKopfUndMonat"/100)+1
 
 ############################################
 ############################################
