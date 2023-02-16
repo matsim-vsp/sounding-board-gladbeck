@@ -36,9 +36,9 @@
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value {{ formattedValue(displayedValues[3], true)}} €
+            .metric-value(:class="[displayedValues[3] < -0.5 ? 'green-number' : 'red-number']") {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value(:style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4], true) }} €
+            .metric-value(:class="[displayedValues[4] < -0.5 ? 'green-number' : 'red-number']" :style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4], true) }} €
 
           
     .right-results
@@ -211,15 +211,26 @@ export default class VueComponent extends Vue {
   }
 
   private formattedValue(v: number, isCosts: boolean) {
-    let percent = 100 * (v - 1)
+    const nf = new Intl.NumberFormat('de-DE', {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    })
 
+    let percent = 100 * (v - 1)
     if (isCosts) percent = v
-    else percent = 100 * (v - 1)
+
+    let fixedPercent = Math.round(percent)
+
+    if (fixedPercent === -0) {
+      fixedPercent = 0
+    }
 
     let sign
-    if (isCosts) sign = percent <= 0 ? '' : '+'
-    else sign = percent <= 0 ? '' : ''
-    return sign + percent.toFixed(0)
+    if (isCosts) sign = fixedPercent <= 0 ? '' : '+'
+    else sign = fixedPercent <= 0 ? '' : ''
+
+    if (isCosts) return sign + nf.format(fixedPercent)
+    else return sign + nf.format(fixedPercent)
   }
 
   private setPreset(preset: string) {
@@ -523,7 +534,8 @@ h3 {
 }
 
 h4 {
-  color: #596;
+  //color: #596;
+  color: rgb(58, 118, 175);
   font-size: 1.2rem;
   font-weight: bold;
   margin: 0 0 0 0;
@@ -641,6 +653,14 @@ li.notes-item {
   font-weight: bold;
   font-size: 1.6rem;
   color: #222;
+}
+
+.green-number {
+  color: green;
+}
+
+.red-number {
+  color: red;
 }
 
 .heading {
