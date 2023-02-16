@@ -6,7 +6,7 @@
 
   .heading
     h2.section-title: b {{ title }}
-    p.header-description(v-html="description")
+    //- p.header-description(v-html="description")
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -36,9 +36,9 @@
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value(:class="[displayedValues[3] < -0.5 ? 'green-number' : 'red-number']") {{ formattedValue(displayedValues[3], true)}} €
+            .metric-value(:class="[displayedValues[3] < -0.5 ? 'green-number' : '',displayedValues[3] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value(:class="[displayedValues[4] < -0.5 ? 'green-number' : 'red-number']" :style="{ 'margin-top': '1.5rem' }") {{ formattedValue(displayedValues[4], true) }} €
+            .metric-value(:class="[displayedValues[4] < -0.5 ? 'green-number' : '', ,displayedValues[4] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
 
           
     .right-results
@@ -61,6 +61,11 @@
         //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
         p.factor-description {{value.description}}
 
+  .description
+    h2.section-title {{ $t('description') }}
+    p.footer-description(v-html="description")
+    
+
 </template>
 
 <i18n>
@@ -76,6 +81,7 @@
     try-combos: '...or try different combinations below.'
     remarks: 'Remarks'
     scenarios: 'Typical Scenarios'
+    description: 'Description'
   de:
     results: 'Ergebnis'
     settings: 'Versuchsbedingungen'
@@ -87,6 +93,7 @@
     estimated-risk: 'Geschätztes Infektionsrisiko'
     remarks: 'Bemerkungen'
     scenarios: 'Typische Szenarien'
+    description: 'Beschreibung'
   </i18n>
 
 <script lang="ts">
@@ -673,6 +680,16 @@ li.notes-item {
 }
 
 .heading p {
+  color: #33b;
+  font-size: 1rem;
+  text-transform: none;
+}
+
+.description {
+  padding: 2rem;
+}
+
+.description p {
   color: #33b;
   font-size: 1rem;
   text-transform: none;

@@ -1,7 +1,7 @@
 import { shallowMount } from '@vue/test-utils'
 import App from '@/App.vue'
 
-// The test checks if the first 5 letters in the first paragraph of the footer are 'COVID'.
+// The test checks if the first 5 letters in the first paragraph of the footer are 'Sound'.
 describe('App.vue', () => {
   it('checks if the page (footer) loads correctly', () => {
     const wrapper = shallowMount(App, {

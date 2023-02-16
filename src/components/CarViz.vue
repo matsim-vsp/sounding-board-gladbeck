@@ -48,16 +48,16 @@
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-3" class="car-viz-car car-viz-car-left car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(8), 'car-viz-black': !showParking(8) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-4" class="car-viz-car car-viz-car-left car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(2), 'car-viz-black': !showParking(2) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-5" class="car-viz-car car-viz-car-left car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(6), 'car-viz-black': !showParking(6) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-6" class="car-viz-car car-viz-car-right car-viz-car-parking-row-1" :class="{ 'car-viz-grey': showParking(9), 'car-viz-black': !showParking(9) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-7" class="car-viz-car car-viz-car-right car-viz-car-parking-row-2" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-8" class="car-viz-car car-viz-car-right car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-9" class="car-viz-car car-viz-car-right car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-11" class="car-viz-car car-viz-car-left car-viz-car-parking-row-6" :class="{ 'car-viz-grey': showParking(1), 'car-viz-black': !showParking(1) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-12" class="car-viz-car car-viz-car-left car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(5), 'car-viz-black': !showParking(5) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-13" class="car-viz-car car-viz-car-left car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(8), 'car-viz-black': !showParking(8) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-14" class="car-viz-car car-viz-car-left car-viz-car-parking-row-9" :class="{ 'car-viz-grey': showParking(2), 'car-viz-black': !showParking(2) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-15" class="car-viz-car car-viz-car-left car-viz-car-parking-row-10" :class="{ 'car-viz-grey': showParking(6), 'car-viz-black': !showParking(6) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-6" class="car-viz-car car-viz-car-right car-viz-car-parking-row-1" :class="{ 'car-viz-grey': showParking(9), 'car-viz-black': !showParking(9) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-7" class="car-viz-car car-viz-car-right car-viz-car-parking-row-2" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-8" class="car-viz-car car-viz-car-right car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-9" class="car-viz-car car-viz-car-right car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-16" class="car-viz-car car-viz-car-right car-viz-car-parking-row-6" :class="{ 'car-viz-grey': showParking(9), 'car-viz-black': !showParking(9) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-17" class="car-viz-car car-viz-car-right car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
         img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-18" class="car-viz-car car-viz-car-right car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
@@ -231,7 +231,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-left {
-  left: 15px;
+  left: 14px;
   -webkit-transform: rotate(270deg);
   -moz-transform: rotate(270deg);
   -ms-transform: rotate(270deg);
@@ -240,7 +240,7 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-right {
-  right: 15px;
+  right: 14px;
   -webkit-transform: rotate(90deg);
   -moz-transform: rotate(90deg);
   -ms-transform: rotate(90deg);
@@ -262,43 +262,43 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-car-row-1 {
-  top: 5px;
+  top: 0px;
 }
 
 .car-viz-car-row-2 {
-  top: 55px;
+  top: 50px;
 }
 
 .car-viz-car-row-3 {
-  top: 105px;
+  top: 100px;
 }
 
 .car-viz-car-row-4 {
-  top: 155px;
+  top: 150px;
 }
 
 .car-viz-car-row-5 {
-  top: 205px;
+  top: 200px;
 }
 
 .car-viz-car-row-6 {
-  top: 15px;
+  top: 20px;
 }
 
 .car-viz-car-row-7 {
-  top: 65px;
+  top: 70px;
 }
 
 .car-viz-car-row-8 {
-  top: 115px;
+  top: 120px;
 }
 
 .car-viz-car-row-9 {
-  top: 165px;
+  top: 170px;
 }
 
 .car-viz-car-row-10 {
-  top: 215px;
+  top: 220px;
 }
 
 .car-viz-car-parking-row-1 {
