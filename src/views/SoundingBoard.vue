@@ -10,7 +10,7 @@
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
-    b-button.is-huge.factor-option(
+    b-button.is-huge.factor-option.preset-buttons(
           v-for="preset in Object.keys(presets)"
           :key="preset"
           :class="preset == currentPreset ? 'is-success' : ''"
@@ -421,7 +421,15 @@ export default class VueComponent extends Vue {
         this.currentConfiguration[factor] = query || this.factors[factor][0]
       }
       // if NO queries were given, use the first preset
-      if (!hasQuery) this.setPreset(presets[0])
+      if (!hasQuery) {
+        for (let i = 0; i < presets.length; i++) {
+          if (presets[i] == 'base') {
+            this.setPreset(presets[i])
+            return
+          }
+        }
+        this.setPreset(presets[0])
+      }
     }
   }
 
@@ -713,7 +721,9 @@ li.notes-item {
 }
 
 .metric-title-factor {
-  height: 4rem;
+  height: 3rem;
+  margin: 0.5rem;
+  margin-left: 0.25rem;
   font-size: 1.2rem;
 }
 
@@ -759,6 +769,9 @@ li.notes-item {
 
   .metric-title-factor {
     height: 1.9rem;
+    //height: 3rem;
+    //margin: 0.5rem;
+    margin-left: 0.25rem;
     font-size: 0.9rem;
   }
 
@@ -830,8 +843,15 @@ li.notes-item {
 }
 
 @media only screen and (max-width: 1024px) {
+  .presets {
+    padding: 1rem 2rem 1rem 2rem;
+  }
   .factor-option {
-    font-size: 0.5rem;
+    font-size: 0.55rem;
+  }
+
+  .preset-buttons {
+    margin-top: 0.5rem;
   }
 
   .section-title {
