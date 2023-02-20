@@ -20,8 +20,8 @@ kiezbloeckeGanzeStadt <- "ganze Stadt"
 frame <- expand.grid(OePNV = c("base","dekarbonisiert"),
                   kiezblocks = c("base",kiezbloeckeGanzeStadt),
                   Fahrrad = c("base","stark"),
-                     # fahrenderVerkehr = c("base",mautFossil,"MautFuerAlle","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
-                     fahrenderVerkehr = c("base","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
+                     fahrenderVerkehr = c("base",mautFossil,"MautFuerAlle","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
+                     # fahrenderVerkehr = c("base","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
                   DRT = c("base","nurAussenbezirke","ganzeStadt"),
                   Parkraum = c("base","Besucher_teuer_Anwohner_preiswert","Besucher_teuer_Anwohner_teuer")
                   )
@@ -65,7 +65,7 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 ########################################################################################################## Superblocks/Kiezblocks
 
 massnahme <- "kiezblocks"
-auspraegung <- "stark"
+auspraegung <- kiezbloeckeGanzeStadt
 
 # Im Ruhrgebiet hatten wir für Kiezblöcke mit _Sperrung_ für Autos Absenkung modal split von 36% auf 27%, also 23% weg.  Wenn wir nicht für die Autos
 # sperren, sondern nur Schritttempo plus keine Durchfahrt, dann erwarten wir ca. 1/2 der Wirkung, also 11.5%, gerundet 10%.  Das ist wohl auch
@@ -180,41 +180,42 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 massnahme <- "fahrenderVerkehr"
 
 # --------------------------------------------
-# # --------------------------------------------
-#
-# auspraegung <- "MautFuerAlle"
-# # 20ct/km
-#
+# --------------------------------------------
+
+auspraegung <- mautFossil
+
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.6,measures$"CO2")
+# ähnliche Wirkung auf wie "Maut für alle".  Wirkt intuitiv richtig, aber warum?
+
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.8,measures$"traffic")
+# Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
+
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.8,measures$"parking")
+# Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 2*365,measures$"Kosten")
+# Annahme: 1/2 * MautFürAlle
+
+# --------------------------------------------
+# --------------------------------------------
+
+auspraegung <- "MautFuerAlle"
+# 20ct/km
+
 traffRed<-0.6
-#
-# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*traffRed,measures$"CO2")
-#
-# measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
-# # DRT müsste irgendwie separat dazu kommen.
-#
-# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
-# # (Auto-Abschaffung analog CO2-Reduktion)
-#
-# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 4*365,measures$"Kosten")
-# # 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
-#
-# # --------------------------------------------
-#
-# auspraegung <- mautFossil
-#
-# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.5,measures$"CO2")
-# # ähnliche Wirkung auf wie "Maut für alle".  Wirkt intuitiv richtig, aber warum?
-#
-# measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.75,measures$"traffic")
-# # Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
-#
-# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.75,measures$"parking")
-# # Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
-#
-# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 2*365,measures$"Kosten")
-# # Annahme: 1/2 * MautFürAlle
-#
-# # --------------------------------------------
+
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*traffRed,measures$"CO2")
+
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
+# DRT müsste irgendwie separat dazu kommen.
+
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
+# (Auto-Abschaffung analog CO2-Reduktion)
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 4*365,measures$"Kosten")
+# 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
+
+# --------------------------------------------
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZone"
@@ -332,21 +333,21 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 
 ############################################
 ############################################
-measures$"KostenProKopfUndMonat" <- measures$"Kosten"/12/3.800000
+measures$"KostenProKopf" <- measures$"Kosten"/3.800000
 # (wir dividieren nur durch 3.8 statt 3.8 Mio, weil wir die "Mio" aus der Einheit rausnehmen)
 
 
 # adjust to 10pct steps.  Does not yet work exactly as intended.
 
 measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measures$CO2 * 10) / 10, measures$CO2 )
-measures$traffic <- round( measures$traffic * 10 ) / 10
-measures$parking <- round( measures$parking * 10 ) / 10
+measures$traffic <- round( measures$traffic * 5 ) / 5
+measures$parking <- round( measures$parking * 5 ) / 5
 
 measures$Kosten <- round( measures$Kosten /10 ) * 10
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
-# measures$"Kosten" <- (measures$"Kosten"/100)+1
-# measures$"KostenProKopfUndMonat" <- (measures$"KostenProKopfUndMonat"/100)+1
+measures$"Kosten" <- (measures$"Kosten"*1000*1000/100)+1
+measures$"KostenProKopf" <- (measures$"KostenProKopf"/100)+1
 
 ############################################
 ############################################
