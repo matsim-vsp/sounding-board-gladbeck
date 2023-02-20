@@ -144,7 +144,9 @@ type ScenarioYaml = {
 @Component({ components: { BarChart, VueSlider, CarViz }, props: {} })
 export default class VueComponent extends Vue {
   private runId = ''
+  private config = ''
   private selectedScenario = ''
+  private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
 
   // OePNV,"kiezblocks","Fahrrad","fahrenderVerkehr","DRT","Parkraum","CO2","Kosten","traffic","parking","KostenProKopf"
   // base,"base","base","base","base","Besucher_teuer_Anwohner_teuer",0.2,-4699999,0.2,0.2,-0.229473684210526
@@ -291,8 +293,11 @@ export default class VueComponent extends Vue {
   private async getYAML() {
     this.badPage = false
     this.runId = this.$route.params.runId
+    this.config = this.$route.params.config
 
-    const url = `${PUBLIC_SVN}/${this.runId}/config.yaml`
+    if (!this.allowedConfigs.includes(this.config)) this.config = 'config'
+
+    const url = `${PUBLIC_SVN}/${this.runId}/${this.config}.yaml`
     console.log({ url })
 
     try {

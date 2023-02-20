@@ -9,11 +9,21 @@ const latestRCalculator = '/r-calcs-v2/2021-01-24b'
 
 const routes = [
   {
-    path: '/:runId',
+    path: '/:runId/:config',
+    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
+  },
+  {
+    path: '/:runId/:config/',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
     path: '/:runId/',
+    redirect: '/ccc/config',
+    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
+  },
+  {
+    path: '/:runId/',
+    redirect: '/ccc/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
