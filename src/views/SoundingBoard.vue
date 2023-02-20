@@ -12,7 +12,7 @@
     //- p.header-description(v-html="description")
 
   .description
-    h2.section-title {{ $t('descriptionOutput') }}
+    h2.section-title(v-if="descriptionOutput") {{ $t('descriptionOutput') }}
     p.footer-description(v-html="descriptionOutput")
 
   .presets(v-if="Object.keys(presets).length")
