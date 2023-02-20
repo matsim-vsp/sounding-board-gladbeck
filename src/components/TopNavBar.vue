@@ -1,6 +1,6 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
-    .navbar-brand
+    .navbar-brand Sounding Board
 
 
       a.navbar-burger.burger(
@@ -21,10 +21,10 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
       .navbar-start
 
-        router-link.navbar-item(:to="'/ccc/config'" :style="{color: 'white'}") privater Personenverkehr
-        router-link.navbar-item(:to="'/ccc/config_gueter'" :style="{color: 'white'}") Güterverkehr
-        router-link.navbar-item(:to="'/ccc/config_kommerziell'" :style="{color: 'white'}") kommerzieller Personenverkehr
-        router-link.navbar-item(:to="'/ccc/config_sonder'" :style="{color: 'white'}") Sonderverkehr
+        router-link.navbar-item(:to="'/ccc/config'") privater Personenverkehr
+        router-link.navbar-item(:to="'/ccc/config_gueter'") Güterverkehr
+        router-link.navbar-item(:to="'/ccc/config_kommerziell'") kommerzieller Personenverkehr
+        router-link.navbar-item(:to="'/ccc/config_sonder'" ) Sonderverkehr
         
 </template>
 
@@ -55,10 +55,7 @@ export default class VueComponent extends Vue {
 .navbar.is-link {
   background-color: rgb(58, 118, 175);
   font-weight: 600;
-}
-
-.navbar-item {
-  color: red;
+  font-size: 1rem;
 }
 
 #nav a.router-link-exact-active {
