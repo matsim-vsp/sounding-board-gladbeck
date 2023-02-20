@@ -1,7 +1,8 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
-    .navbar-brand Sounding Board
-
+    .navbar-brand
+      p.navbar-item(:style="{color: 'white'}") Sounding Board
+        //- img(src="https://bulma.io/images/bulma-logo.png" width="112" height="28")
 
       a.navbar-burger.burger(
         @click='clickedBurger'
@@ -19,8 +20,7 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
       @click='clickedBurger'
     )
 
-      .navbar-start
-
+      .navbar-end
         router-link.navbar-item(:to="'/ccc/config'") privater Personenverkehr
         router-link.navbar-item(:to="'/ccc/config_gueter'") Güterverkehr
         router-link.navbar-item(:to="'/ccc/config_kommerziell'") kommerzieller Personenverkehr
