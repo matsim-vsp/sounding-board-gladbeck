@@ -242,7 +242,7 @@ auspraegung <- "zeroEmissionsZonePlusMaut"
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.01,measures$"CO2")
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 - 4*365. ,measures$"Kosten")
 # Schilder, Durchsetzung, etc.
 
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
@@ -340,8 +340,8 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 
 ############################################
 ############################################
-measures$"KostenProKopf" <- measures$"Kosten"/3.800000
-measures$"KostenProErwachsener" <- measures$"Kosten"/3.0600000
+measures$"KostenProKopf" <- - measures$"Kosten"/3.800000
+measures$"KostenProErwachsener" <- - measures$"Kosten"/3.0600000
 # (wir dividieren nur durch 3.8 statt 3.8 Mio, weil wir die "Mio" aus der Einheit rausnehmen)
 
 
@@ -354,7 +354,7 @@ measures$parking <- round( measures$parking * 20 ) / 20
 measures$Kosten <- round( measures$Kosten /20 ) * 20
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
-measures$"Kosten" <- measures$"Kosten"*1000*1000
+measures$"Kosten" <- - measures$"Kosten"*1000*1000
 #measures$"Kosten" <- (measures$"Kosten"*1000*1000/100)+1
 #measures$"KostenProKopf" <- (measures$"KostenProKopf"/100)+1
 #measures$"KostenProErwachsener" <- (measures$"KostenProErwachsener"/100)+1

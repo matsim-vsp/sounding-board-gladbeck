@@ -29,25 +29,25 @@
     .left-results
       h2.section-title {{ $t('results')  }}
       //- .costs 
-      //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Kosten')")
+      //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Staat')")
       //-     //- h4 {{ metric.title }} {{ formattedValue(displayedValues[i]) }}
       //-     h4(v-if="metric.title.includes('Monat')") Die Kosten pro Kopf werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
       //-     h4(v-if="metric.title.includes('Jahr')") Die Kosten pro Jahr in Mio. Euro werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
       .charts
         .metrics
-          .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Kosten')")
+          .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
             h4.metric-title {{ metric.title }}
             // The percentage sign is not displayed when it comes to costs
-            .metric-value(v-if="metric.title.startsWith('Kosten')") {{ formattedValue(displayedValues[i], true) }}
+            .metric-value(v-if="metric.title.startsWith('Staat')") {{ formattedValue(displayedValues[i], true) }}
             .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'green-number' : '',displayedValues[3] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
+            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'green-number' : '', ,displayedValues[4] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'green-number' : '', ,displayedValues[5] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
 
           
     .right-results
