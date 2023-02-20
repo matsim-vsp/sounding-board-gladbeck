@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "serve": "npx vue-cli-service serve",
-    "build": "npx vue-cli-service build",
+    "build": "export SET NODE_OPTIONS=--openssl-legacy-provider && npx vue-cli-service build",
     "test:unit": "npx vue-cli-service test:unit",
     "lint": "npx vue-cli-service lint"
   },
