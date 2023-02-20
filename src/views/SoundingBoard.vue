@@ -326,6 +326,7 @@ export default class VueComponent extends Vue {
         : this.yaml.description_en || this.yaml.description || this.yaml.description_de || ''
 
     // metrics
+    this.metrics = []
     for (const column of Object.keys(this.yaml.outputColumns)) {
       const config = this.yaml.outputColumns[column]
       const metric = {

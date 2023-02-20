@@ -1,8 +1,7 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
     .navbar-brand
-      router-link.home-link.navbar-item(to="/" :style="{color: 'white'}") Home
-        //- img(src="https://bulma.io/images/bulma-logo.png" width="112" height="28")
+
 
       a.navbar-burger.burger(
         @click='clickedBurger'
@@ -22,10 +21,10 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
       .navbar-start
 
-        router-link.navbar-item(to="/" :style="{color: 'white'}") config.yaml
-        router-link.navbar-item(to="/config_gueter" :style="{color: 'white'}") config_gueter.yaml
-        router-link.navbar-item(to="/" :style="{color: 'white'}") config_kommerziell.yaml
-        router-link.navbar-item(to="/" :style="{color: 'white'}") config_sonder.yaml
+        router-link.navbar-item(:to="'/ccc/config'" :style="{color: 'white'}") privater Personenverkehr
+        router-link.navbar-item(:to="'/ccc/config_gueter'" :style="{color: 'white'}") Güterverkehr
+        router-link.navbar-item(:to="'/ccc/config_kommerziell'" :style="{color: 'white'}") kommerzieller Personenverkehr
+        router-link.navbar-item(:to="'/ccc/config_sonder'" :style="{color: 'white'}") Sonderverkehr
         
 </template>
 
@@ -53,8 +52,13 @@ export default class VueComponent extends Vue {
 <style scoped lang="scss">
 @import '@/styles.scss';
 
-#nav {
-  background-color: $matsimBlue;
+.navbar.is-link {
+  background-color: rgb(58, 118, 175);
+  font-weight: 600;
+}
+
+.navbar-item {
+  color: red;
 }
 
 #nav a.router-link-exact-active {
