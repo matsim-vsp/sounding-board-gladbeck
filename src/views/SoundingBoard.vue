@@ -11,6 +11,10 @@
     h2.section-title: b {{ title }}
     //- p.header-description(v-html="description")
 
+  .description
+    h2.section-title {{ $t('descriptionOutput') }}
+    p.footer-description(v-html="descriptionOutput")
+
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons(
@@ -87,6 +91,7 @@
     remarks: 'Remarks'
     scenarios: 'Typical Scenarios'
     description: 'Description'
+    descriptionOutput: 'Description'
   de:
     results: 'Ergebnis'
     settings: 'Versuchsbedingungen'
@@ -99,6 +104,7 @@
     remarks: 'Bemerkungen'
     scenarios: 'Typische Szenarien'
     description: 'Beschreibung'
+    descriptionOutput: 'Beschreibung'
   </i18n>
 
 <script lang="ts">
@@ -127,6 +133,9 @@ type ScenarioYaml = {
   description?: string
   description_en?: string
   description_de?: string
+  descriptionOutput?: string
+  descriptionOutput_en?: string
+  descriptionOutput_de?: string
   inputColumns: {
     [column: string]: {
       type?: string
@@ -180,6 +189,7 @@ export default class VueComponent extends Vue {
 
   private title = ''
   private description = ''
+  private descriptionOutput = ''
 
   private metrics: { column: string; title: string; value: any }[] = []
   private data: any[] = []
@@ -326,6 +336,17 @@ export default class VueComponent extends Vue {
       this.lang == 'de'
         ? this.yaml.description_de || this.yaml.description || this.yaml.description_en || ''
         : this.yaml.description_en || this.yaml.description || this.yaml.description_de || ''
+
+    this.descriptionOutput =
+      this.lang == 'de'
+        ? this.yaml.descriptionOutput_de ||
+          this.yaml.descriptionOutput ||
+          this.yaml.descriptionOutput_en ||
+          ''
+        : this.yaml.descriptionOutput_en ||
+          this.yaml.descriptionOutput ||
+          this.yaml.descriptionOutput_de ||
+          ''
 
     // metrics
     this.metrics = []
@@ -697,6 +718,7 @@ li.notes-item {
 
 .heading {
   padding: 2rem;
+  padding-bottom: 0rem;
 }
 
 .section-title {
