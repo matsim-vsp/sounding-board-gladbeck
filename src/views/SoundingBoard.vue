@@ -39,9 +39,11 @@
             bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value(:class="[displayedValues[3] < -0.5 ? 'green-number' : '',displayedValues[3] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
+            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'green-number' : '',displayedValues[3] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value(:class="[displayedValues[4] < -0.5 ? 'green-number' : '', ,displayedValues[4] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'green-number' : '', ,displayedValues[4] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
+            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
+            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'green-number' : '', ,displayedValues[5] >= 0.5 ? 'red-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
 
           
     .right-results
@@ -677,6 +679,7 @@ li.notes-item {
 }
 
 .metric-value {
+  margin-top: 1rem;
   font-weight: bold;
   font-size: 1.6rem;
   color: #222;
@@ -730,7 +733,8 @@ li.notes-item {
 }
 
 .metric-title {
-  height: 4rem;
+  //height: 4rem;
+  margin-bottom: 0.2rem;
   font-size: 1.2rem;
 }
 
@@ -781,7 +785,7 @@ li.notes-item {
   }
 
   .metric-value {
-    margin-top: -1rem;
+    margin-top: 0.5rem;
     font-size: 1.4rem;
   }
 
@@ -806,7 +810,7 @@ li.notes-item {
   }
 
   .metric-title {
-    height: 1.5rem;
+    //height: 1.5rem;
     font-size: 0.8rem;
   }
 
@@ -860,7 +864,7 @@ li.notes-item {
   }
 
   .metric-title {
-    height: 1.5rem;
+    //height: 1.5rem;
     font-size: 0.7rem;
   }
 
@@ -871,7 +875,7 @@ li.notes-item {
 
   .metric-value {
     margin-top: 0rem;
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .factor-description {
@@ -882,7 +886,7 @@ li.notes-item {
 
   .results {
     padding-bottom: 0;
-    margin-bottom: -3rem;
+    margin-bottom: -2rem;
   }
 
   .right-results {
