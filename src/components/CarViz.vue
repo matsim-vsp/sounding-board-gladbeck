@@ -154,9 +154,6 @@ export default class VueComponent extends Vue {
   height: 15px;
 }
 
-#car-viz-middle-1 {
-}
-
 #car-viz-middle-2 {
   top: 30px;
 }
@@ -348,14 +345,8 @@ export default class VueComponent extends Vue {
   background-color: black;
 }
 
-.parking-spot-left {
-}
-
 .parking-spot-right {
   right: 0px;
-}
-
-.parking-spot-row-1 {
 }
 
 .parking-spot-row-2 {
@@ -403,15 +394,12 @@ export default class VueComponent extends Vue {
 }
 
 .car-viz-grey {
-  filter: invert(80%);
+  filter: invert(82%);
   transition: all 1s;
 }
 
 .car-viz-black {
   filter: invert(0%);
   transition: all 0.7s;
-}
-
-@media only screen and (max-width: 640px) {
 }
 </style>

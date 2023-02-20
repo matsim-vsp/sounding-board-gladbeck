@@ -254,7 +254,6 @@ export default class VueComponent extends Vue {
   }
 
   private setFactor(factor: string, option: any) {
-    console.log(factor, option)
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
@@ -262,9 +261,6 @@ export default class VueComponent extends Vue {
     // disable the preset if user mucks with the settings
     this.currentPreset = ''
     this.setURLQuery()
-    console.log(this.displayedValues)
-    console.log(this.metrics)
-    // 3599999
   }
 
   private mounted() {
@@ -671,11 +667,13 @@ li.notes-item {
 }
 
 .green-number {
-  color: green;
+  color: rgb(46, 135, 46);
+  //color: rgb(104, 192, 141);
 }
 
 .red-number {
-  color: red;
+  //color: red;
+  color: rgb(221, 75, 98);
 }
 
 .heading {
@@ -758,15 +756,6 @@ li.notes-item {
     font-size: 0.7rem;
   }
 
-  .section-title {
-    // margin-bottom: 0;
-  }
-
-  .metric-title {
-    // height: 1.5rem;
-    // font-size: 0.7rem;
-  }
-
   .metric-title-factor {
     height: 1.9rem;
     //height: 3rem;
@@ -784,11 +773,6 @@ li.notes-item {
     font-size: 0.8rem;
     // margin-top: 0rem;
     // margin-bottom: 0;
-  }
-
-  .results {
-    // padding-bottom: 0;
-    // margin-bottom: -2rem;
   }
 
   .option-groups {

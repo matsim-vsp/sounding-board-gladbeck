@@ -21,8 +21,8 @@
       a(href="https://vsp.berlin") &nbsp;vsp.berlin
 
     p
-      router-link(to="https://vsp.berlin/impressum/") Impressum
-      router-link(to="https://vsp.tu-berlin.de/privacy") Datenschutz
+      a(href="https://vsp.berlin/impressum/" target="_blank") Impressum
+      a(href="https://vsp.tu-berlin.de/privacy" target="_blank") Datenschutz
 
 </template>
 
