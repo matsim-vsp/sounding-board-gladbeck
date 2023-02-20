@@ -49,7 +49,11 @@ measures <- cbind(frame,CO2,Kosten,traffic,parking)
 massnahme <- "Fahrrad"
 auspraegung <- "stark"
 
-# Annahme: Fahrrad nimmt 10% vom Autoverkehr weg.  Also z.B. 30% auf 27%.
+
+
+# Annahme: Fahrrad 2013 13%, Fahrad 2018 18%.  Annahme 2025 25%.
+# Annahme Fahrrad-Infra erhöht die 25% auf 35%. (Kopenhagen 33%).
+# Annahme: Von diesen 10% kommen 3% vom Auto.  Das bedeutet eine Reduktion Auto von 30 auf 27%, also minus 10%.
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.9,measures$"CO2")
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.9,measures$"traffic")
@@ -60,6 +64,7 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 70,measures$"Kosten")
 # Kosten ca. 1000Eu/qm.  1000km Radwegnetz.  4 Meter Breite.  4 * 1000 * 1000 * 1000 = 4e9.  Abgeschrieben 30J = 133 Mio/J.'
 # Kosten 70 Mio /J auf 10 Jahre: 100km RSV + 850km Vorrangnetz + 1500km Ausbau
+# Ca. 1 Mio pro km.  Ca. 2500km.  Also 2500 Mio.  Div durch 30 Jahre.  Ca. 70 Mio/J.
 
 
 ########################################################################################################## Superblocks/Kiezblocks
@@ -82,6 +87,8 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 
 measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 10,measures$"Kosten")
 # https://docs.google.com/spreadsheets/d/1pHne8cdCsSHKrH0WI6YFU2Ocv7RBMFR58T50n1KswFY/edit#gid=691888471
+# 300kEu - 400kEu pro Kiezblock Umbaukosten.  Sagen wir 500kEu.  200 Blöcke.  (Ca. 20k Einwohner pro Kiez; 4000k/20k=200.)
+# 200 x 500kEu = 100'000 kEu.  Abschreibung (nur) über 10 Jahre, weil dauernd kaputtgefahren.
 
 ########################################################################################################## DRT
 
@@ -220,7 +227,7 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 
 auspraegung <- "zeroEmissionsZone"
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.01,measures$"CO2")
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.0,measures$"CO2")
 
 measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
 # Schilder, Durchsetzung, etc.
@@ -334,20 +341,23 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 ############################################
 ############################################
 measures$"KostenProKopf" <- measures$"Kosten"/3.800000
+measures$"KostenProErwachsener" <- measures$"Kosten"/3.0600000
 # (wir dividieren nur durch 3.8 statt 3.8 Mio, weil wir die "Mio" aus der Einheit rausnehmen)
 
 
 # adjust to 10pct steps.  Does not yet work exactly as intended.
 
-measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measures$CO2 * 10) / 10, measures$CO2 )
-measures$traffic <- round( measures$traffic * 5 ) / 5
-measures$parking <- round( measures$parking * 5 ) / 5
+measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measures$CO2 * 20) / 20, measures$CO2 )
+measures$traffic <- round( measures$traffic * 20 ) / 20
+measures$parking <- round( measures$parking * 20 ) / 20
 
-measures$Kosten <- round( measures$Kosten /10 ) * 10
+measures$Kosten <- round( measures$Kosten /20 ) * 20
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
-measures$"Kosten" <- (measures$"Kosten"*1000*1000/100)+1
-measures$"KostenProKopf" <- (measures$"KostenProKopf"/100)+1
+measures$"Kosten" <- measures$"Kosten"*1000*1000
+#measures$"Kosten" <- (measures$"Kosten"*1000*1000/100)+1
+#measures$"KostenProKopf" <- (measures$"KostenProKopf"/100)+1
+#measures$"KostenProErwachsener" <- (measures$"KostenProErwachsener"/100)+1
 
 ############################################
 ############################################
