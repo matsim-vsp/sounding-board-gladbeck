@@ -22,31 +22,11 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
       .navbar-start
 
-        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
-          a.navbar-link  Visualizations
-          .navbar-dropdown
-            a.navbar-item(:href="'/v3?day=5'") Infection Traces
-            a.navbar-item(:href="'/timelapse'") 90 Day Time Lapse
-
-        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
-          a.navbar-link  Mobility
-          .navbar-dropdown
-            a.navbar-item(:href="'/mobility'") Mobility State
-            a.navbar-item(:href="'/mobility-counties/'") Mobility County
-
-        .navbar-item.has-dropdown.is-hoverable(:class="{'is-active': isDropdownActive}")
-          a.navbar-link(:href="'/calculators'")  Calculators
-          .navbar-dropdown
-            a.navbar-item(:href="'/r-calcs/2021-01-24'") R-Calculator (24.Jan)
-            a.navbar-item(:href="'/r-calcs/2020-11-14-lockdown59'") R-Calculator (14.Nov, restrictive)
-            a.navbar-item(:href="'/r-calcs/2020-11-14-lockdown84'") R-Calculator (14.Nov, permissive)
-            a.navbar-item(:href="'/r-calcs/2020-10-23'") R-Calculator (23.Oct)
-            hr
-            a.navbar-item(:href="'/risk-calcs/2020-11-11'") Activity Risk Calculator
-
-      .navbar-end
-        router-link.navbar-item(to="/" :style="{color: 'white'}") About
-
+        router-link.navbar-item(to="/" :style="{color: 'white'}") config.yaml
+        router-link.navbar-item(to="/config_gueter" :style="{color: 'white'}") config_gueter.yaml
+        router-link.navbar-item(to="/" :style="{color: 'white'}") config_kommerziell.yaml
+        router-link.navbar-item(to="/" :style="{color: 'white'}") config_sonder.yaml
+        
 </template>
 
 <script lang="ts">

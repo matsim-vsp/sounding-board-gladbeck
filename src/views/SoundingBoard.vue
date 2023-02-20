@@ -4,6 +4,9 @@
   //-   h2 VSP / Technische Universität Berlin
   //-   h3 {{ $t('title') }}
 
+
+  top-nav-bar
+
   .heading
     h2.section-title: b {{ title }}
     //- p.header-description(v-html="description")
@@ -108,6 +111,7 @@ import 'vue-slider-component/theme/default.css'
 
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
+import TopNavBar from '@/components/TopNavBar.vue'
 
 // const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
@@ -141,7 +145,7 @@ type ScenarioYaml = {
   presets: any
 }
 
-@Component({ components: { BarChart, VueSlider, CarViz }, props: {} })
+@Component({ components: { BarChart, VueSlider, CarViz, TopNavBar }, props: {} })
 export default class VueComponent extends Vue {
   private runId = ''
   private config = ''
@@ -594,6 +598,12 @@ p.factor {
   padding-bottom: 0.25rem;
   background-color: #1e1f2c;
   width: max-content;
+}
+
+.header-nav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
 }
 
 .notes-item {
