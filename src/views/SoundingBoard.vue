@@ -38,16 +38,16 @@
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
             h4.metric-title {{ metric.title }}
             // The percentage sign is not displayed when it comes to costs
-            .metric-value(v-if="metric.title.startsWith('Staat')") {{ formattedValue(displayedValues[i], true) }}
-            .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %
-            bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
+            .metric-value {{ formattedValue(displayedValues[i] + 1, false) }} %
+            bar-chart(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]")
+            bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
+            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[3]), true)}} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[4]), true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
 
           
     .right-results
@@ -116,7 +116,6 @@ import VueSlider from 'vue-slider-component'
 import { debounce } from 'debounce'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
-
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
@@ -250,9 +249,7 @@ export default class VueComponent extends Vue {
       fixedPercent = 0
     }
 
-    let sign
-    if (isCosts) sign = fixedPercent <= 0 ? '' : '+'
-    else sign = fixedPercent <= 0 ? '' : ''
+    const sign = fixedPercent <= 0 ? '' : ''
 
     if (isCosts) return sign + nf.format(fixedPercent)
     else return sign + nf.format(fixedPercent)
