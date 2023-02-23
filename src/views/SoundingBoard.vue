@@ -18,11 +18,10 @@
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons(
-          v-for="preset in Object.keys(presets)"
-          :key="preset"
-          :class="preset == currentPreset ? 'is-success' : ''"
-          @click="setPreset(preset)"
-        ) {{ presets[preset].title }}
+          v-for="preset in myObjectSorted"
+          :class="preset.key == currentPreset ? 'is-success' : ''"
+          @click="setPreset(preset.key)"
+        ) {{ preset.title }}
 
 
   .results
@@ -44,9 +43,9 @@
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[3]), true)}} €
-            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
+            h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[4].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[4]), true) }} €
-            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
+            h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[5].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
 
           
@@ -177,7 +176,7 @@ export default class VueComponent extends Vue {
   private lang = 'en'
   private mdParser = new MarkdownIt()
 
-  private presets: { [id: string]: { title: string; items: any } } = {}
+  private presets: { [id: string]: { title: string; items: any; order: number } } = {}
   private currentPreset = ''
 
   private factors: { [measure: string]: any } = {}
@@ -256,6 +255,7 @@ export default class VueComponent extends Vue {
   }
 
   private setPreset(preset: string) {
+    console.log(preset)
     const factors = this.presets[preset].items
     for (const factor of Object.keys(factors)) {
       this.currentConfiguration[factor] = factors[factor]
@@ -416,15 +416,23 @@ export default class VueComponent extends Vue {
     for (const key of Object.keys(this.yaml.presets || {})) {
       const preset = this.yaml.presets[key]
       // extract titles
-      const { title, title_en, title_de, ...items } = preset
+      const { title, title_en, title_de, order, ...items } = preset
       const finalTitle =
         this.lang == 'de'
           ? title_de || title || title_en || key
           : title_en || title || title_de || key
 
-      presets[key] = { title: finalTitle, items }
+      presets[key] = { title: finalTitle, items, order, key }
     }
     this.presets = presets
+    console.log(this.myObjectSorted)
+  }
+
+  get myObjectSorted() {
+    return Object.values(this.presets).sort((a, b) => {
+      if (a.order >= b.order) return 1
+      else return -1
+    })
   }
 
   private setInitialValues() {
