@@ -18,7 +18,7 @@
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons(
-          v-for="preset in myObjectSorted"
+          v-for="preset in orderedPresets"
           :class="preset.key == currentPreset ? 'is-success' : ''"
           @click="setPreset(preset.key)"
         ) {{ preset.title }}
@@ -425,10 +425,9 @@ export default class VueComponent extends Vue {
       presets[key] = { title: finalTitle, items, order, key }
     }
     this.presets = presets
-    console.log(this.myObjectSorted)
   }
 
-  get myObjectSorted() {
+  get orderedPresets() {
     return Object.values(this.presets).sort((a, b) => {
       if (a.order >= b.order) return 1
       else return -1
