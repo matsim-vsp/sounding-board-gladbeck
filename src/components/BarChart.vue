@@ -18,54 +18,62 @@ export default class VueComponent extends Vue {
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
   }
-  private handleResize = debounce(this.realHandleResize, 250)
+  private handleResize = debounce(this.realHandleResize, 1000)
   private async realHandleResize(c: Event) {
-    this.resizePlot()
-    this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
+    console.log(document.getElementsByClassName('metric')[0].clientWidth - 16 - 16 - 40)
+
+    // -padding (16)
+
+    //this.resizePlot()
+    if (document.getElementsByClassName('metric')[0].clientWidth > 120) {
+      this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 100
+    }
   }
   @Watch('width') private updateWidth() {
     this.resizePlot()
   }
   private updateSize() {
-    window.setInterval(() => {
-      this.resizePlot()
-      this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
-    }, 100)
+    // window.setInterval(() => {
+    //   console.log(document.getElementsByClassName('metric')[0].clientWidth)
+    //   //this.resizePlot()
+    //   //this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
+    // }, 1000)
   }
   private resizePlot() {
-    if (window.innerWidth <= 1024) {
-      this.layout.height = 120
-      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
-      this.layout.font.size = 10
-      this.layout.yaxis.gridwidth = 2
-      this.layout.xaxis.linewidth = 2
-    } else if (window.innerWidth <= 1260) {
-      this.layout.height = 120
-      this.layout.margin = { t: 10, r: 15, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-      this.layout.font.size = 10
-      this.layout.yaxis.gridwidth = 2
-      this.layout.xaxis.linewidth = 2
-    } else if (window.innerWidth <= 1440) {
-      this.layout.height = 180
-      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-      this.layout.font.size = 10
-      this.layout.yaxis.gridwidth = 1
-      this.layout.xaxis.linewidth = 1
-    } else {
-      this.layout.height = 250
-      this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-      this.layout.font.size = 13
-      this.layout.yaxis.gridwidth = 1
-      this.layout.xaxis.linewidth = 1
-    }
+    console.log('resizePlot')
+    // if (window.innerWidth <= 1024) {
+    //   this.layout.height = 120
+    //   this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
+    //   this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
+    //   this.layout.font.size = 10
+    //   this.layout.yaxis.gridwidth = 2
+    //   this.layout.xaxis.linewidth = 2
+    // } else if (window.innerWidth <= 1260) {
+    //   this.layout.height = 120
+    //   this.layout.margin = { t: 10, r: 15, b: 10, l: 30 }
+    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    //   this.layout.font.size = 10
+    //   this.layout.yaxis.gridwidth = 2
+    //   this.layout.xaxis.linewidth = 2
+    // } else if (window.innerWidth <= 1440) {
+    //   this.layout.height = 180
+    //   this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
+    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    //   this.layout.font.size = 10
+    //   this.layout.yaxis.gridwidth = 1
+    //   this.layout.xaxis.linewidth = 1
+    // } else {
+    //   this.layout.height = 250
+    //   this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
+    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+    //   this.layout.font.size = 13
+    //   this.layout.yaxis.gridwidth = 1
+    //   this.layout.xaxis.linewidth = 1
+    // }
   }
   private layout: any = {
-    width: this.width - 20,
-    height: 250,
+    width: 20,
+    height: 150,
     barmode: 'relative',
     autosize: true,
     showlegend: false,

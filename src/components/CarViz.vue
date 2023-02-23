@@ -103,10 +103,14 @@ export default class VueComponent extends Vue {
   }
 
   @Watch('plotWidth') updateWidth() {
+    console.log(this.plotHeight)
+    console.log(this.plotWidth)
     this.resizeCarViz()
   }
 
   @Watch('plotHeight') updateHeight() {
+    console.log('Height: ', this.plotHeight)
+    console.log('Width: ', this.plotWidth)
     this.resizeCarViz()
   }
 

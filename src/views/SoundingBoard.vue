@@ -48,10 +48,12 @@
             .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[4]), true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
+          .metric(:style="{padding: 0}")
+            car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
           
-    .right-results
-      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
+    //- .right-results
+    //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
   .configurator
     h2.section-title {{ $t('settings') }}
@@ -214,17 +216,15 @@ export default class VueComponent extends Vue {
 
   private updateWidth() {
     const firstPlot = document.getElementsByClassName('metric')[0] as HTMLElement
-
     if (firstPlot) {
-      if (!(Math.abs(firstPlot.clientHeight - this.plotHeight) < 20))
-        this.plotHeight = firstPlot.clientHeight
-      if (!(Math.abs(firstPlot.clientWidth - this.plotWidth) < 20))
-        this.plotWidth = firstPlot.clientWidth
-
-      const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
-      if (leftSide) {
-        leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
-      }
+      if (!(Math.abs(firstPlot.offsetHeight - this.plotHeight) < 20))
+        this.plotHeight = firstPlot.offsetHeight
+      if (!(Math.abs(firstPlot.offsetWidth - this.plotWidth) < 20))
+        this.plotWidth = firstPlot.offsetWidth
+      // const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
+      // if (leftSide) {
+      //   leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+      // }
     }
   }
 
@@ -665,7 +665,8 @@ li.notes-item {
 }
 
 .left-results {
-  width: calc(100% - 170px);
+  width: 100%;
+  //width: calc(100% - 170px);
 }
 
 .right-results {
@@ -687,13 +688,16 @@ li.notes-item {
   //width: max-content;
   //width: 320px;
   padding: 1rem;
-  margin: 0.5rem;
+  //margin: 0.5rem;
   display: flex;
   flex-direction: column;
-  min-width: 100px;
+  //min-width: 100px;
   flex: 1;
-  height: fit-content;
+  //height: fit-content;
   border: 1px solid black;
+  align-self: stretch;
+
+  //justify-content: center;
 }
 
 .metric-value {
@@ -749,6 +753,14 @@ li.notes-item {
   flex-wrap: nowrap;
   //justify-content: space-around;
   height: fit-content;
+  //justify-content: stretch;
+
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-content: center;
+  gap: 20px;
 }
 
 .metric-title {
@@ -905,7 +917,7 @@ li.notes-item {
 
   .results {
     padding-bottom: 0;
-    margin-bottom: -2rem;
+    //margin-bottom: -2rem;
   }
 
   .right-results {
