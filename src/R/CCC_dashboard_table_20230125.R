@@ -90,36 +90,6 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 # 300kEu - 400kEu pro Kiezblock Umbaukosten.  Sagen wir 500kEu.  200 Blöcke.  (Ca. 20k Einwohner pro Kiez; 4000k/20k=200.)
 # 200 x 500kEu = 100'000 kEu.  Abschreibung (nur) über 10 Jahre, weil dauernd kaputtgefahren.
 
-########################################################################################################## DRT
-
-massnahme <- "DRT"
-auspraegung <- "nurAussenbezirke"
-
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-auspraegung <- "ganzeStadt"
-
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-########################################################################################################## fahrenderVerkehrHundekopf
-
-####PAVE
-### in PAVE hatten wir als Zusatzmaßnahme zu DRT die variablen PKW-Kosten von 0,20 €/km auf 0,40 €/km und auf 0,60 €/km erhöht (also so etwas wie globale Distanzmaut)
-### DRT wurde hier sowohl als Taxi im Hundekopf und zusätzlich als Pooling Berlin-weit angeboten,
-### s. auch https://vsp.berlin/pave/3-combined/T200P100-000-p3-10 und S.215ff im PAVE Bericht (VSP-WP 21-30)
-##
-## CO2:      0,20€/km -> ~ -50%, 0,40€/km -> -75%
-## traffic:  0,20€/km -> ~ -35% FzgKm, 0,40€/km -> -55% FzgKm
-## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
-## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
-
-
 ############################################
 ############################################
 massnahme <- "Parkraum"
@@ -182,7 +152,47 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 # measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
 
 # ############################################
+#############################################
+massnahme <- "DRT"
+
+# Wir hatten, beim Nachdenken, folgendes spezifiziert:
+# (1) einen muva-ähnlichen DRT.  Für die sogenannte "Direktfahrt" benötigt man ein VBB-Ticket plus 1,50Eu/km.
+# (2) ein miles-ähnliches car-sharing.  Dort derzeit 1Eu + 1Eu/km.  Wir vermuten sinkende Kosten und daher Preise, und wollen das aus planerischer
+# Sicht nur auf den km-Preis anwenden.  Also 1Eu + 50ct/km
+
+# Beim Parken gehen wir davon aus, dass das durch eine Betriebsgebühr in Höhe der derzeitigen für car sharing (1XX Eu/Monat) abgehakt ist.
+
+# yyyyyy Bzgl. Maut müssen wir uns noch etwas ausdenken!!!
+
+
+auspraegung <- "ganzeStadt"
+
+# Wir haben dann "vermutet", dass bei Auto-Verbot 75% der Autofahrer auf einen solchen Service umsteigen würden.  Also müssen wir rauskriegen, wieviel
+# "verscheuchte" Autofahrer wir haben, nachdem die obigen Massnahmen eingeführt wurden.  Das ist 1 - measures$traffic.  Davon kommen dann 0.75 wieder
+# dazu.
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.75,measures$traffic)
+
+# CO2 kommt keiner hinzu weil elektrisch:
+#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
+
+# Kosten kommen keine hinzu weil in etwa kostenneutral:
+#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
+
+# yyyy parking muss gelöst werden, weil bei "freiwilligem" Umstieg das Parken wegfällt.  (Aber macht das viel aus?)
+#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
+
+
+auspraegung <- "nurAussenbezirke"
+
+# irgendeine Idee? X% des Verkehrs sind in den Innenbezirken (ist in PAVE drin); darüber runterrechnen???
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.65,measures$traffic)
+
+# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
+# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
+# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
+
 ############################################
+###########################################
 
 massnahme <- "fahrenderVerkehr"
 
@@ -264,7 +274,7 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 #auspraegung <- mautFossil
 
 #measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"/2,measures$"CO2")
-## 
+##
 
 #measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.05,measures$"Kosten")
 #measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" + 0.05,measures$"traffic")
@@ -309,6 +319,20 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 #measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
 
 #############################################
+############################################
+
+####PAVE
+### in PAVE hatten wir als Zusatzmaßnahme zu DRT die variablen PKW-Kosten von 0,20 €/km auf 0,40 €/km und auf 0,60 €/km erhöht (also so etwas wie globale Distanzmaut)
+### DRT wurde hier sowohl als Taxi im Hundekopf und zusätzlich als Pooling Berlin-weit angeboten,
+### s. auch https://vsp.berlin/pave/3-combined/T200P100-000-p3-10 und S.215ff im PAVE Bericht (VSP-WP 21-30)
+##
+## CO2:      0,20€/km -> ~ -50%, 0,40€/km -> -75%
+## traffic:  0,20€/km -> ~ -35% FzgKm, 0,40€/km -> -55% FzgKm
+## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
+## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
+
+
+############################################
 ############################################
 massnahme <- "OePNV"
 
