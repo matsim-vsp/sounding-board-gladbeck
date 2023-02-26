@@ -119,7 +119,7 @@ import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
 
-// const PUBLIC_SVN = 'http://localhost:8000'
+//const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
@@ -160,9 +160,6 @@ export default class VueComponent extends Vue {
   private config = ''
   private selectedScenario = ''
   private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
-
-  // OePNV,"kiezblocks","Fahrrad","fahrenderVerkehr","DRT","Parkraum","CO2","Kosten","traffic","parking","KostenProKopf"
-  // base,"base","base","base","base","Besucher_teuer_Anwohner_teuer",0.2,-4699999,0.2,0.2,-0.229473684210526
 
   private yaml: ScenarioYaml = {
     data: '',
@@ -255,7 +252,6 @@ export default class VueComponent extends Vue {
   }
 
   private setPreset(preset: string) {
-    console.log(preset)
     const factors = this.presets[preset].items
     for (const factor of Object.keys(factors)) {
       this.currentConfiguration[factor] = factors[factor]
@@ -604,7 +600,6 @@ p.factor {
   display: flex;
   flex-direction: column;
   padding: 4rem 3rem 1rem 3rem;
-  // background-color: #1e1f2c;
   color: white;
   background: url(../assets/images/banner.jpg);
   background-repeat: no-repeat;
@@ -614,7 +609,6 @@ p.factor {
 .banner h2 {
   margin-bottom: 0rem;
   font-size: 1.6rem;
-  // background-color: #1e1f2c;
   line-height: 1.6rem;
   margin-right: auto;
 }
@@ -666,7 +660,6 @@ li.notes-item {
 }
 
 .results {
-  // background-color: #154b30;
   padding: 1rem 2rem 1rem 2rem;
   display: flex;
   width: 100%;
@@ -692,8 +685,6 @@ li.notes-item {
 
 .metric {
   background-color: white;
-  //width: max-content;
-  //width: 320px;
   padding: 1rem;
   margin: 0.5rem;
   display: flex;
@@ -713,11 +704,9 @@ li.notes-item {
 
 .green-number {
   color: rgb(46, 135, 46);
-  //color: rgb(104, 192, 141);
 }
 
 .red-number {
-  //color: red;
   color: rgb(221, 75, 98);
 }
 
@@ -753,14 +742,11 @@ li.notes-item {
 }
 .metrics {
   display: flex;
-  //flex-wrap: wrap;
   flex-wrap: nowrap;
-  //justify-content: space-around;
   height: fit-content;
 }
 
 .metric-title {
-  //height: 4rem;
   margin-bottom: 0.2rem;
   font-size: 1.2rem;
 }
@@ -777,14 +763,9 @@ li.notes-item {
   background-color: white;
   margin: 0.5rem;
   max-width: fit-content;
-  // display: flex;
-  // flex-direction: column;
 }
 
 .factor-option {
-  //color: #227;
-  //color: white;
-  // background-color: #cc3;
   margin: 0.25rem;
   margin-top: 0rem;
   margin-bottom: 0rem;
@@ -805,9 +786,11 @@ li.notes-item {
 
   .metric-title-factor {
     height: 1.9rem;
-    //height: 3rem;
-    //margin: 0.5rem;
     margin-left: 0.25rem;
+    font-size: 0.9rem;
+  }
+
+  .metric-title {
     font-size: 0.9rem;
   }
 
@@ -818,8 +801,6 @@ li.notes-item {
 
   .factor-description {
     font-size: 0.8rem;
-    // margin-top: 0rem;
-    // margin-bottom: 0;
   }
 
   .option-groups {
@@ -837,7 +818,6 @@ li.notes-item {
   }
 
   .metric-title {
-    //height: 1.5rem;
     font-size: 0.8rem;
   }
 

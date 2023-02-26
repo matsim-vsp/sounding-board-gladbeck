@@ -37,7 +37,6 @@ export default class VueComponent extends Vue {
   private isDropdownActive = false
 
   private clickedBurger() {
-    console.log('clicked!')
     this.isBurgerActive = !this.isBurgerActive
   }
 
