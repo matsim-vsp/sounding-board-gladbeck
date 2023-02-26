@@ -42,11 +42,11 @@
             bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[3]), true)}} €
+            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
             h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[4].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[4]), true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
             h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[5].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
 
           
     .right-results
