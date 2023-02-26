@@ -383,6 +383,7 @@ export default class VueComponent extends Vue {
    * Discover all factor values that are in the inputColumns of the dataset
    */
   private buildOptions() {
+    this.factors = {}
     const inputColumns = Object.keys(this.yaml.inputColumns)
 
     const f = {} as any
