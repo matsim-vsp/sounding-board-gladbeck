@@ -167,14 +167,16 @@ massnahme <- "fahrenderVerkehr"
 
 auspraegung <- mautFossil
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.6,measures$"CO2")
-# ähnliche Wirkung auf wie "Maut für alle".  Wirkt intuitiv richtig, aber warum?
+# Erster Schritt: Maut.  40% wechseln vom Auto weg.
 
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.8,measures$"traffic")
-# Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
+# Zweiter Schritt: Möglichkeit E-Auto.  (a) Von obigen 40%-Pkte wechseln 20%-Pkte wieder zurück.  (b) Von den 60%-Pkten fossiles Auto kaufen sich 40%-Pkte ein elektrisches.
 
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.8,measures$"parking")
-# Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
+# Resultat: 20%Pkte plus 40%Pkte = 60%Pkte elektrisch; 20%Pkte plus 60Pkte insgesamt.
+
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.6,measures$CO2)
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.8,measures$traffic)
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.9,measures$parking)
+# nur Hälfte derjenigen, die nicht mehr fahren, schaffen auch das Auto ganz ab
 
 # --------------------------------------------
 # --------------------------------------------
@@ -182,44 +184,39 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 auspraegung <- "MautFuerAlle"
 # 20ct/km
 
-traffRed<-0.6
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.6,measures$CO2)
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.6,measures$traffic)
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.8,measures$parking)
+# nur Hälfte derjenigen, die nicht mehr fahren, schaffen auch das Auto ganz ab
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*traffRed,measures$"CO2")
-
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
-# DRT müsste irgendwie separat dazu kommen.
-
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
-# (Auto-Abschaffung analog CO2-Reduktion)
 
 # --------------------------------------------
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZone"
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.0,measures$"CO2")
+measures$CO2 <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.0, measures$CO2)
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.9, measures$traffic)
+# El. Auto nach Variabilisierung Batterie genauso teuer wie fossiles Auto.  10% können sich kein neues Auto leisten.
 
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic",measures$"traffic")
-
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking",measures$"parking")
+measures$parking <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.9, measures$parking)
+# Alte Gurke behalten lohnt nicht weil nicht mehr nutzbar.
 
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZonePlusMaut"
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.01,measures$"CO2")
-
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
-
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
+measures$CO2 <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.0, measures$CO2)
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.9*0.6, measures$traffic)
+measures$parking <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.9*0.7, measures$parking)
 
 # --------------------------------------------
 
 auspraegung <- "autofrei"
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.0,measures$"CO2")
-measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.0,measures$"traffic")
-measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.0,measures$"parking")
+measures$CO2 <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.0,measures$CO2)
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.0,measures$traffic)
+measures$parking <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.0,measures$parking)
 
 ############################################
 ############################################
@@ -272,16 +269,21 @@ massnahme <- "Parkraum"
 
 auspraegung <- "Besucher_teuer_Anwohner_preiswert"
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1*365,measures$"Kosten")
-# 1 mio car trips in base case, corresponding to 20% mode share.  Half
+measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - measures$traffic*0.1*2.5*4*365,     measures$Kosten)
+
+# 1 mio trips.  50% do not pay for parking --> remain.  Other 50% reduced to 10%.  That is, 10% of moving traffic pays for parking.
+
+# OLD: 1 mio car trips in base case, corresponding to 20% mode share.  Half
 # of that, i.e. 10%pts, will not pay.  8%pts goes away.  2%pts remains.  I.e. 10% of original, 100k.  So these pay approx for 2.5hrs per day.  10Eu x 100k = 1m/day.
 
 # ---
 
 auspraegung <- "Besucher_teuer_Anwohner_teuer"
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1.28*365 ,measures$"Kosten")
-# The remaining 10pct pay 10Eu per day as above, plus 2.8 Eu per day for "Anwohner".
+measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,       measures$Kosten - measures$parking*1000 - measures$traffic*0.1*2.5*4*365 ,          measures$Kosten)
+
+
+# OLD The remaining 10pct pay 10Eu per day as above, plus 2.8 Eu per day for "Anwohner".
 
 ############################################
 ############################################
@@ -319,8 +321,9 @@ massnahme <- "fahrenderVerkehr"
 
 auspraegung <- mautFossil
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 2*365,measures$"Kosten")
-# Annahme: 1/2 * MautFürAlle
+measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,measures$Kosten - measures$CO2/0.6 *4*365,measures$"Kosten")
+
+# OLD: Annahme: 1/2 * MautFürAlle
 
 # --------------------------------------------
 # --------------------------------------------
@@ -328,22 +331,23 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 auspraegung <- "MautFuerAlle"
 # 20ct/km
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 4*365,measures$"Kosten")
-# 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
+measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,    measures$Kosten - measures$traffic/0.6 * 4*365,    measures$Kosten)
+
+# OLD: 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
 
 # --------------------------------------------
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZone"
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
+measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
 # Schilder, Durchsetzung, etc.
 
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZonePlusMaut"
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 - 4*365. ,measures$"Kosten")
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 - measures$traffic/0.6*4*365 ,measures$Kosten)
 # Schilder, Durchsetzung, etc.
 
 # --------------------------------------------
