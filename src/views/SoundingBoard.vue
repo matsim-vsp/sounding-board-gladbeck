@@ -18,11 +18,10 @@
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons(
-          v-for="preset in Object.keys(presets)"
-          :key="preset"
-          :class="preset == currentPreset ? 'is-success' : ''"
-          @click="setPreset(preset)"
-        ) {{ presets[preset].title }}
+          v-for="preset in orderedPresets"
+          :class="preset.key == currentPreset ? 'is-success' : ''"
+          @click="setPreset(preset.key)"
+        ) {{ preset.title }}
 
 
   .results
@@ -38,15 +37,15 @@
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
             h4.metric-title {{ metric.title }}
             // The percentage sign is not displayed when it comes to costs
-            .metric-value(v-if="metric.title.startsWith('Staat')") {{ formattedValue(displayedValues[i], true) }}
-            .metric-value(v-else) {{ formattedValue(displayedValues[i] + 1, false) }} %
-            bar-chart( :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
+            .metric-value {{ formattedValue(displayedValues[i] + 1, false) }} %
+            bar-chart(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]")
+            bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
-            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
+            h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[4].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
-            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
+            h4.metric-title(:style="{ 'margin-top': '0.5rem' }") {{ metrics[5].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
 
           
@@ -116,12 +115,11 @@ import VueSlider from 'vue-slider-component'
 import { debounce } from 'debounce'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
-
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
 
-// const PUBLIC_SVN = 'http://localhost:8000'
+//const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
@@ -163,9 +161,6 @@ export default class VueComponent extends Vue {
   private selectedScenario = ''
   private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
 
-  // OePNV,"kiezblocks","Fahrrad","fahrenderVerkehr","DRT","Parkraum","CO2","Kosten","traffic","parking","KostenProKopf"
-  // base,"base","base","base","base","Besucher_teuer_Anwohner_teuer",0.2,-4699999,0.2,0.2,-0.229473684210526
-
   private yaml: ScenarioYaml = {
     data: '',
     title: '',
@@ -178,7 +173,7 @@ export default class VueComponent extends Vue {
   private lang = 'en'
   private mdParser = new MarkdownIt()
 
-  private presets: { [id: string]: { title: string; items: any } } = {}
+  private presets: { [id: string]: { title: string; items: any; order: number } } = {}
   private currentPreset = ''
 
   private factors: { [measure: string]: any } = {}
@@ -250,9 +245,7 @@ export default class VueComponent extends Vue {
       fixedPercent = 0
     }
 
-    let sign
-    if (isCosts) sign = fixedPercent <= 0 ? '' : '+'
-    else sign = fixedPercent <= 0 ? '' : ''
+    const sign = fixedPercent <= 0 ? '' : ''
 
     if (isCosts) return sign + nf.format(fixedPercent)
     else return sign + nf.format(fixedPercent)
@@ -386,6 +379,7 @@ export default class VueComponent extends Vue {
    * Discover all factor values that are in the inputColumns of the dataset
    */
   private buildOptions() {
+    this.factors = {}
     const inputColumns = Object.keys(this.yaml.inputColumns)
 
     const f = {} as any
@@ -419,15 +413,22 @@ export default class VueComponent extends Vue {
     for (const key of Object.keys(this.yaml.presets || {})) {
       const preset = this.yaml.presets[key]
       // extract titles
-      const { title, title_en, title_de, ...items } = preset
+      const { title, title_en, title_de, order, ...items } = preset
       const finalTitle =
         this.lang == 'de'
           ? title_de || title || title_en || key
           : title_en || title || title_de || key
 
-      presets[key] = { title: finalTitle, items }
+      presets[key] = { title: finalTitle, items, order, key }
     }
     this.presets = presets
+  }
+
+  get orderedPresets() {
+    return Object.values(this.presets).sort((a, b) => {
+      if (a.order >= b.order) return 1
+      else return -1
+    })
   }
 
   private setInitialValues() {
@@ -599,7 +600,6 @@ p.factor {
   display: flex;
   flex-direction: column;
   padding: 4rem 3rem 1rem 3rem;
-  // background-color: #1e1f2c;
   color: white;
   background: url(../assets/images/banner.jpg);
   background-repeat: no-repeat;
@@ -609,7 +609,6 @@ p.factor {
 .banner h2 {
   margin-bottom: 0rem;
   font-size: 1.6rem;
-  // background-color: #1e1f2c;
   line-height: 1.6rem;
   margin-right: auto;
 }
@@ -661,7 +660,6 @@ li.notes-item {
 }
 
 .results {
-  // background-color: #154b30;
   padding: 1rem 2rem 1rem 2rem;
   display: flex;
   width: 100%;
@@ -687,8 +685,6 @@ li.notes-item {
 
 .metric {
   background-color: white;
-  //width: max-content;
-  //width: 320px;
   padding: 1rem;
   margin: 0.5rem;
   display: flex;
@@ -708,11 +704,9 @@ li.notes-item {
 
 .green-number {
   color: rgb(46, 135, 46);
-  //color: rgb(104, 192, 141);
 }
 
 .red-number {
-  //color: red;
   color: rgb(221, 75, 98);
 }
 
@@ -748,14 +742,11 @@ li.notes-item {
 }
 .metrics {
   display: flex;
-  //flex-wrap: wrap;
   flex-wrap: nowrap;
-  //justify-content: space-around;
   height: fit-content;
 }
 
 .metric-title {
-  //height: 4rem;
   margin-bottom: 0.2rem;
   font-size: 1.2rem;
 }
@@ -772,14 +763,9 @@ li.notes-item {
   background-color: white;
   margin: 0.5rem;
   max-width: fit-content;
-  // display: flex;
-  // flex-direction: column;
 }
 
 .factor-option {
-  //color: #227;
-  //color: white;
-  // background-color: #cc3;
   margin: 0.25rem;
   margin-top: 0rem;
   margin-bottom: 0rem;
@@ -800,9 +786,11 @@ li.notes-item {
 
   .metric-title-factor {
     height: 1.9rem;
-    //height: 3rem;
-    //margin: 0.5rem;
     margin-left: 0.25rem;
+    font-size: 0.9rem;
+  }
+
+  .metric-title {
     font-size: 0.9rem;
   }
 
@@ -813,8 +801,6 @@ li.notes-item {
 
   .factor-description {
     font-size: 0.8rem;
-    // margin-top: 0rem;
-    // margin-bottom: 0;
   }
 
   .option-groups {
@@ -832,7 +818,6 @@ li.notes-item {
   }
 
   .metric-title {
-    //height: 1.5rem;
     font-size: 0.8rem;
   }
 

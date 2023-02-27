@@ -1,7 +1,7 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
     .navbar-brand
-      p.navbar-item(:style="{color: 'white'}") Sounding Board
+      p.navbar-item(:style="{color: 'white'}") Sounding Board - Berlin
         //- img(src="https://bulma.io/images/bulma-logo.png" width="112" height="28")
 
       a.navbar-burger.burger(
@@ -37,7 +37,6 @@ export default class VueComponent extends Vue {
   private isDropdownActive = false
 
   private clickedBurger() {
-    console.log('clicked!')
     this.isBurgerActive = !this.isBurgerActive
   }
 

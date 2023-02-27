@@ -119,14 +119,7 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 ## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
 ## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
 
-## BVG MUVA: zwischen 1,00 € und 2,50 € Zuschlag für ersten Fahrgast einer Buchung und 50 Cent für jeden weiteren Fahrgast, Je Kilometer Fahrstrecke für den ersten Fahrgast einer Buchung 1,50 EUR und 50 Cent für jeden weiteren Fahrgast
-##
-## Berlkönig: Je Kilometer (gemäß vorab berechneter, zeitoptimierter Route) war ein Preis von 1,50 Euro zu zahlen.
-## Auch bei Strecken unter drei km war ein Mindestpreis von 4 Euro zu zahlen.
-## In Stoßzeiten war ein Zuschlag in Höhe von 25 % auf den gesamten Fahrpreis zu zahlen. Stoßzeiten waren Montag bis Freitag von 7 bis 9 Uhr.
-## Buchte ein Fahrgast gleichzeitig eine Fahrt für mehrere Personen, erhielt jeder Mitfahrer innerhalb der Buchung einen Rabatt von 50 % auf den Fahrpreis
-##
-## Ansatz: 2€ + 0,20ct/km für keine OPNV-Abo Besitzer, 2€ + 0ct/km für OPNV-Abo Besitzer
+
 ############################################
 ############################################
 massnahme <- "Parkraum"
@@ -358,7 +351,7 @@ measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measur
 measures$traffic <- round( measures$traffic * 20 ) / 20
 measures$parking <- round( measures$parking * 20 ) / 20
 
-measures$Kosten <- round( measures$Kosten *20 ) / 20
+measures$Kosten <- round( measures$Kosten /20 ) * 20
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
 measures$"Kosten" <- - measures$"Kosten"*1000*1000
