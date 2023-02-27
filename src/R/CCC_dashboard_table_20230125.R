@@ -42,7 +42,7 @@ measures <- cbind(frame,CO2,Kosten,traffic,parking)
 #########################################################################################################
 #########################################################################################################
 
-## MASSNAHMEN
+## MASSNAHMEN --> Mengengerüste (traffic, parking, co2)
 
 ############################################
 ############################################
@@ -60,11 +60,6 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.95,measures$"parking")
 # Annahme: Jede zweite Person schafft ihr Auto ab.
-
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 70,measures$"Kosten")
-# Kosten ca. 1000Eu/qm.  1000km Radwegnetz.  4 Meter Breite.  4 * 1000 * 1000 * 1000 = 4e9.  Abgeschrieben 30J = 133 Mio/J.'
-# Kosten 70 Mio /J auf 10 Jahre: 100km RSV + 850km Vorrangnetz + 1500km Ausbau
-# Ca. 1 Mio pro km.  Ca. 2500km.  Also 2500 Mio.  Div durch 30 Jahre.  Ca. 70 Mio/J.
 
 
 ########################################################################################################## Superblocks/Kiezblocks
@@ -85,10 +80,6 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" * 0.95,measures$"parking")
 # Annahme: Jede zweite Person schafft ihr Auto ab.
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 10,measures$"Kosten")
-# https://docs.google.com/spreadsheets/d/1pHne8cdCsSHKrH0WI6YFU2Ocv7RBMFR58T50n1KswFY/edit#gid=691888471
-# 300kEu - 400kEu pro Kiezblock Umbaukosten.  Sagen wir 500kEu.  200 Blöcke.  (Ca. 20k Einwohner pro Kiez; 4000k/20k=200.)
-# 200 x 500kEu = 100'000 kEu.  Abschreibung (nur) über 10 Jahre, weil dauernd kaputtgefahren.
 
 ############################################
 ############################################
@@ -111,10 +102,6 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*16/20,measures$"parking")
 # Gehe wie immer davon aus, dass 1/2 davon ihr Auto verkaufen.  Also von 10% auf 6%
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1*365,measures$"Kosten")
-# 1 mio car trips in base case, corresponding to 20% mode share.  Half
-# of that, i.e. 10%pts, will not pay.  8%pts goes away.  2%pts remains.  I.e. 10% of original, 100k.  So these pay approx for 2.5hrs per day.  10Eu x 100k = 1m/day.
-
 # ---
 
 auspraegung <- "Besucher_teuer_Anwohner_teuer"
@@ -130,28 +117,7 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.2,measures$"parking")
 # Hier Annahme gleiche Reduktion wie "fahrend".
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1.28*365 ,measures$"Kosten")
-# The remaining 10pct pay 10Eu per day as above, plus 2.8 Eu per day for "Anwohner".
-
 ############################################
-# ############################################
-
-# massnahme <- "ParkraumAussenbezirke"
-# auspraegung <- "Besucher_teuer_Anwohner_preiswert"
-
-# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-# measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-# auspraegung <- "Besucher_teuer_Anwohner_teuer"
-
-# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-# measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-# ############################################
 #############################################
 massnahme <- "DRT"
 
@@ -210,9 +176,6 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.8,measures$"parking")
 # Eine Hälfte zahlt Maut, die andere wechselt auf nicht-fossiles Auto.
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 2*365,measures$"Kosten")
-# Annahme: 1/2 * MautFürAlle
-
 # --------------------------------------------
 # --------------------------------------------
 
@@ -229,18 +192,12 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
 # (Auto-Abschaffung analog CO2-Reduktion)
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 4*365,measures$"Kosten")
-# 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
-
 # --------------------------------------------
 # --------------------------------------------
 
 auspraegung <- "zeroEmissionsZone"
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.0,measures$"CO2")
-
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
-# Schilder, Durchsetzung, etc.
 
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic",measures$"traffic")
 
@@ -252,9 +209,6 @@ auspraegung <- "zeroEmissionsZonePlusMaut"
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.01,measures$"CO2")
 
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 - 4*365. ,measures$"Kosten")
-# Schilder, Durchsetzung, etc.
-
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*traffRed,measures$"traffic")
 
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*traffRed,measures$"parking")
@@ -264,61 +218,10 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 auspraegung <- "autofrei"
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.0,measures$"CO2")
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten",measures$"Kosten")
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.0,measures$"traffic")
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.0,measures$"parking")
 
 ############################################
-#############################################
-#massnahme <- "fahrenderVerkehrHundekopf"
-#auspraegung <- mautFossil
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"/2,measures$"CO2")
-##
-
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" + 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" + 0.05,measures$"parking")
-
-#auspraegung <- "MautFuerAlle"
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-#auspraegung <- "autofrei"
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-#############################################
-#############################################
-#massnahme <- "fahrenderVerkehrAussenbezirke"
-#auspraegung <- mautFossil
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" + 0.02,measures$"CO2")
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" + 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" + 0.05,measures$"parking")
-
-#auspraegung <- "MautFuerAlle"
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-#auspraegung <- "autofrei"
-
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic" - 0.05,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-#############################################
 ############################################
 
 ####PAVE
@@ -330,6 +233,141 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 ## traffic:  0,20€/km -> ~ -35% FzgKm, 0,40€/km -> -55% FzgKm
 ## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
 ## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
+
+
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+
+## MASSNAHMEN --> Mengengerüste (traffic, parking, co2)
+
+############################################
+############################################
+massnahme <- "Fahrrad"
+auspraegung <- "stark"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 70,measures$"Kosten")
+# Kosten ca. 1000Eu/qm.  1000km Radwegnetz.  4 Meter Breite.  4 * 1000 * 1000 * 1000 = 4e9.  Abgeschrieben 30J = 133 Mio/J.'
+# Kosten 70 Mio /J auf 10 Jahre: 100km RSV + 850km Vorrangnetz + 1500km Ausbau
+# Ca. 1 Mio pro km.  Ca. 2500km.  Also 2500 Mio.  Div durch 30 Jahre.  Ca. 70 Mio/J.
+
+############################################
+############################################
+massnahme <- "kiezblocks"
+auspraegung <- kiezbloeckeGanzeStadt
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 10,measures$"Kosten")
+# https://docs.google.com/spreadsheets/d/1pHne8cdCsSHKrH0WI6YFU2Ocv7RBMFR58T50n1KswFY/edit#gid=691888471
+# 300kEu - 400kEu pro Kiezblock Umbaukosten.  Sagen wir 500kEu.  200 Blöcke.  (Ca. 20k Einwohner pro Kiez; 4000k/20k=200.)
+# 200 x 500kEu = 100'000 kEu.  Abschreibung (nur) über 10 Jahre, weil dauernd kaputtgefahren.
+
+############################################
+############################################
+massnahme <- "Parkraum"
+
+# ---
+
+auspraegung <- "Besucher_teuer_Anwohner_preiswert"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1*365,measures$"Kosten")
+# 1 mio car trips in base case, corresponding to 20% mode share.  Half
+# of that, i.e. 10%pts, will not pay.  8%pts goes away.  2%pts remains.  I.e. 10% of original, 100k.  So these pay approx for 2.5hrs per day.  10Eu x 100k = 1m/day.
+
+# ---
+
+auspraegung <- "Besucher_teuer_Anwohner_teuer"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 1.28*365 ,measures$"Kosten")
+# The remaining 10pct pay 10Eu per day as above, plus 2.8 Eu per day for "Anwohner".
+
+############################################
+############################################
+massnahme <- "DRT"
+
+# Wir hatten, beim Nachdenken, folgendes spezifiziert:
+# (1) einen muva-ähnlichen DRT.  Für die sogenannte "Direktfahrt" benötigt man ein VBB-Ticket plus 1,50Eu/km.
+# (2) ein miles-ähnliches car-sharing.  Dort derzeit 1Eu + 1Eu/km.  Wir vermuten sinkende Kosten und daher Preise, und wollen das aus planerischer
+# Sicht nur auf den km-Preis anwenden.  Also 1Eu + 50ct/km
+
+# Beim Parken gehen wir davon aus, dass das durch eine Betriebsgebühr in Höhe der derzeitigen für car sharing (1XX Eu/Monat) abgehakt ist.
+
+# yyyyyy Bzgl. Maut müssen wir uns noch etwas ausdenken!!!
+
+# --
+
+auspraegung <- "ganzeStadt"
+
+# Kosten kommen keine hinzu weil in etwa kostenneutral:
+#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
+
+# --
+
+auspraegung <- "nurAussenbezirke"
+
+# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
+
+
+############################################
+###########################################
+massnahme <- "fahrenderVerkehr"
+
+# --------------------------------------------
+# --------------------------------------------
+
+auspraegung <- mautFossil
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 2*365,measures$"Kosten")
+# Annahme: 1/2 * MautFürAlle
+
+# --------------------------------------------
+# --------------------------------------------
+
+auspraegung <- "MautFuerAlle"
+# 20ct/km
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 4*365,measures$"Kosten")
+# 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
+
+# --------------------------------------------
+# --------------------------------------------
+
+auspraegung <- "zeroEmissionsZone"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 ,measures$"Kosten")
+# Schilder, Durchsetzung, etc.
+
+# --------------------------------------------
+
+auspraegung <- "zeroEmissionsZonePlusMaut"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 0.01 - 4*365. ,measures$"Kosten")
+# Schilder, Durchsetzung, etc.
+
+# --------------------------------------------
+
+auspraegung <- "autofrei"
+
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten",measures$"Kosten")
+
+############################################
+############################################
+
+####PAVE
+### in PAVE hatten wir als Zusatzmaßnahme zu DRT die variablen PKW-Kosten von 0,20 €/km auf 0,40 €/km und auf 0,60 €/km erhöht (also so etwas wie globale Distanzmaut)
+### DRT wurde hier sowohl als Taxi im Hundekopf und zusätzlich als Pooling Berlin-weit angeboten,
+### s. auch https://vsp.berlin/pave/3-combined/T200P100-000-p3-10 und S.215ff im PAVE Bericht (VSP-WP 21-30)
+##
+## CO2:      0,20€/km -> ~ -50%, 0,40€/km -> -75%
+## traffic:  0,20€/km -> ~ -35% FzgKm, 0,40€/km -> -55% FzgKm
+## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
+## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
+
+
+############################################
+
 
 
 ############################################
