@@ -22,6 +22,7 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
       .navbar-end
         router-link.navbar-item(:to="'/ccc/config'") privater Personenverkehr
+        router-link.navbar-item(:to="'/ccc/config_privaterPersonenverkehr'") privater Personenverkehr Kopie
         router-link.navbar-item(:to="'/ccc/config_gueter'") Güterverkehr
         router-link.navbar-item(:to="'/ccc/config_kommerziell'") kommerzieller Personenverkehr
         router-link.navbar-item(:to="'/ccc/config_sonder'" ) Sonderverkehr
