@@ -4,7 +4,6 @@
   //-   h2 VSP / Technische Universität Berlin
   //-   h3 {{ $t('title') }}
 
-
   top-nav-bar
 
   .heading
@@ -12,7 +11,7 @@
     //- p.header-description(v-html="description")
 
   .description
-    h2.section-title(v-if="descriptionOutput") {{ $t('descriptionOutput') }}
+    //- h2.section-title(v-if="descriptionOutput") {{ $t('descriptionOutput') }}
     p.footer-description(v-html="descriptionOutput")
 
   .presets(v-if="Object.keys(presets).length")
@@ -159,7 +158,13 @@ export default class VueComponent extends Vue {
   private runId = ''
   private config = ''
   private selectedScenario = ''
-  private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
+  private allowedConfigs = [
+    'config',
+    'config_gueter',
+    'config_kommerziell',
+    'config_sonder',
+    'config_privaterPersonenverkehr',
+  ]
 
   private yaml: ScenarioYaml = {
     data: '',
