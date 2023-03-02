@@ -158,13 +158,7 @@ export default class VueComponent extends Vue {
   private runId = ''
   private config = ''
   private selectedScenario = ''
-  private allowedConfigs = [
-    'config',
-    'config_gueter',
-    'config_kommerziell',
-    'config_sonder',
-    'config_privaterPersonenverkehr',
-  ]
+  private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
 
   private yaml: ScenarioYaml = {
     data: '',
