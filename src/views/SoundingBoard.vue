@@ -20,7 +20,7 @@
         ) {{ preset.title }}
 
 
-  .results
+  .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
     .left-results
       h2.section-title {{ $t('results')  }}
       .charts
@@ -41,7 +41,7 @@
 
           
     .right-results
-      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
+      car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
   .configurator
     h2.section-title {{ $t('settings') }}
@@ -215,7 +215,9 @@ export default class VueComponent extends Vue {
 
       const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
       if (leftSide) {
-        leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+        if (!this.title.startsWith('Güter'))
+          leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+        else leftSide.style.width = 'calc(100%)'
       }
     }
   }
@@ -886,6 +888,9 @@ li.notes-item {
 
   .results {
     padding-bottom: 0;
+  }
+
+  .calc-margin {
     margin-bottom: -2rem;
   }
 
