@@ -124,7 +124,9 @@ export default class VueComponent extends Vue {
     else htmlElement.style.scale = factorHeight.toString()
   }
 
-  private mounted() {}
+  private mounted() {
+    this.resizeCarViz()
+  }
 }
 </script>
 

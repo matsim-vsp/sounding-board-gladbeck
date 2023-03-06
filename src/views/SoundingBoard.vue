@@ -1,19 +1,15 @@
 <template lang="pug">
 #sounding-board
-  //- .banner
-  //-   h2 VSP / Technische Universität Berlin
-  //-   h3 {{ $t('title') }}
-
 
   top-nav-bar
 
   .heading
     h2.section-title: b {{ title }}
-    //- p.header-description(v-html="description")
 
   .description
-    h2.section-title(v-if="descriptionOutput") {{ $t('descriptionOutput') }}
-    p.footer-description(v-html="descriptionOutput")
+    .description-subtitle(v-for="item in yaml.descriptionOutput")
+      //p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+      p.description-text(v-html="'<b>' + item.title + ': </b>' + item.description")
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -24,14 +20,9 @@
         ) {{ preset.title }}
 
 
-  .results
+  .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
     .left-results
       h2.section-title {{ $t('results')  }}
-      //- .costs 
-      //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Staat')")
-      //-     //- h4 {{ metric.title }} {{ formattedValue(displayedValues[i]) }}
-      //-     h4(v-if="metric.title.includes('Monat')") Die Kosten pro Kopf werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
-      //-     h4(v-if="metric.title.includes('Jahr')") Die Kosten pro Jahr in Mio. Euro werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
       .charts
         .metrics
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
@@ -50,7 +41,7 @@
 
           
     .right-results
-      car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
+      car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
   .configurator
     h2.section-title {{ $t('settings') }}
@@ -64,14 +55,14 @@
           :class="option == currentConfiguration[key] ? 'is-danger' : ''"
           @click="setFactor(key, option)"
         ) {{ option }}
-        // br
-        // div.information.icon(@click="showInformation(key)")
-        //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
         p.factor-description {{value.description}}
 
   .description
     h2.section-title {{ $t('description') }}
-    p.footer-description(v-html="description")
+    .description-subtitle(v-for="item in yaml.descriptionInput")
+      p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+      .subdescription(v-for="sub in item.subdescriptions")
+        p.description-text {{ sub }}
     
 
 </template>
@@ -119,7 +110,7 @@ import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
 
-//const PUBLIC_SVN = 'http://localhost:8000'
+// const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
   'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
@@ -131,9 +122,8 @@ type ScenarioYaml = {
   description?: string
   description_en?: string
   description_de?: string
-  descriptionOutput?: string
-  descriptionOutput_en?: string
-  descriptionOutput_de?: string
+  descriptionOutput?: {}
+  descriptionInput?: {}
   inputColumns: {
     [column: string]: {
       type?: string
@@ -159,7 +149,13 @@ export default class VueComponent extends Vue {
   private runId = ''
   private config = ''
   private selectedScenario = ''
-  private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
+  private allowedConfigs = [
+    'config',
+    'config_gueter',
+    'config_kommerziell',
+    'config_sonder',
+    'config_privaterPersonenverkehr',
+  ]
 
   private yaml: ScenarioYaml = {
     data: '',
@@ -219,7 +215,9 @@ export default class VueComponent extends Vue {
 
       const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
       if (leftSide) {
-        leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+        if (!this.title.startsWith('Güter'))
+          leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
+        else leftSide.style.width = 'calc(100%)'
       }
     }
   }
@@ -293,6 +291,7 @@ export default class VueComponent extends Vue {
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
+    console.log(this.yaml)
   }
 
   // private parseMarkdown(text: string) {
@@ -324,22 +323,6 @@ export default class VueComponent extends Vue {
       this.lang == 'de'
         ? this.yaml.title_de || this.yaml.title || this.yaml.title_en || this.runId
         : this.yaml.title_en || this.yaml.title || this.yaml.title_de || this.runId
-
-    this.description =
-      this.lang == 'de'
-        ? this.yaml.description_de || this.yaml.description || this.yaml.description_en || ''
-        : this.yaml.description_en || this.yaml.description || this.yaml.description_de || ''
-
-    this.descriptionOutput =
-      this.lang == 'de'
-        ? this.yaml.descriptionOutput_de ||
-          this.yaml.descriptionOutput ||
-          this.yaml.descriptionOutput_en ||
-          ''
-        : this.yaml.descriptionOutput_en ||
-          this.yaml.descriptionOutput ||
-          this.yaml.descriptionOutput_de ||
-          ''
 
     // metrics
     this.metrics = []
@@ -732,7 +715,7 @@ li.notes-item {
 
 .description p {
   color: #33b;
-  font-size: 1rem;
+  font-size: 1.2rem;
   text-transform: none;
 }
 
@@ -777,6 +760,14 @@ li.notes-item {
 .factor-description {
   margin-top: 0.5rem;
   margin-bottom: 0;
+}
+
+.description-text {
+  margin-bottom: 0;
+}
+
+.subdescription {
+  margin-left: 2rem;
 }
 
 @media only screen and (max-width: 1440px) {
@@ -851,6 +842,10 @@ li.notes-item {
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .description p {
+    font-size: 1.1rem;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -893,6 +888,9 @@ li.notes-item {
 
   .results {
     padding-bottom: 0;
+  }
+
+  .calc-margin {
     margin-bottom: -2rem;
   }
 
@@ -907,6 +905,10 @@ li.notes-item {
 
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .description p {
+    font-size: 0.9rem;
   }
 }
 
