@@ -79,6 +79,10 @@
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 
+// Diemensions:
+//  Width: 150px
+//  Height: 253px
+
 @Component({ components: {}, props: {} })
 export default class VueComponent extends Vue {
   @Prop({ required: true }) private numberOfDrivingCars!: number
@@ -103,14 +107,10 @@ export default class VueComponent extends Vue {
   }
 
   @Watch('plotWidth') updateWidth() {
-    console.log(this.plotHeight)
-    console.log(this.plotWidth)
     this.resizeCarViz()
   }
 
   @Watch('plotHeight') updateHeight() {
-    console.log('Height: ', this.plotHeight)
-    console.log('Width: ', this.plotWidth)
     this.resizeCarViz()
   }
 
@@ -119,13 +119,16 @@ export default class VueComponent extends Vue {
     const height = document.getElementsByClassName('metric')[0]?.clientHeight
     const factorHeight = height / carHeight
     const carWidth = document.getElementsByClassName('car-viz-styles')[0].clientWidth
-    const width = document.getElementsByClassName('metric')[0]?.clientWidth - 30
+    const width = document.getElementsByClassName('metric')[0]?.clientWidth
     const factorWidth = width / carWidth
-
     const htmlElement = document.getElementsByClassName('car-viz-styles')[0] as HTMLElement
-
-    if (factorHeight > factorWidth) htmlElement.style.scale = factorWidth.toString()
-    else htmlElement.style.scale = factorHeight.toString()
+    console.log('Height: ', height)
+    console.log('Width: ', width)
+    console.log('Factor Height: ', factorHeight)
+    console.log('Factor Width: ', factorWidth)
+    if (factorHeight > factorWidth) htmlElement.style.scale = (factorWidth * 0.95).toString()
+    else htmlElement.style.scale = (factorHeight * 0.95).toString()
+    console.log('Scale: ', htmlElement.style.scale)
   }
 
   private mounted() {}

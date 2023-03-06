@@ -37,10 +37,11 @@
         .metrics
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
             h4.metric-title {{ metric.title }}
-            // The percentage sign is not displayed when it comes to costs
+            //- The percentage sign is not displayed when it comes to costs
             .metric-value {{ formattedValue(displayedValues[i] + 1, false) }} %
-            bar-chart(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]")
-            bar-chart(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]")
+            bar-chart.temp-box(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
+            bar-chart.temp-box(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
+            //- .temp-box
           .metric(v-if="metrics.length")
             h4.metric-title {{ metrics[3].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[3]), true)}} €
@@ -48,7 +49,7 @@
             .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[4]), true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
-          .metric(:style="{padding: 0}")
+          .metric
             car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
           
@@ -217,10 +218,10 @@ export default class VueComponent extends Vue {
   private updateWidth() {
     const firstPlot = document.getElementsByClassName('metric')[0] as HTMLElement
     if (firstPlot) {
-      if (!(Math.abs(firstPlot.offsetHeight - this.plotHeight) < 20))
-        this.plotHeight = firstPlot.offsetHeight
-      if (!(Math.abs(firstPlot.offsetWidth - this.plotWidth) < 20))
-        this.plotWidth = firstPlot.offsetWidth
+      if (!(Math.abs(firstPlot.clientHeight - this.plotHeight) < 20))
+        this.plotHeight = firstPlot.clientHeight
+      if (!(Math.abs(firstPlot.clientWidth - this.plotWidth) < 20))
+        this.plotWidth = firstPlot.clientWidth
       // const leftSide = document.getElementsByClassName('left-results')[0] as HTMLElement
       // if (leftSide) {
       //   leftSide.style.width = 'calc(100% - ' + (this.plotWidth - 0) + 'px)'
@@ -687,17 +688,26 @@ li.notes-item {
   background-color: white;
   //width: max-content;
   //width: 320px;
-  padding: 1rem;
+  //padding: 1rem;
   //margin: 0.5rem;
   display: flex;
   flex-direction: column;
   //min-width: 100px;
   flex: 1;
   //height: fit-content;
-  border: 1px solid black;
+  //border: 1px solid black;
   align-self: stretch;
 
   //justify-content: center;
+}
+
+.metrics .metric {
+  border: 1px solid black;
+  padding: 1rem;
+}
+.metrics .metric:last-of-type {
+  border: none;
+  padding: 0rem;
 }
 
 .metric-value {
@@ -800,6 +810,12 @@ li.notes-item {
 .factor-description {
   margin-top: 0.5rem;
   margin-bottom: 0;
+}
+
+.temp-box {
+  //background-color: red;
+  width: 100%;
+  height: 100%;
 }
 
 @media only screen and (max-width: 1440px) {
