@@ -13,7 +13,7 @@
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
-    b-button.is-huge.factor-option.preset-buttons(
+    b-button.is-huge.factor-option.preset-buttons.preset-option(
           v-for="preset in orderedPresets"
           :class="preset.key == currentPreset ? 'is-success' : ''"
           @click="setPreset(preset.key)"
@@ -748,6 +748,10 @@ li.notes-item {
   max-width: fit-content;
 }
 
+.preset-option {
+  font-size: 1rem;
+}
+
 .factor-option {
   margin: 0.25rem;
   margin-top: 0rem;
@@ -773,6 +777,10 @@ li.notes-item {
 @media only screen and (max-width: 1440px) {
   .factor-option {
     font-size: 0.7rem;
+  }
+
+  .preset-option {
+    font-size: 0.8rem;
   }
 
   .metric-title-factor {
@@ -802,6 +810,10 @@ li.notes-item {
 @media only screen and (max-width: 1280px) {
   .factor-option {
     font-size: 0.6rem;
+  }
+
+  .preset-option {
+    font-size: 0.7rem;
   }
 
   .section-title {
@@ -854,6 +866,10 @@ li.notes-item {
   }
   .factor-option {
     font-size: 0.55rem;
+  }
+
+  .preset-option {
+    font-size: 0.65rem;
   }
 
   .preset-buttons {
