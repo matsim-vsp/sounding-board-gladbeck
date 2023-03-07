@@ -816,11 +816,11 @@ li.notes-item {
   background-color: white;
   font-weight: normal;
   font-size: 13px;
-  border-radius: 8px;
+  border-radius: 2px;
   position: absolute;
   z-index: 99999999;
   box-sizing: border-box;
-  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
   display: none;
 }
 
