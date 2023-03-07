@@ -49,6 +49,10 @@
     .factors
       .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
         h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
+          .tooltip
+            .top
+              h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
+              p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
         b-button.is-small.factor-option(
           v-for="option of factors[key]"
           :key="option"
@@ -123,7 +127,13 @@ type ScenarioYaml = {
   description_en?: string
   description_de?: string
   descriptionOutput?: {}
-  descriptionInput?: {}
+  descriptionInput: {
+    [column: string]: {
+      title: string
+      description?: string
+      subdescriptions?: {}
+    }
+  }
   inputColumns: {
     [column: string]: {
       type?: string
@@ -160,6 +170,7 @@ export default class VueComponent extends Vue {
   private yaml: ScenarioYaml = {
     data: '',
     title: '',
+    descriptionInput: {},
     inputColumns: {},
     outputColumns: {},
     presets: {},
@@ -524,6 +535,13 @@ export default class VueComponent extends Vue {
     }
   }
 
+  private getDescriptionForTooltip(key: string) {
+    for (const value of Object.values(this.yaml.descriptionInput)) {
+      if (value.title == key) return value.description
+    }
+    return ''
+  }
+
   private addDescriptionToggle() {
     for (const value of Object.values(this.yaml.inputColumns)) {
       value.showDescription = true
@@ -739,6 +757,9 @@ li.notes-item {
   margin: 0.5rem;
   margin-left: 0.25rem;
   font-size: 1.2rem;
+  position: relative;
+  width: min-content;
+  height: min-content;
 }
 
 .factor {
@@ -772,6 +793,60 @@ li.notes-item {
 
 .subdescription {
   margin-left: 2rem;
+}
+
+/* TOOLTIP */
+.tooltip {
+  display: inline-block;
+  position: absolute;
+  text-align: left;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.tooltip .top {
+  min-width: 200px;
+  // top: -20px;
+  // left: 50%;
+  transform: translate(0, -100%);
+  padding: 10px 20px;
+  color: #444444;
+  background-color: white;
+  font-weight: normal;
+  font-size: 13px;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+}
+
+.tooltip:hover .top {
+  display: block;
+}
+
+.tooltip .top i {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.tooltip .top i::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background-color: #eeeeee;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 @media only screen and (max-width: 1440px) {
