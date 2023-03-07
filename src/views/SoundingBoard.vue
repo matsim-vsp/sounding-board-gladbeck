@@ -40,7 +40,7 @@
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
             .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(Math.abs(displayedValues[5]), true) }} €
           .metric
-            car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
+            car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
           
     //- .right-results

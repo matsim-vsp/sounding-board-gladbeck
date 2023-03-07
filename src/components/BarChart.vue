@@ -47,36 +47,31 @@ export default class VueComponent extends Vue {
   //   }, 1000)
   // }
   private resizePlot() {
-    // console.log('resizePlot')
-    // if (window.innerWidth <= 1024) {
-    //   //   this.layout.height = 120
-    //   //   this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-    //   this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
-    //   this.layout.font.size = 10
-    //   this.layout.yaxis.gridwidth = 2
-    //   this.layout.xaxis.linewidth = 2
-    // } else if (window.innerWidth <= 1260) {
-    //   //   this.layout.height = 120
-    //   //   this.layout.margin = { t: 10, r: 15, b: 10, l: 30 }
-    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-    //   this.layout.font.size = 10
-    //   this.layout.yaxis.gridwidth = 2
-    //   this.layout.xaxis.linewidth = 2
-    // } else if (window.innerWidth <= 1440) {
-    //   //   this.layout.height = 180
-    //   //   this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-    //   this.layout.font.size = 10
-    //   this.layout.yaxis.gridwidth = 1
-    //   this.layout.xaxis.linewidth = 1
-    // } else {
-    //   //   this.layout.height = 250
-    //   //   this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
-    //   this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
-    //   this.layout.font.size = 13
-    //   this.layout.yaxis.gridwidth = 1
-    //   this.layout.xaxis.linewidth = 1
-    // }
+    if (window.innerWidth <= 1024) {
+      this.layout.margin = { t: 10, r: 0, b: 10, l: 30 }
+      this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
+      this.layout.font.size = 10
+      this.layout.yaxis.gridwidth = 2
+      this.layout.xaxis.linewidth = 2
+    } else if (window.innerWidth <= 1260) {
+      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.font.size = 10
+      this.layout.yaxis.gridwidth = 2
+      this.layout.xaxis.linewidth = 2
+    } else if (window.innerWidth <= 1440) {
+      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.font.size = 10
+      this.layout.yaxis.gridwidth = 1
+      this.layout.xaxis.linewidth = 1
+    } else {
+      //   this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.font.size = 13
+      this.layout.yaxis.gridwidth = 1
+      this.layout.xaxis.linewidth = 1
+    }
   }
 
   private config: any = { responsive: true }
@@ -92,7 +87,7 @@ export default class VueComponent extends Vue {
     //   size: 12,
     //   color: '#000',
     // },
-    margin: { t: 10, r: 0, b: 10, l: 40 },
+    margin: { t: 10, r: 0, b: 10, l: 38 },
     xaxis: {
       //fixedrange: window.innerWidth < 700,
       linecolor: '#000000',
