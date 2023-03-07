@@ -1,38 +1,28 @@
 <template lang="pug">
 #sounding-board
-  //- .banner
-  //-   h2 VSP / Technische Universität Berlin
-  //-   h3 {{ $t('title') }}
-
 
   top-nav-bar
 
   .heading
     h2.section-title: b {{ title }}
-    //- p.header-description(v-html="description")
 
   .description
-    h2.section-title(v-if="descriptionOutput") {{ $t('descriptionOutput') }}
-    p.footer-description(v-html="descriptionOutput")
+    .description-subtitle(v-for="item in yaml.descriptionOutput")
+      //p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+      p.description-text(v-html="'<b>' + item.title + ': </b>' + item.description")
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
-    b-button.is-huge.factor-option.preset-buttons(
-          v-for="preset in Object.keys(presets)"
-          :key="preset"
-          :class="preset == currentPreset ? 'is-success' : ''"
-          @click="setPreset(preset)"
-        ) {{ presets[preset].title }}
+    b-button.is-huge.factor-option.preset-buttons.preset-option(
+          v-for="preset in orderedPresets"
+          :class="preset.key == currentPreset ? 'is-success' : ''"
+          @click="setPreset(preset.key)"
+        ) {{ preset.title }}
 
 
-  .results
+  .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
     .left-results
       h2.section-title {{ $t('results')  }}
-      //- .costs 
-      //-   .cost(v-for="metric,i in metrics" v-if="metric.title.startsWith('Staat')")
-      //-     //- h4 {{ metric.title }} {{ formattedValue(displayedValues[i]) }}
-      //-     h4(v-if="metric.title.includes('Monat')") Die Kosten pro Kopf werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
-      //-     h4(v-if="metric.title.includes('Jahr')") Die Kosten pro Jahr in Mio. Euro werden sich um {{ formattedValue(displayedValues[i]) }} € verändern.
       .charts
         .metrics
           .metric(v-for="metric,i in metrics" v-if="!metric.title.startsWith('Staat')")
@@ -68,14 +58,14 @@
           :class="option == currentConfiguration[key] ? 'is-danger' : ''"
           @click="setFactor(key, option)"
         ) {{ option }}
-        // br
-        // div.information.icon(@click="showInformation(key)")
-        //   i.fas.fa-arrow-right(:style="{ 'margin-top': '1.5rem' }")
         p.factor-description {{value.description}}
 
   .description
     h2.section-title {{ $t('description') }}
-    p.footer-description(v-html="description")
+    .description-subtitle(v-for="item in yaml.descriptionInput")
+      p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+      .subdescription(v-for="sub in item.subdescriptions")
+        p.description-text {{ sub }}
     
 
 </template>
@@ -135,9 +125,8 @@ type ScenarioYaml = {
   description?: string
   description_en?: string
   description_de?: string
-  descriptionOutput?: string
-  descriptionOutput_en?: string
-  descriptionOutput_de?: string
+  descriptionOutput?: {}
+  descriptionInput?: {}
   inputColumns: {
     [column: string]: {
       type?: string
@@ -163,10 +152,13 @@ export default class VueComponent extends Vue {
   private runId = ''
   private config = ''
   private selectedScenario = ''
-  private allowedConfigs = ['config', 'config_gueter', 'config_kommerziell', 'config_sonder']
-
-  // OePNV,"kiezblocks","Fahrrad","fahrenderVerkehr","DRT","Parkraum","CO2","Kosten","traffic","parking","KostenProKopf"
-  // base,"base","base","base","base","Besucher_teuer_Anwohner_teuer",0.2,-4699999,0.2,0.2,-0.229473684210526
+  private allowedConfigs = [
+    'config',
+    'config_gueter',
+    'config_kommerziell',
+    'config_sonder',
+    'config_privaterPersonenverkehr',
+  ]
 
   private yaml: ScenarioYaml = {
     data: '',
@@ -180,7 +172,7 @@ export default class VueComponent extends Vue {
   private lang = 'en'
   private mdParser = new MarkdownIt()
 
-  private presets: { [id: string]: { title: string; items: any } } = {}
+  private presets: { [id: string]: { title: string; items: any; order: number } } = {}
   private currentPreset = ''
 
   private factors: { [measure: string]: any } = {}
@@ -298,6 +290,7 @@ export default class VueComponent extends Vue {
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
+    console.log(this.yaml)
   }
 
   // private parseMarkdown(text: string) {
@@ -329,22 +322,6 @@ export default class VueComponent extends Vue {
       this.lang == 'de'
         ? this.yaml.title_de || this.yaml.title || this.yaml.title_en || this.runId
         : this.yaml.title_en || this.yaml.title || this.yaml.title_de || this.runId
-
-    this.description =
-      this.lang == 'de'
-        ? this.yaml.description_de || this.yaml.description || this.yaml.description_en || ''
-        : this.yaml.description_en || this.yaml.description || this.yaml.description_de || ''
-
-    this.descriptionOutput =
-      this.lang == 'de'
-        ? this.yaml.descriptionOutput_de ||
-          this.yaml.descriptionOutput ||
-          this.yaml.descriptionOutput_en ||
-          ''
-        : this.yaml.descriptionOutput_en ||
-          this.yaml.descriptionOutput ||
-          this.yaml.descriptionOutput_de ||
-          ''
 
     // metrics
     this.metrics = []
@@ -384,6 +361,7 @@ export default class VueComponent extends Vue {
    * Discover all factor values that are in the inputColumns of the dataset
    */
   private buildOptions() {
+    this.factors = {}
     const inputColumns = Object.keys(this.yaml.inputColumns)
 
     const f = {} as any
@@ -417,15 +395,22 @@ export default class VueComponent extends Vue {
     for (const key of Object.keys(this.yaml.presets || {})) {
       const preset = this.yaml.presets[key]
       // extract titles
-      const { title, title_en, title_de, ...items } = preset
+      const { title, title_en, title_de, order, ...items } = preset
       const finalTitle =
         this.lang == 'de'
           ? title_de || title || title_en || key
           : title_en || title || title_de || key
 
-      presets[key] = { title: finalTitle, items }
+      presets[key] = { title: finalTitle, items, order, key }
     }
     this.presets = presets
+  }
+
+  get orderedPresets() {
+    return Object.values(this.presets).sort((a, b) => {
+      if (a.order >= b.order) return 1
+      else return -1
+    })
   }
 
   private setInitialValues() {
@@ -597,7 +582,6 @@ p.factor {
   display: flex;
   flex-direction: column;
   padding: 4rem 3rem 1rem 3rem;
-  // background-color: #1e1f2c;
   color: white;
   background: url(../assets/images/banner.jpg);
   background-repeat: no-repeat;
@@ -607,7 +591,6 @@ p.factor {
 .banner h2 {
   margin-bottom: 0rem;
   font-size: 1.6rem;
-  // background-color: #1e1f2c;
   line-height: 1.6rem;
   margin-right: auto;
 }
@@ -659,7 +642,6 @@ li.notes-item {
 }
 
 .results {
-  // background-color: #154b30;
   padding: 1rem 2rem 1rem 2rem;
   display: flex;
   width: 100%;
@@ -719,11 +701,9 @@ li.notes-item {
 
 .green-number {
   color: rgb(46, 135, 46);
-  //color: rgb(104, 192, 141);
 }
 
 .red-number {
-  //color: red;
   color: rgb(221, 75, 98);
 }
 
@@ -749,7 +729,7 @@ li.notes-item {
 
 .description p {
   color: #33b;
-  font-size: 1rem;
+  font-size: 1.2rem;
   text-transform: none;
 }
 
@@ -759,9 +739,7 @@ li.notes-item {
 }
 .metrics {
   display: flex;
-  //flex-wrap: wrap;
   flex-wrap: nowrap;
-  //justify-content: space-around;
   height: fit-content;
   //justify-content: stretch;
 
@@ -774,7 +752,6 @@ li.notes-item {
 }
 
 .metric-title {
-  //height: 4rem;
   margin-bottom: 0.2rem;
   font-size: 1.2rem;
 }
@@ -791,14 +768,13 @@ li.notes-item {
   background-color: white;
   margin: 0.5rem;
   max-width: fit-content;
-  // display: flex;
-  // flex-direction: column;
+}
+
+.preset-option {
+  font-size: 1rem;
 }
 
 .factor-option {
-  //color: #227;
-  //color: white;
-  // background-color: #cc3;
   margin: 0.25rem;
   margin-top: 0rem;
   margin-bottom: 0rem;
@@ -818,16 +794,30 @@ li.notes-item {
   height: 100%;
 }
 
+.description-text {
+  margin-bottom: 0;
+}
+
+.subdescription {
+  margin-left: 2rem;
+}
+
 @media only screen and (max-width: 1440px) {
   .factor-option {
     font-size: 0.7rem;
   }
 
+  .preset-option {
+    font-size: 0.8rem;
+  }
+
   .metric-title-factor {
     height: 1.9rem;
-    //height: 3rem;
-    //margin: 0.5rem;
     margin-left: 0.25rem;
+    font-size: 0.9rem;
+  }
+
+  .metric-title {
     font-size: 0.9rem;
   }
 
@@ -838,8 +828,6 @@ li.notes-item {
 
   .factor-description {
     font-size: 0.8rem;
-    // margin-top: 0rem;
-    // margin-bottom: 0;
   }
 
   .option-groups {
@@ -852,12 +840,15 @@ li.notes-item {
     font-size: 0.6rem;
   }
 
+  .preset-option {
+    font-size: 0.7rem;
+  }
+
   .section-title {
     margin-bottom: 0;
   }
 
   .metric-title {
-    //height: 1.5rem;
     font-size: 0.8rem;
   }
 
@@ -891,6 +882,10 @@ li.notes-item {
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .description p {
+    font-size: 1.1rem;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -899,6 +894,10 @@ li.notes-item {
   }
   .factor-option {
     font-size: 0.55rem;
+  }
+
+  .preset-option {
+    font-size: 0.65rem;
   }
 
   .preset-buttons {
@@ -947,6 +946,10 @@ li.notes-item {
 
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .description p {
+    font-size: 0.9rem;
   }
 }
 

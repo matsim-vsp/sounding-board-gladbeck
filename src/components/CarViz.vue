@@ -131,7 +131,9 @@ export default class VueComponent extends Vue {
     console.log('Scale: ', htmlElement.style.scale)
   }
 
-  private mounted() {}
+  private mounted() {
+    this.resizeCarViz()
+  }
 }
 </script>
 
