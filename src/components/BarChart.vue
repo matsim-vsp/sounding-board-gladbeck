@@ -3,6 +3,7 @@ vue-plotly(class="bar-plot"
   :data="data"
   :layout="layout"
   :options="options"
+  :config="config"
 )
 </template>
 
@@ -10,62 +11,55 @@ vue-plotly(class="bar-plot"
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import VuePlotly from '@twelve-co/vue-plotly'
 import { debounce } from 'debounce'
+
 @Component({ components: { VuePlotly }, props: {} })
 export default class VueComponent extends Vue {
   @Prop({ required: false }) private data!: any[]
-  @Prop({ required: false }) private width!: number
-  private mounted() {
-    window.addEventListener('resize', this.handleResize)
-    this.updateSize()
-  }
-  private handleResize = debounce(this.realHandleResize, 250)
-  private async realHandleResize(c: Event) {
-    this.resizePlot()
-    this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
-  }
-  @Watch('width') private updateWidth() {
+  @Prop({ required: true }) private plotWidth!: any
+  @Prop({ required: true }) private plotHeight!: any
+  private mounted() {}
+
+  @Watch('plotWidth') private updateWidth() {
     this.resizePlot()
   }
-  private updateSize() {
-    window.setInterval(() => {
-      this.resizePlot()
-      this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
-    }, 100)
+
+  @Watch('plotHeight') private updateHeight() {
+    this.resizePlot()
   }
+
   private resizePlot() {
     if (window.innerWidth <= 1024) {
-      this.layout.height = 120
-      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
+      this.layout.margin = { t: 10, r: 0, b: 10, l: 30 }
       this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 2
       this.layout.xaxis.linewidth = 2
     } else if (window.innerWidth <= 1260) {
-      this.layout.height = 120
-      this.layout.margin = { t: 10, r: 15, b: 10, l: 30 }
+      this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
       this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 2
       this.layout.xaxis.linewidth = 2
     } else if (window.innerWidth <= 1440) {
-      this.layout.height = 180
       this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
       this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 1
       this.layout.xaxis.linewidth = 1
     } else {
-      this.layout.height = 250
-      this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
+      //   this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
       this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
       this.layout.font.size = 13
       this.layout.yaxis.gridwidth = 1
       this.layout.xaxis.linewidth = 1
     }
   }
+
+  private config: any = { responsive: true }
+
   private layout: any = {
-    width: this.width - 20,
-    height: 250,
+    // width: 249,
+    // height: 279,
     barmode: 'relative',
     autosize: true,
     showlegend: false,
@@ -74,7 +68,7 @@ export default class VueComponent extends Vue {
     //   size: 12,
     //   color: '#000',
     // },
-    margin: { t: 25, r: 25, b: 25, l: 50 },
+    margin: { t: 10, r: 0, b: 10, l: 38 },
     xaxis: {
       //fixedrange: window.innerWidth < 700,
       linecolor: '#000000',
@@ -92,6 +86,7 @@ export default class VueComponent extends Vue {
       fixedrange: true,
       range: [0, 1.05],
       tickformat: ',.0%',
+      //tickvals: [0, 0.2, 0.4, 0.6, 0.8, 1],
       title: {
         //text: '% Diff',
         standoff: 500,
