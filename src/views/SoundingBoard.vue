@@ -290,7 +290,6 @@ export default class VueComponent extends Vue {
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
-    console.log(this.yaml)
   }
 
   // private parseMarkdown(text: string) {

@@ -122,13 +122,8 @@ export default class VueComponent extends Vue {
     const width = document.getElementsByClassName('metric')[0]?.clientWidth
     const factorWidth = width / carWidth
     const htmlElement = document.getElementsByClassName('car-viz-styles')[0] as HTMLElement
-    console.log('Height: ', height)
-    console.log('Width: ', width)
-    console.log('Factor Height: ', factorHeight)
-    console.log('Factor Width: ', factorWidth)
     if (factorHeight > factorWidth) htmlElement.style.scale = (factorWidth * 0.95).toString()
     else htmlElement.style.scale = (factorHeight * 0.95).toString()
-    console.log('Scale: ', htmlElement.style.scale)
   }
 
   private mounted() {

@@ -17,21 +17,8 @@ export default class VueComponent extends Vue {
   @Prop({ required: false }) private data!: any[]
   @Prop({ required: true }) private plotWidth!: any
   @Prop({ required: true }) private plotHeight!: any
-  private mounted() {
-    // window.addEventListener('resize', this.handleResize)
-    // this.updateSize()
-  }
-  // private handleResize = debounce(this.realHandleResize, 1000)
-  // private async realHandleResize(c: Event) {
-  //   console.log(document.getElementsByClassName('metric')[0].clientWidth - 16 - 16 - 40)
+  private mounted() {}
 
-  //   // -padding (16)
-
-  //   //this.resizePlot()
-  //   if (document.getElementsByClassName('metric')[0].clientWidth > 120) {
-  //     //this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 100
-  //   }
-  // }
   @Watch('plotWidth') private updateWidth() {
     this.resizePlot()
   }
@@ -39,13 +26,7 @@ export default class VueComponent extends Vue {
   @Watch('plotHeight') private updateHeight() {
     this.resizePlot()
   }
-  // private updateSize() {
-  //   window.setInterval(() => {
-  //     console.log(document.getElementsByClassName('metric')[0].clientWidth)
-  //     //this.resizePlot()
-  //     //this.layout.width = document.getElementsByClassName('metric')[0].clientWidth - 20
-  //   }, 1000)
-  // }
+
   private resizePlot() {
     if (window.innerWidth <= 1024) {
       this.layout.margin = { t: 10, r: 0, b: 10, l: 30 }
