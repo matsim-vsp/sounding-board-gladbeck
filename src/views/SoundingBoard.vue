@@ -760,6 +760,7 @@ li.notes-item {
   position: relative;
   width: min-content;
   height: min-content;
+  white-space: nowrap;
 }
 
 .factor {
