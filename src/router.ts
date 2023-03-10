@@ -18,12 +18,12 @@ const routes = [
   },
   {
     path: '/:runId/',
-    redirect: '/ccc/config_privaterPersonenverkehr',
+    redirect: '/ccc/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
     path: '/:runId/',
-    redirect: '/ccc/config_privaterPersonenverkehr',
+    redirect: '/ccc/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
