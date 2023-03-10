@@ -48,7 +48,8 @@ export default class VueComponent extends Vue {
       this.layout.xaxis.linewidth = 1
     } else {
       //   this.layout.margin = { t: 25, r: 25, b: 25, l: 50 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      ;(this.layout.margin = { t: 10, r: 0, b: 10, l: 40 }),
+        (this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1])
       this.layout.font.size = 13
       this.layout.yaxis.gridwidth = 1
       this.layout.xaxis.linewidth = 1
@@ -68,7 +69,7 @@ export default class VueComponent extends Vue {
     //   size: 12,
     //   color: '#000',
     // },
-    margin: { t: 10, r: 0, b: 10, l: 38 },
+    margin: { t: 10, r: 0, b: 10, l: 40 },
     xaxis: {
       //fixedrange: window.innerWidth < 700,
       linecolor: '#000000',
