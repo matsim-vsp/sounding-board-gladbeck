@@ -57,13 +57,25 @@ auspraegung <- "stark"
 
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.9,measures$"CO2")
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.9,measures$"traffic")
-
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.95,measures$"parking")
 # Annahme: Jede zweite Person schafft ihr Auto ab.
 
+############################################
+############################################
+massnahme <- "OePNV"
 
-########################################################################################################## Superblocks/Kiezblocks
+auspraegung <- "stark"
 
+# BVG macht ÖPNV attraktiver: Frequenz, billigeres Ticket, Ausbau, Komfort
+# Kosten siehe später
+# Paket senkt Auto-Anteil um etwa 10% (wie Fahrrad)
+
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.9,measures$"CO2")
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.9,measures$"traffic")
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.95,measures$"parking")
+
+############################################
+############################################
 massnahme <- "kiezblocks"
 auspraegung <- kiezbloeckeGanzeStadt
 
@@ -116,46 +128,6 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.2,measures$"parking")
 # Hier Annahme gleiche Reduktion wie "fahrend".
-
-############################################
-#############################################
-massnahme <- "DRT"
-
-# Wir hatten, beim Nachdenken, folgendes spezifiziert:
-# (1) einen muva-ähnlichen DRT.  Für die sogenannte "Direktfahrt" benötigt man ein VBB-Ticket plus 1,50Eu/km.
-# (2) ein miles-ähnliches car-sharing.  Dort derzeit 1Eu + 1Eu/km.  Wir vermuten sinkende Kosten und daher Preise, und wollen das aus planerischer
-# Sicht nur auf den km-Preis anwenden.  Also 1Eu + 50ct/km
-
-# Beim Parken gehen wir davon aus, dass das durch eine Betriebsgebühr in Höhe der derzeitigen für car sharing (1XX Eu/Monat) abgehakt ist.
-
-# yyyyyy Bzgl. Maut müssen wir uns noch etwas ausdenken!!!
-
-
-auspraegung <- "ganzeStadt"
-
-# Wir haben dann "vermutet", dass bei Auto-Verbot 75% der Autofahrer auf einen solchen Service umsteigen würden.  Also müssen wir rauskriegen, wieviel
-# "verscheuchte" Autofahrer wir haben, nachdem die obigen Massnahmen eingeführt wurden.  Das ist 1 - measures$traffic.  Davon kommen dann 0.75 wieder
-# dazu.
-measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.75,measures$traffic)
-
-# CO2 kommt keiner hinzu weil elektrisch:
-#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-
-# Kosten kommen keine hinzu weil in etwa kostenneutral:
-#measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-
-# yyyy parking muss gelöst werden, weil bei "freiwilligem" Umstieg das Parken wegfällt.  (Aber macht das viel aus?)
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
-
-
-auspraegung <- "nurAussenbezirke"
-
-# irgendeine Idee? X% des Verkehrs sind in den Innenbezirken (ist in PAVE drin); darüber runterrechnen???
-measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.65,measures$traffic)
-
-# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
-# measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" - 0.05,measures$"Kosten")
-# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
 
 ############################################
 ###########################################
@@ -220,6 +192,41 @@ measures$parking <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0
 
 ############################################
 ############################################
+massnahme <- "DRT"
+
+# Wir hatten, beim Nachdenken, folgendes spezifiziert:
+# (1) einen muva-ähnlichen DRT.  Für die sogenannte "Direktfahrt" benötigt man ein VBB-Ticket plus 1,50Eu/km.
+# (2) ein miles-ähnliches car-sharing.  Dort derzeit 1Eu + 1Eu/km.  Wir vermuten sinkende Kosten und daher Preise, und wollen das aus planerischer
+# Sicht nur auf den km-Preis anwenden.  Also 1Eu + 50ct/km
+
+# Beim Parken gehen wir davon aus, dass das durch eine Betriebsgebühr in Höhe der derzeitigen für car sharing (1XX Eu/Monat) abgehakt ist.
+
+# Bzgl. Maut müssen wir uns noch etwas ausdenken!!!  Genau genommen ist sie aber irgendwie Teil des km-Preises.
+
+auspraegung <- "ganzeStadt"
+
+# Wir haben dann "vermutet", dass bei Auto-Verbot 75% der Autofahrer auf einen solchen Service umsteigen würden.  Also müssen wir rauskriegen, wieviel
+# "verscheuchte" Autofahrer wir haben, nachdem die obigen Massnahmen eingeführt wurden.  Das ist 1 - measures$traffic.  Davon kommen dann 0.75 wieder
+# dazu.
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.75,measures$traffic)
+
+# CO2 kommt keiner hinzu weil elektrisch:
+#measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
+
+# Kosten kommen keine hinzu weil in etwa kostenneutral:
+
+# yyyy parking muss gelöst werden, weil bei "freiwilligem" Umstieg das Parken wegfällt.  (Aber macht das viel aus?)
+#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
+
+auspraegung <- "nurAussenbezirke"
+
+# irgendeine Idee? X% des Verkehrs sind in den Innenbezirken (ist in PAVE drin); darüber runterrechnen???
+measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.65,measures$traffic)
+# measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
+# measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking" - 0.05,measures$"parking")
+
+###########################################
+############################################
 
 ####PAVE
 ### in PAVE hatten wir als Zusatzmaßnahme zu DRT die variablen PKW-Kosten von 0,20 €/km auf 0,40 €/km und auf 0,60 €/km erhöht (also so etwas wie globale Distanzmaut)
@@ -239,7 +246,7 @@ measures$parking <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0
 #########################################################################################################
 #########################################################################################################
 
-## MASSNAHMEN --> Mengengerüste (traffic, parking, co2)
+## MENGEN --> KOSTEN
 
 ############################################
 ############################################
@@ -370,12 +377,12 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 ## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
 
 
-############################################
-
-
-
-############################################
-############################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
+#########################################################################################################
 massnahme <- "OePNV"
 
 # Alles oberhalb von hier sind Pkw-Emissionen.  Das ist so etwas wie 4
@@ -397,25 +404,15 @@ measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.99,
 # müsste man aber die ohnehin entstehenden Kosten für fossile Busse wieder abziehen.
 # https://docs.google.com/spreadsheets/d/1pHne8cdCsSHKrH0WI6YFU2Ocv7RBMFR58T50n1KswFY/edit#gid=691888471
 measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 50,measures$"Kosten")
+# yyyyyy wieso wird daraus "40" im Dashboard??
 
-# no consequences on moving/non-moving traffic:
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic",measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking",measures$"parking")
-
-
-#neue Ausprägung: stark verbesserter ÖPNV (2023/04)
 auspraegung <- "stark"
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*0.9,measures$"CO2")
+# "Das Investitionsvolumen für Bau und Planung aller i2030-Korridore liegt Stand 2023 bei ca. 10,6 Mrd. €."  https://www.i2030.de/fragen-und-hintergruende-zur-nutzen-kosten-untersuchungen-bei-i2030/
+# 10 Mrd / 20J = 500 Mio/J.  yyyyyy Reicht das aus, um den Auto-Anteil um 10% zu drücken?
+# Plus die Kosten der Dekarbonisierung (siehe oben).
+measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 500 + 50,measures$"Kosten")
 
-# BVG macht ÖPNV attraktiver: Frequenz, billigeres Ticket, Ausbau, Komfort
-# Paket kostet provisorisch 100 Mio €
-# Paket senkt Auto-Anteil um etwa 10%
-measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten" + 100,measures$"Kosten")
-
-# no consequences on moving/non-moving traffic:
-#measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*0.9,measures$"traffic")
-#measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.95,measures$"parking")
 
 ############################################
 ############################################
@@ -424,13 +421,13 @@ measures$"KostenProErwachsener" <- - measures$"Kosten"/3.0600000
 # (wir dividieren nur durch 3.8 statt 3.8 Mio, weil wir die "Mio" aus der Einheit rausnehmen)
 
 
-# adjust to 10pct steps.  Does not yet work exactly as intended.
+# adjust to 5pct steps.  Does not yet work exactly as intended.
 
 measures$CO2 <- ifelse( measures$CO2 < 0.95 & measures$CO2 > 0.05, round( measures$CO2 * 20) / 20, measures$CO2 )
 measures$traffic <- round( measures$traffic * 20 ) / 20
 measures$parking <- round( measures$parking * 20 ) / 20
 
-measures$Kosten <- round( measures$Kosten /20 ) * 20
+measures$Kosten <- round( measures$Kosten /10 ) * 10
 
 # adding "1" to costs since this is decucted by the dashboard.  And then we divide by 100 to compensate for the % sign. (no, other way round)
 measures$"Kosten" <- - measures$"Kosten"*1000*1000
@@ -449,7 +446,7 @@ measures$"CO2" <- ifelse( measures$"CO2" < 0.0, 0.0, measures$"CO2")
 #options(digits = 1) 
 
 ### writing CSV file ## PATH FOR OUTPUT
-write.csv(measures, "CCC_dashboard.csv", row.names=FALSE)
+write.csv(measures, "CCC_dashboard_KN.csv", row.names=FALSE)
 
 print("done")
 
