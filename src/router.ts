@@ -1,11 +1,9 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import HomeIndex from '@/views/HomeIndex.vue'
-import Imprint from '@/views/Imprint.vue'
 
 Vue.use(VueRouter)
 
-const latestRCalculator = '/r-calcs-v2/2021-01-24b'
+// könntet Ihr das bitte so bauen, dass die URL https://vsp.berlin/sounding-board/ nach https://vsp.berlin/sounding-board/current/config
 
 const routes = [
   {
@@ -18,18 +16,18 @@ const routes = [
   },
   {
     path: '/:runId/',
-    redirect: '/ccc/config',
+    redirect: '/:runId/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
     path: '/:runId/',
-    redirect: '/ccc/config',
+    redirect: '/:runId/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
     // catch-all back to home page
     path: '*',
-    redirect: '/ccc',
+    redirect: '/current/config',
   },
 ]
 
