@@ -3,8 +3,6 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
-// könntet Ihr das bitte so bauen, dass die URL https://vsp.berlin/sounding-board/ nach https://vsp.berlin/sounding-board/current/config
-
 const routes = [
   {
     path: '/:runId/:config',
