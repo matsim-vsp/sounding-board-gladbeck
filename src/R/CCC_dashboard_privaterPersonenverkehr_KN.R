@@ -23,7 +23,7 @@ frame <- expand.grid(OePNV = c("base","dekarbonisiert","stark"),
                      fahrenderVerkehr = c("base",mautFossil,"MautFuerAlle","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
                      # fahrenderVerkehr = c("base","zeroEmissionsZone","zeroEmissionsZonePlusMaut","autofrei"),
                   DRT = c("base","nurAussenbezirke","ganzeStadt"),
-                  Parkraum = c("base","Besucher_teuer_Anwohner_preiswert","Besucher_teuer_Anwohner_teuer")
+                  Parkraum = c("base","BesucherTossilTeuer_alleAnderenPreiswert", "Besucher_teuer_Anwohner_preiswert","Besucher_teuer_Anwohner_teuer")
                   )
                   #kiezblocksAussenbezirke = c("base",kiezbloeckeGanzeStadt),
                   #fahrenderVerkehrAussenbezirke = c("base",mautFossil,"MautFuerAlle","zeroEmissionsZone","autofrei"),
@@ -36,7 +36,7 @@ traffic <- c(1.00)
 parking <- c(1.00)
 
 Kosten <- c(0.00)
-# Das sind jetzt mio Eu / Jahr.  Am Ende fügen wir noch Eu / (Kopf * Monat).
+# Das sind jetzt mio Eu / Jahr.  Am Ende fügen wir noch Eu / (Kopf * Monat) hinzu.
 
 measures <- cbind(frame,CO2,Kosten,traffic,parking)
 #########################################################################################################
@@ -96,23 +96,39 @@ measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parkin
 ############################################
 ############################################
 massnahme <- "Parkraum"
-
 # aus webex Sendung von Tilmann
+# ---
+
+auspraegung <- "BesucherFossilTeuer_alleAnderenPreiswert"
+
+# Erster Schritt: Parkgebühren.  Der betroffene Teil (10%) wird gefünftelt; daraus insgesamt: Auto geht von 20% auf 12%.
+
+# Zweiter Schritt: Möglichkeit E-Auto.  (b) Von obigen 8% wechseln 4 wieder zurück.  Von den anderen 2% fossiles Auto kaufen sich 2/3 ein el. Auto.
+
+# Resultat: 10% weiterhin fossil; von den anderen 10% sind 4% weg, 4% elektrisch, 2/3 * 2% = 1.33% elektrisch, Rest = 0.66% fossil.
+
+# Insgesamt: 10.66% fossil, 5.33% elektrisch, 4% weg.
+
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*10.66/20,measures$"CO2")
+
+measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*16/20,measures$"traffic")
+# wie CO2
+
+measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*18/20,measures$"parking")
+# Gehe wie immer davon aus, dass 1/2 davon ihr Auto verkaufen.  
 
 # ---
 
 auspraegung <- "Besucher_teuer_Anwohner_preiswert"
-
 measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2"*12/20,measures$"CO2")
 # Im Prinzip car share von 20% auf 4%.  Aber wenn das nur 1/2 der
 # Parkplätze betrifft, dann gehen der Verkehr dafür von 10% auf 2%,
 # und der andere bleibt gleich.  Also von 20% auf 12%
-
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffic"*12/20,measures$"traffic")
 # wie CO2
-
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*16/20,measures$"parking")
 # Gehe wie immer davon aus, dass 1/2 davon ihr Auto verkaufen.  Also von 10% auf 6%
+# (es handelt sich ja um Besucherparkplätze)
 
 # ---
 
@@ -127,7 +143,7 @@ measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$"traffi
 # car share von 20% auf 2%
 
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$"parking"*0.2,measures$"parking")
-# Hier Annahme gleiche Reduktion wie "fahrend".
+# Hier Annahme gleiche Reduktion wie "fahrend" (weil die ja mit dem Auto nichts mehr anfangen können).
 
 ############################################
 ###########################################
@@ -141,7 +157,7 @@ auspraegung <- mautFossil
 
 # Erster Schritt: Maut.  40% wechseln vom Auto weg.
 
-# Zweiter Schritt: Möglichkeit E-Auto.  (a) Von obigen 40%-Pkte wechseln 20%-Pkte wieder zurück.  (b) Von den 60%-Pkten fossiles Auto kaufen sich 40%-Pkte ein elektrisches.
+# Zweiter Schritt: Möglichkeit E-Auto.  (a) Von obigen 40%-Pkte wechseln 20%-Pkte wieder zurück.  (b) Von den anderen 60%-Pkten fossiles Auto kaufen sich 2/3 ein elektrisches.
 
 # Resultat: 20%Pkte plus 40%Pkte = 60%Pkte elektrisch; 20%Pkte plus 60Pkte insgesamt.
 
@@ -271,6 +287,17 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 ############################################
 ############################################
 massnahme <- "Parkraum"
+
+# ---
+
+auspraegung <- "BesucherFossilTeuer_alleAnderenPreiswert" 
+
+measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - measures$traffic*0.033*2.5*4*365,     measures$Kosten)
+
+# 1 mio trips.  50% do not pay for parking --> remain.  Other 50% reduced to 10%.  Out of that, 2/3 move to electric.  That is, 3.33% of moving traffic pays for parking.
+
+# OLD: 1 mio car trips in base case, corresponding to 20% mode share.  Half
+# of that, i.e. 10%pts, will not pay.  8%pts goes away.  2%pts remains.  I.e. 10% of original, 100k.  So these pay approx for 2.5hrs per day.  10Eu x 100k = 1m/day.
 
 # ---
 
