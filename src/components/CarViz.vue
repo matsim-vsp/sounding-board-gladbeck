@@ -1,79 +1,31 @@
 <template lang="pug">
-    div(id="car-viz-total")
-        div(id="car-viz-left")
-        div(id="car-viz-middle-1" class="car-viz-middle")
-        div(id="car-viz-middle-2" class="car-viz-middle")
-        div(id="car-viz-middle-3" class="car-viz-middle")
-        div(id="car-viz-middle-4" class="car-viz-middle")
-        div(id="car-viz-middle-5" class="car-viz-middle")
-        div(id="car-viz-middle-6" class="car-viz-middle")
-        div(id="car-viz-middle-7" class="car-viz-middle")
-        div(id="car-viz-middle-8" class="car-viz-middle")
-        div(id="car-viz-middle-9" class="car-viz-middle")
-        div(id="car-viz-right")
+#car-viz-total
+    #car-viz-left 
+    .car-viz-middle(v-for="n in 9", :key="n+'A'", :id="'car-viz-middle-' + n")
+    #car-viz-right 
 
-        div(id="car-viz-middle-right")
-        div(id="car-viz-middle-left")
+    #car-viz-middle-right
+    #car-viz-middle-left
 
-        div(class="parking-spot parking-spot-left parking-spot-row-1")
-        div(class="parking-spot parking-spot-left parking-spot-row-2")
-        div(class="parking-spot parking-spot-left parking-spot-row-3")
-        div(class="parking-spot parking-spot-left parking-spot-row-4")
-        div(class="parking-spot parking-spot-left parking-spot-row-5")
-        div(class="parking-spot parking-spot-left parking-spot-row-6")
-        div(class="parking-spot parking-spot-left parking-spot-row-7")
-        div(class="parking-spot parking-spot-left parking-spot-row-8")
-        div(class="parking-spot parking-spot-left parking-spot-row-9")
-        div(class="parking-spot parking-spot-left parking-spot-row-10")
-        div(class="parking-spot parking-spot-left parking-spot-row-11")
-        
+    div(v-for="n in 11", :key="n+'B'", :class="'parking-spot parking-spot-left parking-spot-row-' + n")
+    div(v-for="n in 11", :key="n+'C'", :class="'parking-spot parking-spot-right parking-spot-row-' + n")
 
-        div(class="parking-spot parking-spot-right parking-spot-row-1")
-        div(class="parking-spot parking-spot-right parking-spot-row-2")
-        div(class="parking-spot parking-spot-right parking-spot-row-3")
-        div(class="parking-spot parking-spot-right parking-spot-row-4")
-        div(class="parking-spot parking-spot-right parking-spot-row-5")
-        div(class="parking-spot parking-spot-right parking-spot-row-6")
-        div(class="parking-spot parking-spot-right parking-spot-row-7")
-        div(class="parking-spot parking-spot-right parking-spot-row-8")
-        div(class="parking-spot parking-spot-right parking-spot-row-9")
-        div(class="parking-spot parking-spot-right parking-spot-row-10")
-        div(class="parking-spot parking-spot-right parking-spot-row-11")
-        
+    //- Image Source
+    //- https://uxwing.com/car-top-view-icon/
 
-        //- Image Source
-        //- https://uxwing.com/car-top-view-icon/
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-1" class="car-viz-car car-viz-car-left car-viz-car-parking-row-1" :class="{ 'car-viz-grey': showParking(1), 'car-viz-black': !showParking(1) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-2" class="car-viz-car car-viz-car-left car-viz-car-parking-row-2" :class="{ 'car-viz-grey': showParking(5), 'car-viz-black': !showParking(5) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-3" class="car-viz-car car-viz-car-left car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(8), 'car-viz-black': !showParking(8) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-4" class="car-viz-car car-viz-car-left car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(2), 'car-viz-black': !showParking(2) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-5" class="car-viz-car car-viz-car-left car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(6), 'car-viz-black': !showParking(6) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-11" class="car-viz-car car-viz-car-left car-viz-car-parking-row-6" :class="{ 'car-viz-grey': showParking(1), 'car-viz-black': !showParking(1) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-12" class="car-viz-car car-viz-car-left car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(5), 'car-viz-black': !showParking(5) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-13" class="car-viz-car car-viz-car-left car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(8), 'car-viz-black': !showParking(8) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-14" class="car-viz-car car-viz-car-left car-viz-car-parking-row-9" :class="{ 'car-viz-grey': showParking(2), 'car-viz-black': !showParking(2) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-15" class="car-viz-car car-viz-car-left car-viz-car-parking-row-10" :class="{ 'car-viz-grey': showParking(6), 'car-viz-black': !showParking(6) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-6" class="car-viz-car car-viz-car-right car-viz-car-parking-row-1" :class="{ 'car-viz-grey': showParking(9), 'car-viz-black': !showParking(9) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-7" class="car-viz-car car-viz-car-right car-viz-car-parking-row-2" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-8" class="car-viz-car car-viz-car-right car-viz-car-parking-row-3" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-9" class="car-viz-car car-viz-car-right car-viz-car-parking-row-4" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-5" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-16" class="car-viz-car car-viz-car-right car-viz-car-parking-row-6" :class="{ 'car-viz-grey': showParking(9), 'car-viz-black': !showParking(9) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-17" class="car-viz-car car-viz-car-right car-viz-car-parking-row-7" :class="{ 'car-viz-grey': showParking(3), 'car-viz-black': !showParking(3) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-18" class="car-viz-car car-viz-car-right car-viz-car-parking-row-8" :class="{ 'car-viz-grey': showParking(7), 'car-viz-black': !showParking(7) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-19" class="car-viz-car car-viz-car-right car-viz-car-parking-row-9" :class="{ 'car-viz-grey': showParking(10), 'car-viz-black': !showParking(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" id="car-viz-car-parking-10" class="car-viz-car car-viz-car-right car-viz-car-parking-row-10" :class="{ 'car-viz-grey': showParking(4), 'car-viz-black': !showParking(4) }" )
+    //- parked Cars (must be incremented by 5 for each loop since class index resets after each 5) 
+    img(v-for="n in 10", :key="n+'D'", :id="'car-viz-car-parking-' + n", src="../assets/images/car-top-view-icon.svg" alt="Parking Car" 
+    :class="showParking(getLeftParkingStateArguments(n-1)) ? 'car-viz-car car-viz-car-left car-viz-car-parking-row-' + n + ' car-viz-grey' : 'car-viz-car car-viz-car-left car-viz-car-parking-row-' + n + ' car-viz-black'")
 
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-1" class="car-viz-car car-viz-car-middle-left car-viz-car-row-1" :class="{ 'car-viz-grey': showDriving(4), 'car-viz-black': !showDriving(4) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-2" class="car-viz-car car-viz-car-middle-left car-viz-car-row-2" :class="{ 'car-viz-grey': showDriving(7), 'car-viz-black': !showDriving(7) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-3" class="car-viz-car car-viz-car-middle-left car-viz-car-row-3" :class="{ 'car-viz-grey': showDriving(10), 'car-viz-black': !showDriving(10) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-4" class="car-viz-car car-viz-car-middle-left car-viz-car-row-4" :class="{ 'car-viz-grey': showDriving(3), 'car-viz-black': !showDriving(3) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-5" class="car-viz-car car-viz-car-middle-left car-viz-car-row-5" :class="{ 'car-viz-grey': showDriving(6), 'car-viz-black': !showDriving(6) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-6" class="car-viz-car car-viz-car-middle-right car-viz-car-row-6" :class="{ 'car-viz-grey': showDriving(9), 'car-viz-black': !showDriving(9) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-7" class="car-viz-car car-viz-car-middle-right car-viz-car-row-7" :class="{ 'car-viz-grey': showDriving(2), 'car-viz-black': !showDriving(2) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-8" class="car-viz-car car-viz-car-middle-right car-viz-car-row-8" :class="{ 'car-viz-grey': showDriving(5), 'car-viz-black': !showDriving(5) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-9" class="car-viz-car car-viz-car-middle-right car-viz-car-row-9" :class="{ 'car-viz-grey': showDriving(8), 'car-viz-black': !showDriving(8) }" )
-        img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car" id="car-viz-car-driving-10" class="car-viz-car car-viz-car-middle-right car-viz-car-row-10" :class="{ 'car-viz-grey': showDriving(1), 'car-viz-black': !showDriving(1) }" )
+    img(v-for="n in 10", :key="n+'E'", :id="'car-viz-car-parking-' + (n + 10) ", src="../assets/images/car-top-view-icon.svg" alt="Parking Car" 
+    :class="showParking(getRightParkingStateArguments(n-1)) ? 'car-viz-car car-viz-car-right car-viz-car-parking-row-' + n + ' car-viz-grey' : 'car-viz-car car-viz-car-right car-viz-car-parking-row-' + n + ' car-viz-black'")
+    
+    //- driving Cars
+    img(v-for="n in 5", :key="n+'F'", :id="'car-viz-car-driving-' + n ", src="../assets/images/car-top-view-icon.svg" alt="Driving Car" 
+    :class="showParking(getDrivingStateArguments(n-1)) ? 'car-viz-car car-viz-car-middle-left car-viz-car-row-' + n + ' car-viz-grey' : 'car-viz-car car-viz-car-middle-left car-viz-car-row-' + n + ' car-viz-black'")
+
+    img(v-for="n in 5", :key="n+'G'", :id="'car-viz-car-driving-' + n ", src="../assets/images/car-top-view-icon.svg" alt="Driving Car" 
+    :class="showParking(getDrivingStateArguments((n+5)-1)) ? 'car-viz-car car-viz-car-middle-right car-viz-car-row-' + (n + 5) + ' car-viz-grey' : 'car-viz-car car-viz-car-middle-right car-viz-car-row-' + (n + 5) + ' car-viz-black'")
 </template>
 
 <script lang="ts">
@@ -83,6 +35,10 @@ import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 //  Width: 150px
 //  Height: 253px
 
+const leftParkingStateArguments: number[] = [1, 5, 8, 2, 6, 1, 5, 8, 2, 6]
+const rightParkingStateArguments: number[] = [9, 3, 7, 10, 4, 9, 3, 10, 7, 4]
+const drivingStateArguments: number[] = [4, 7, 10, 3, 6, 9, 2, 5, 8, 1]
+
 @Component({ components: {}, props: {} })
 export default class VueComponent extends Vue {
   @Prop({ required: true }) private numberOfDrivingCars!: number
@@ -91,11 +47,27 @@ export default class VueComponent extends Vue {
   @Prop({ required: true }) private plotHeight!: any
 
   private showParking(n: number) {
-    return Math.abs(10 - this.numberOfParkingCars) > n - 1
+    if (Math.abs(10 - this.numberOfParkingCars) > n - 1) return true
+    else return false
   }
 
   private showDriving(n: number) {
-    return Math.abs(10 - this.numberOfDrivingCars) > n - 1
+    if (Math.abs(10 - this.numberOfDrivingCars) > n - 1) return true
+    else return false
+  }
+
+  private getLeftParkingStateArguments(n: number) {
+    console.log(leftParkingStateArguments[n])
+    return leftParkingStateArguments[n]
+  }
+
+  private getRightParkingStateArguments(n: number) {
+    console.log(rightParkingStateArguments[n])
+    return rightParkingStateArguments[n]
+  }
+
+  private getDrivingStateArguments(n: number) {
+    return drivingStateArguments[n]
   }
 
   @Watch('$numberOfDrivingCars') updateNumberOfDrivingCars() {
