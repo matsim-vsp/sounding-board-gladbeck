@@ -57,12 +57,10 @@ export default class VueComponent extends Vue {
   }
 
   private getLeftParkingStateArguments(n: number) {
-    console.log(leftParkingStateArguments[n])
     return leftParkingStateArguments[n]
   }
 
   private getRightParkingStateArguments(n: number) {
-    console.log(rightParkingStateArguments[n])
     return rightParkingStateArguments[n]
   }
 
