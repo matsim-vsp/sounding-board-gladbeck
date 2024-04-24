@@ -14,6 +14,7 @@
     //- https://uxwing.com/car-top-view-icon/
 
     //- parked Cars (must be incremented by 5 for each loop since class index resets after each 5) 
+    //- boolean functions that recieved a hardcode number based on class name are now fed the number from an index array that facilitates the looping to reduce code. 
     img(v-for="n in 10", :key="n+'D'", :id="'car-viz-car-parking-' + n", src="../assets/images/car-top-view-icon.svg" alt="Parking Car" 
     :class="showParking(getLeftParkingStateArguments(n-1)) ? 'car-viz-car car-viz-car-left car-viz-car-parking-row-' + n + ' car-viz-grey' : 'car-viz-car car-viz-car-left car-viz-car-parking-row-' + n + ' car-viz-black'")
 
@@ -47,13 +48,11 @@ export default class VueComponent extends Vue {
   @Prop({ required: true }) private plotHeight!: any
 
   private showParking(n: number) {
-    if (Math.abs(10 - this.numberOfParkingCars) > n - 1) return true
-    else return false
+    return (Math.abs(10 - this.numberOfParkingCars) > n - 1)
   }
 
   private showDriving(n: number) {
-    if (Math.abs(10 - this.numberOfDrivingCars) > n - 1) return true
-    else return false
+    return (Math.abs(10 - this.numberOfDrivingCars) > n - 1)
   }
 
   private getLeftParkingStateArguments(n: number) {
