@@ -63,6 +63,9 @@
           @click="setFactor(key, option)"
         ) {{ option }}
         p.factor-description {{value.description}}
+    .button.reveal-button(@click="showResults") reveal results
+    .button.hide-button(@click="hideResults") hide results
+
 
   .description
     h2.section-title {{ $t('description') }}
@@ -540,6 +543,21 @@ export default class VueComponent extends Vue {
     return ''
   }
 
+  private showResults() {
+    let results = Array.from(
+      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+    )
+    results[0].style.display = 'flex'
+  }
+
+  private hideResults() {
+    let results = Array.from(
+      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+    )
+    results[0].style.display = 'none'
+  }
+
+
   private addDescriptionToggle() {
     for (const value of Object.values(this.yaml.inputColumns)) {
       value.showDescription = true
@@ -551,6 +569,7 @@ export default class VueComponent extends Vue {
       if (text == key) value.showDescription = !value.showDescription
     }
   } */
+
 }
 </script>
 
@@ -622,6 +641,34 @@ p.factor {
   width: max-content;
 }
 
+.reveal-button {
+  color: white;
+  font-size: 16px;
+  margin: 20px 2px;
+  background-color: #3a76af;
+  font-weight: bold;
+}
+
+.reveal-button:hover {
+  background-color: white;
+  color: #3a76af;
+  border: 1px solid #3a76af;
+}
+
+.hide-button {
+  color: white;
+  font-size: 16px;
+  margin: 20px 2px;
+  background-color: #3a76af;
+  font-weight: bold;
+}
+
+.hide-button:hover {
+  background-color: white;
+  color: #3a76af;
+  border: 1px solid #3a76af;
+}
+
 .header-nav {
   list-style-type: none;
   margin: 0;
@@ -660,7 +707,7 @@ li.notes-item {
 
 .results {
   padding: 1rem 2rem 1rem 2rem;
-  display: flex;
+  display: none;
   width: 100%;
 }
 
