@@ -170,9 +170,8 @@ export default class VueComponent extends Vue {
 
 .car-driving-right img {
   height: 140%;
-  position: absolute;
-  bottom: 0px;
-  margin-left: 5px;
+  display: block;
+  margin: auto;
 }
 
 .column > #parked-column {
