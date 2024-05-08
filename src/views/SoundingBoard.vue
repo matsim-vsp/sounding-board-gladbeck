@@ -37,9 +37,8 @@
           @click="setFactor(key, option)"
         ) {{ option }}
         p.factor-description {{value.description}}
-    .button.reveal-button(@click="showResults") reveal results
-    .button.hide-button(@click="hideResults") hide results
-    
+    .button.reveal-button(@click="showResults") Ergebnisse anzeigen
+    .button.hide-button(@click="hideResults") Ergebnisse ausblenden
 
 
   .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
@@ -120,7 +119,6 @@ import 'vue-slider-component/theme/default.css'
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
-// import SubmitModal from '@/components/SubmitModal.vue'
 
 // const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
