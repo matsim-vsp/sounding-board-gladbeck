@@ -19,6 +19,27 @@
           @click="setPreset(preset.key)"
         ) {{ preset.title }}
 
+      
+  .configurator
+    h2.section-title {{ $t('settings') }}
+
+    .factors
+      .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
+        h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
+          .tooltip
+            .top
+              h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
+              p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
+        b-button.is-small.factor-option(
+          v-for="option of factors[key]"
+          :key="option"
+          :class="option == currentConfiguration[key] ? 'is-danger' : ''"
+          @click="setFactor(key, option)"
+        ) {{ option }}
+        p.factor-description {{value.description}}
+    .button.reveal-button(@click="showResults") Ergebnisse anzeigen
+    .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+
 
   .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
     .left-results
@@ -45,24 +66,6 @@
           
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
-
-  .configurator
-    h2.section-title {{ $t('settings') }}
-
-    .factors
-      .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
-        h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
-          .tooltip
-            .top
-              h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
-              p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
-        b-button.is-small.factor-option(
-          v-for="option of factors[key]"
-          :key="option"
-          :class="option == currentConfiguration[key] ? 'is-danger' : ''"
-          @click="setFactor(key, option)"
-        ) {{ option }}
-        p.factor-description {{value.description}}
 
   .description
     h2.section-title {{ $t('description') }}
@@ -273,6 +276,7 @@ export default class VueComponent extends Vue {
   }
 
   private setFactor(factor: string, option: any) {
+    console.log(factor, option)
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
@@ -284,9 +288,9 @@ export default class VueComponent extends Vue {
 
   private mounted() {
     console.log({ locale: this.$i18n.locale })
-
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
+
     this.buildPageForURL()
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
@@ -540,6 +544,29 @@ export default class VueComponent extends Vue {
     return ''
   }
 
+  private showResults() {
+    let results = Array.from(
+      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+    )
+    results[0].style.display = 'flex'
+    window.scrollTo({
+      top: 600,
+      behavior: 'smooth',
+    })
+  }
+
+  private hideResults() {
+    let results = Array.from(
+      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+    )
+    results[0].style.display = 'none'
+    this.setPreset('base')
+    window.scrollTo({
+      top: -600,
+      behavior: 'smooth',
+    })
+  }
+
   private addDescriptionToggle() {
     for (const value of Object.values(this.yaml.inputColumns)) {
       value.showDescription = true
@@ -622,6 +649,34 @@ p.factor {
   width: max-content;
 }
 
+.reveal-button {
+  color: white;
+  font-size: 16px;
+  margin: 20px 2px;
+  background-color: #3a76af;
+  font-weight: bold;
+}
+
+.reveal-button:hover {
+  background-color: white;
+  color: #3a76af;
+  border: 1px solid #3a76af;
+}
+
+.hide-button {
+  color: white;
+  font-size: 16px;
+  margin: 20px 2px;
+  background-color: #3a76af;
+  font-weight: bold;
+}
+
+.hide-button:hover {
+  background-color: white;
+  color: #3a76af;
+  border: 1px solid #3a76af;
+}
+
 .header-nav {
   list-style-type: none;
   margin: 0;
@@ -660,7 +715,7 @@ li.notes-item {
 
 .results {
   padding: 1rem 2rem 1rem 2rem;
-  display: flex;
+  display: none;
   width: 100%;
 }
 
