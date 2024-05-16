@@ -39,6 +39,8 @@
         p.factor-description {{value.description}}
     .button.reveal-button(@click="showResults") Ergebnisse anzeigen
     .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+    .button.hide-button(@click="saveConditions") Stimme abgeben
+
 
 
   .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
@@ -119,6 +121,7 @@ import 'vue-slider-component/theme/default.css'
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
+import { options } from 'marked'
 
 // const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
@@ -205,6 +208,19 @@ export default class VueComponent extends Vue {
   private numberOfDrivingCars = 10
   private numberOfParkingCars = 10
 
+  private voteConditions = {
+    oepnv: 'base',
+    kiezBloecke: 'base',
+    fahrrad: 'base',
+    parkraum: 'base',
+    fahrenderAutoVerkehr: 'base',
+    drt: 'base',
+    ipAddr: '',
+    cookie: false,
+  }
+
+  private apiKey = ''
+
   @Watch('$route') routeChanged(to: Route, from: Route) {
     if (to.path === from.path) {
     } else {
@@ -280,7 +296,7 @@ export default class VueComponent extends Vue {
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
-
+    this.updateVoteConditions(factor, option)
     // disable the preset if user mucks with the settings
     this.currentPreset = ''
     this.setURLQuery()
@@ -565,6 +581,75 @@ export default class VueComponent extends Vue {
       top: -600,
       behavior: 'smooth',
     })
+  }
+
+  private updateVoteConditions(factor: string, option: any) {
+    if (factor == 'OePNV') this.voteConditions.oepnv = option
+    if (factor == 'kiezblocks') this.voteConditions.kiezBloecke = option
+    if (factor == 'Fahrrad') this.voteConditions.fahrrad = option
+    if (factor == 'Parkraum') this.voteConditions.parkraum = option
+    if (factor == 'fahrenderVerkehr') this.voteConditions.fahrenderAutoVerkehr = option
+    if (factor == 'DRT') this.voteConditions.drt = option
+  }
+
+  private async saveConditions() {
+    //   const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
+    //   .then(FingerprintJS => FingerprintJS.load())
+
+    // // Get the visitor identifier when you need it.
+    // fpPromise
+    //   .then(fp => fp.get())
+    //   .then(result => {
+    //     // This is the visitor identifier:
+    //     const visitorId = result.visitorId
+    //     console.log(visitorId)
+    //   })
+
+    this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
+    fetch('https://api.ipify.org?format=json')
+      .then(x => x.json())
+      .then(({ ip }) => {
+        this.voteConditions.ipAddr = ip
+      })
+      .then(() => {
+        const vote = JSON.stringify(this.voteConditions)
+        // console.log(vote)
+      })
+
+    // Get request from python api-server
+    try {
+      console.log(JSON.stringify(this.voteConditions))
+      // this.myState.statusMessage = ''
+      let response = await fetch('http://127.0.0.1:4999/votes', {
+        headers: {
+          'Content-type': 'application/json; charset=UTF-8',
+        },
+        method: 'POST',
+        body: JSON.stringify(this.voteConditions),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      let json = await response.json()
+      console.log(json)
+    } catch (e) {
+      // this.myState.statusMessage = 'Error fetching paths :-('
+      // this.isFiltering = false
+      console.log('Error fetching paths :-(')
+      return
+    }
+  }
+
+  private setCookie(name: string, value: boolean, days: number) {
+    let expires = ''
+    if (days) {
+      let date = new Date()
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+      expires = '; expires=' + date.toUTCString()
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/'
+    return value
   }
 
   private addDescriptionToggle() {
