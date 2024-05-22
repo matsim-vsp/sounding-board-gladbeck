@@ -302,6 +302,16 @@ export default class VueComponent extends Vue {
     this.setURLQuery()
   }
 
+  getApiAuthorization() {
+    let auth = localStorage.getItem('brendan-api-key')
+    if (!auth) auth = prompt('API access key required:')
+
+    if (auth) {
+      this.apiKey = auth
+      localStorage.setItem('brendan-api-key', auth)
+    }
+  }
+
   private mounted() {
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
@@ -310,6 +320,7 @@ export default class VueComponent extends Vue {
     this.buildPageForURL()
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
+    this.getApiAuthorization()
   }
 
   private async buildPageForURL() {
@@ -620,9 +631,11 @@ export default class VueComponent extends Vue {
     try {
       console.log(JSON.stringify(this.voteConditions))
       // this.myState.statusMessage = ''
-      let response = await fetch('http://127.0.0.1:4999/votes', {
+      let response = await fetch('http://127.0.0.1:5000/votes', {
         headers: {
+          Authorization: this.apiKey,
           'Content-type': 'application/json; charset=UTF-8',
+          'Access-Control-Allow-Origin': '*',
         },
         method: 'POST',
         body: JSON.stringify(this.voteConditions),
