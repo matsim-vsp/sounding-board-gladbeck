@@ -1,3 +1,0 @@
-
-FLASK_APP=RunServer.py
-API_KEYS=brendan-4885.3423.30
