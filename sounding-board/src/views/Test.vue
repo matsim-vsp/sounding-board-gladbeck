@@ -5,6 +5,8 @@
     .button.sessionOn-btn(@click="toggleSession(true)") Neue Sitzung beginnen
     br
     .button.sessionOff-btn(@click="toggleSession(false)") Sitzung beenden
+    h1 Läuft eine Sitzung: {{ this.SessionOn }}
+    br
 
 </template>
 
@@ -36,31 +38,32 @@ export default class VueComponent extends Vue {
     if (sessionStatus) {
       this.SessionOn = true
       console.log('Session is on')
-      try {
-        // this.myState.statusMessage = ''
-        let response = await fetch('http://127.0.0.1:5000/sessionOn', {
-          headers: {
-            Authorization: this.apiKey,
-            'Content-type': 'text',
-            'Access-Control-Allow-Origin': '*',
-          },
-          method: 'POST',
-          body: 'value: ' + this.SessionOn,
-        })
-
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`)
-        }
-        let json = await response.json()
-        console.log(json)
-      } catch (e) {
-        // this.myState.statusMessage = 'Error fetching paths :-('
-        // this.isFiltering = false
-        console.log('Error fetching paths :-(')
-        return
-      }
     } else {
-      console.log('Session is off')
+      this.SessionOn = false
+    }
+
+    try {
+      // this.myState.statusMessage = ''
+      let response = await fetch('http://127.0.0.1:5000/sessionOn', {
+        headers: {
+          Authorization: this.apiKey,
+          'Content-type': 'text',
+          'Access-Control-Allow-Origin': '*',
+        },
+        method: 'POST',
+        body: String(this.SessionOn),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      let json = await response.json()
+      console.log(json)
+    } catch (e) {
+      // this.myState.statusMessage = 'Error fetching paths :-('
+      // this.isFiltering = false
+      console.log('Error fetching paths :-(')
+      return
     }
   }
 }
@@ -104,5 +107,10 @@ export default class VueComponent extends Vue {
   background-color: white;
   color: #af3c3a;
   border: 1px solid #af3c3a;
+}
+
+h1 {
+  font-size: 24px;
+  font-weight: bold;
 }
 </style>
