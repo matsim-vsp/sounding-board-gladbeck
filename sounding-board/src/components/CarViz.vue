@@ -184,5 +184,4 @@ export default class VueComponent extends Vue {
 #row-10 > .column > #parked-column {
   border-bottom: 4px solid #000;
 }
-
 </style>

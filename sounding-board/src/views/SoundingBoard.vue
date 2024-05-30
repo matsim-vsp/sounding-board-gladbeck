@@ -616,6 +616,10 @@ export default class VueComponent extends Vue {
     //     console.log(visitorId)
     //   })
 
+    for (const metric of this.metrics) {
+      console.log(metric.title + ': ' + metric.value)
+    }
+
     this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
     fetch('https://api.ipify.org?format=json')
       .then(x => x.json())
@@ -624,7 +628,6 @@ export default class VueComponent extends Vue {
       })
       .then(() => {
         const vote = JSON.stringify(this.voteConditions)
-        // console.log(vote)
       })
 
     // Get request from python api-server
@@ -645,6 +648,7 @@ export default class VueComponent extends Vue {
         throw new Error(`HTTP error! Status: ${response.status}`)
       }
       let json = await response.json()
+      console.log(this.metrics)
       console.log(json)
     } catch (e) {
       // this.myState.statusMessage = 'Error fetching paths :-('

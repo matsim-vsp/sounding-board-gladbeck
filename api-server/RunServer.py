@@ -153,32 +153,32 @@ def post_vote_to_db():
     check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
     cur.execute(check_if_voter_exists, (1, data['ipAddr']))
     voter_exists = cur.fetchone()
-    if (voter_exists != None): 
-        print("voter already voted")
-        return "voter already voted"
-    else:
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-            
-        cur.execute(db_vote_insert, (
-        data['oepnv'],
-        data['kiezBloecke'],
-        data['fahrrad'],
-        data['parkraum'],
-        data['fahrenderAutoVerkehr'],
-        data['drt'],
-        data['ipAddr'],
-        data['cookie'],
-        sessionID
-        ))
+    # if (voter_exists != None): 
+    #     print("voter already voted")
+    #     return "voter already voted"
+    # else:
+    db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         
-        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
-        print(table_list) 
+    cur.execute(db_vote_insert, (
+    data['oepnv'],
+    data['kiezBloecke'],
+    data['fahrrad'],
+    data['parkraum'],
+    data['fahrenderAutoVerkehr'],
+    data['drt'],
+    data['ipAddr'],
+    data['cookie'],
+    sessionID
+    ))
+    
+    table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
+    print(table_list) 
 
-        con.commit()
-        con.close()
+    con.commit()
+    con.close()
 
-        return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
+    return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
 @app.route('/getVotes/<session_id>', methods=["GET"])
 def get_votes_from_db(session_id):
@@ -186,13 +186,13 @@ def get_votes_from_db(session_id):
     
     con = sqlite3.connect("test.db", check_same_thread=False)
     cur = con.cursor()
-    table_list = [a for a in cur.execute("SELECT * FROM votes WHERE sessionID = " + session_id)]
-    print(type(table_list))
-    print("sql List: ", table_list)
+    cur.execute("SELECT * FROM votes WHERE sessionID = " + session_id)
+    results = cur.fetchall()
+    votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'session_id': row[8]} for row in results]
+    print(votes)
     
-    return json.dumps(table_list)
+    return json.dumps(votes)
     
 
 if __name__ == "__main__":
     app.run(port=4999, debug=True)
-

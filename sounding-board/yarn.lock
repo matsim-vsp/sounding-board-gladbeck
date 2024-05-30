@@ -4130,6 +4130,11 @@ css-declaration-sorter@^4.0.1:
     postcss "^7.0.1"
     timsort "^0.3.0"
 
+css-element-queries@^1.0.2:
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/css-element-queries/-/css-element-queries-1.2.3.tgz#e14940b1fcd4bf0da60ea4145d05742d7172e516"
+  integrity sha512-QK9uovYmKTsV2GXWQiMOByVNrLn2qz6m3P7vWpOR4IdD6I3iXoDw5qtgJEN3Xq7gIbdHVKvzHjdAtcl+4Arc4Q==
+
 css-font-size-keywords@^1.0.0:
   version "1.0.0"
   resolved "https://registry.npmjs.org/css-font-size-keywords/-/css-font-size-keywords-1.0.0.tgz"
@@ -4506,7 +4511,7 @@ d3-timer@1:
   resolved "https://registry.npmjs.org/d3-timer/-/d3-timer-1.0.10.tgz"
   integrity sha512-B1JDm0XDaQC+uvo4DT79H0XmBskgS3l6Ve+1SBCfxgmtIb1AVrPIoqd+nPSv+loMX8szQ0sVUhGngL7D5QPiXw==
 
-d3@^3.5.12:
+d3@^3.5.12, d3@^3.5.17:
   version "3.5.17"
   resolved "https://registry.npmjs.org/d3/-/d3-3.5.17.tgz"
   integrity sha1-vEZ0gAQ3iyGjYMn8fPUjF5B2L7g=
@@ -5203,6 +5208,11 @@ es6-promise@^3.0.2:
   version "3.3.1"
   resolved "https://registry.npmjs.org/es6-promise/-/es6-promise-3.3.1.tgz"
   integrity sha1-oIzd6EzNvzTQJ6FFG8kdS80ophM=
+
+es6-promise@^4.2.8:
+  version "4.2.8"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.8.tgz#4eb21594c972bc40553d276e510539143db53e0a"
+  integrity sha512-HJDGx5daxeIvxdBxvG2cb9g4tEvwIk3i8+nhX0yGrYmZUzbkdg8QbDevheDB8gd0//uPj4c1EQua8Q+MViT0/w==
 
 es6-symbol@^3.1.1, es6-symbol@~3.1.3:
   version "3.1.3"
@@ -6288,7 +6298,7 @@ gl-constants@^1.0.0:
   resolved "https://registry.npmjs.org/gl-constants/-/gl-constants-1.0.0.tgz"
   integrity sha1-WXpQTjZHUP9QJTqjX43qevSl0jM=
 
-gl-contour2d@^1.1.6:
+gl-contour2d@^1.1.6, gl-contour2d@^1.1.7:
   version "1.1.7"
   resolved "https://registry.npmjs.org/gl-contour2d/-/gl-contour2d-1.1.7.tgz"
   integrity sha512-GdebvJ9DtT3pJDpoE+eU2q+Wo9S3MijPpPz5arZbhK85w2bARmpFpVfPaDlZqWkB644W3BlH8TVyvAo1KE4Bhw==
@@ -6307,6 +6317,17 @@ gl-error3d@^1.0.15:
   version "1.0.16"
   resolved "https://registry.npmjs.org/gl-error3d/-/gl-error3d-1.0.16.tgz"
   integrity sha512-TGJewnKSp7ZnqGgG3XCF9ldrDbxZrO+OWlx6oIet4OdOM//n8xJ5isArnIV/sdPJnFbhfoLxWrW9f5fxHFRQ1A==
+  dependencies:
+    gl-buffer "^2.1.2"
+    gl-shader "^4.2.1"
+    gl-vao "^1.3.0"
+    glsl-out-of-range "^1.0.4"
+    glslify "^7.0.0"
+
+gl-error3d@^1.0.16:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/gl-error3d/-/gl-error3d-1.0.17.tgz#bdca00f78e6d1bf2b194e7e3109ffdb230910137"
+  integrity sha512-wV/fHMteQQtQ6SfufaL75aki3S/rWzo0QQ7e5y6FEGy1fL9YxLqYkog2iyxLd4wxEaNZJk7e8USbYL6fZ5Yx3g==
   dependencies:
     gl-buffer "^2.1.2"
     gl-shader "^4.2.1"
@@ -6343,10 +6364,36 @@ gl-heatmap2d@^1.0.5:
     iota-array "^1.0.0"
     typedarray-pool "^1.1.0"
 
+gl-heatmap2d@^1.1.0:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/gl-heatmap2d/-/gl-heatmap2d-1.1.1.tgz#dbbb2c288bfe277002fa50985155b0403d87640f"
+  integrity sha512-6Vo1fPIB1vQFWBA/MR6JAA16XuQuhwvZRbSjYEq++m4QV33iqjGS2HcVIRfJGX+fomd5eiz6bwkVZcKm69zQPw==
+  dependencies:
+    binary-search-bounds "^2.0.4"
+    gl-buffer "^2.1.2"
+    gl-shader "^4.2.1"
+    glslify "^7.0.0"
+    iota-array "^1.0.0"
+    typedarray-pool "^1.2.0"
+
 gl-line3d@1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/gl-line3d/-/gl-line3d-1.2.0.tgz"
   integrity sha512-du9GDF87DMfllND2pBjySyHhFaza9upw4t2GMoXn11/I38atO6+saiznuhKmfxuDnyxGdmmZF6/HPauk0owKDA==
+  dependencies:
+    binary-search-bounds "^2.0.4"
+    gl-buffer "^2.1.2"
+    gl-shader "^4.2.1"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
+    glsl-out-of-range "^1.0.4"
+    glslify "^7.0.0"
+    ndarray "^1.0.18"
+
+gl-line3d@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/gl-line3d/-/gl-line3d-1.2.1.tgz#632fc5b931a84a315995322b271aaf497e292609"
+  integrity sha512-eeb0+RI2ZBRqMYJK85SgsRiJK7c4aiOjcnirxv0830A3jmOc99snY3AbPcV8KvKmW0Yaf3KA4e+qNCbHiTOTnA==
   dependencies:
     binary-search-bounds "^2.0.4"
     gl-buffer "^2.1.2"
@@ -6412,6 +6459,27 @@ gl-mesh3d@^2.3.0:
     simplicial-complex-contour "^1.0.2"
     typedarray-pool "^1.1.0"
 
+gl-mesh3d@^2.3.1:
+  version "2.3.2"
+  resolved "https://registry.yarnpkg.com/gl-mesh3d/-/gl-mesh3d-2.3.2.tgz#a0b817c160c89c8da7c8106a2a9e321fdbbadd21"
+  integrity sha512-ELCxrRBNUjrKeHMN4PVcx+pToeeCnd5w8ddSHOFDkVCInDTK5WKUA94OcfGKqcmZE4LeZ4jiwM3vV54Dq3zFdg==
+  dependencies:
+    barycentric "^1.0.1"
+    colormap "^2.3.1"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
+    gl-shader "^4.2.1"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
+    glsl-out-of-range "^1.0.4"
+    glsl-specular-cook-torrance "^2.0.1"
+    glslify "^7.0.0"
+    ndarray "^1.0.18"
+    normals "^1.1.0"
+    polytope-closest-point "^1.0.0"
+    simplicial-complex-contour "^1.0.2"
+    typedarray-pool "^1.1.0"
+
 gl-plot2d@^1.4.3:
   version "1.4.4"
   resolved "https://registry.npmjs.org/gl-plot2d/-/gl-plot2d-1.4.4.tgz"
@@ -6424,6 +6492,19 @@ gl-plot2d@^1.4.3:
     glsl-inverse "^1.0.0"
     glslify "^7.0.0"
     text-cache "^4.2.2"
+
+gl-plot2d@^1.4.5:
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/gl-plot2d/-/gl-plot2d-1.5.0.tgz#fa3329e09be783d1d4c6c887d0a28563b51ed36d"
+  integrity sha512-zOv9CU+Gm8vPSUM8Rm/9Ymzuk9RUMfk0ol0ewe6TUF83rGCN/ZRr+xTHoXigI1N0lQ7nfnj+m1raPn7VFTu2IA==
+  dependencies:
+    binary-search-bounds "^2.0.4"
+    gl-buffer "^2.1.2"
+    gl-select-static "^2.0.7"
+    gl-shader "^4.2.1"
+    glsl-inverse "^1.0.0"
+    glslify "^7.0.0"
+    text-cache "^4.3.0"
 
 gl-plot3d@^2.4.4:
   version "2.4.5"
@@ -6447,7 +6528,29 @@ gl-plot3d@^2.4.4:
     ndarray "^1.0.18"
     right-now "^1.0.0"
 
-gl-pointcloud2d@^1.0.2:
+gl-plot3d@^2.4.7:
+  version "2.4.7"
+  resolved "https://registry.yarnpkg.com/gl-plot3d/-/gl-plot3d-2.4.7.tgz#b66e18c5affdd664f42c884acf7b82c60b41ee78"
+  integrity sha512-mLDVWrl4Dj0O0druWyHUK5l7cBQrRIJRn2oROEgrRuOgbbrLAzsREKefwMO0bA0YqkiZMFMnV5VvPA9j57X5Xg==
+  dependencies:
+    "3d-view" "^2.0.0"
+    a-big-triangle "^1.0.3"
+    gl-axes3d "^1.5.3"
+    gl-fbo "^2.0.5"
+    gl-mat4 "^1.2.0"
+    gl-select-static "^2.0.7"
+    gl-shader "^4.2.1"
+    gl-spikes3d "^1.0.10"
+    glslify "^7.0.0"
+    has-passive-events "^1.0.0"
+    is-mobile "^2.2.1"
+    mouse-change "^1.4.0"
+    mouse-event-offset "^3.0.2"
+    mouse-wheel "^1.2.0"
+    ndarray "^1.0.19"
+    right-now "^1.0.0"
+
+gl-pointcloud2d@^1.0.2, gl-pointcloud2d@^1.0.3:
   version "1.0.3"
   resolved "https://registry.npmjs.org/gl-pointcloud2d/-/gl-pointcloud2d-1.0.3.tgz"
   integrity sha512-OS2e1irvJXVRpg/GziXj10xrFJm9kkRfFoB6BLUvkjCQV7ZRNNcs2CD+YSK1r0gvMwTg2T3lfLM3UPwNtz+4Xw==
@@ -6481,7 +6584,22 @@ gl-scatter3d@^1.2.2:
     typedarray-pool "^1.1.0"
     vectorize-text "^3.2.1"
 
-gl-select-box@^1.0.3:
+gl-scatter3d@^1.2.3:
+  version "1.4.1"
+  resolved "https://registry.yarnpkg.com/gl-scatter3d/-/gl-scatter3d-1.4.1.tgz#b71f17ef28e8b6618124d105f233c9bdef35d175"
+  integrity sha512-v2nQWSPr9/smu2YB4erhHuUkk+8w2q59CsTPvcK72vFYWCSgU6eeTnu0UlmN634bblbTTa5ap/xrbxJGiKLyrw==
+  dependencies:
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
+    gl-shader "^4.2.1"
+    gl-vao "^1.3.0"
+    glsl-out-of-range "^1.0.4"
+    glslify "^7.0.0"
+    is-string-blank "^1.0.1"
+    typedarray-pool "^1.1.0"
+    vectorize-text "^3.2.1"
+
+gl-select-box@^1.0.3, gl-select-box@^1.0.4:
   version "1.0.4"
   resolved "https://registry.npmjs.org/gl-select-box/-/gl-select-box-1.0.4.tgz"
   integrity sha512-mKsCnglraSKyBbQiGq0Ila0WF+m6Tr+EWT2yfaMn/Sh9aMHq5Wt0F/l6Cf/Ed3CdERq5jHWAY5yxLviZteYu2w==
@@ -6497,6 +6615,16 @@ gl-select-static@^2.0.6:
   dependencies:
     bit-twiddle "^1.0.2"
     cwise "^1.0.10"
+    gl-fbo "^2.0.5"
+    ndarray "^1.0.18"
+    typedarray-pool "^1.1.0"
+
+gl-select-static@^2.0.7:
+  version "2.0.7"
+  resolved "https://registry.yarnpkg.com/gl-select-static/-/gl-select-static-2.0.7.tgz#ce7eb05ae0139009c15e2d2d0d731600b3dae5c0"
+  integrity sha512-OvpYprd+ngl3liEatBTdXhSyNBjwvjMSvV2rN0KHpTU+BTi4viEETXNZXFgGXY37qARs0L28ybk3UQEW6C5Nnw==
+  dependencies:
+    bit-twiddle "^1.0.2"
     gl-fbo "^2.0.5"
     ndarray "^1.0.18"
     typedarray-pool "^1.1.0"
@@ -6544,10 +6672,48 @@ gl-streamtube3d@^1.4.0:
     glsl-specular-cook-torrance "^2.0.1"
     glslify "^7.0.0"
 
+gl-streamtube3d@^1.4.1:
+  version "1.4.2"
+  resolved "https://registry.yarnpkg.com/gl-streamtube3d/-/gl-streamtube3d-1.4.2.tgz#751a091c00877aaddbeeeb3395777b3aafd39279"
+  integrity sha512-Vn6dMg5Tji9tV60dm7/K9dnedlKSGikHGKSquiWv5GzmWS2QlKtt4J9ei2d2DUVcD0faga+mG5Ep7nlAXnI0AQ==
+  dependencies:
+    gl-cone3d "^1.5.2"
+    gl-vec3 "^1.1.3"
+    gl-vec4 "^1.0.1"
+    glsl-inverse "^1.0.0"
+    glsl-out-of-range "^1.0.4"
+    glsl-specular-cook-torrance "^2.0.1"
+    glslify "^7.0.0"
+
 gl-surface3d@^1.5.1:
   version "1.5.2"
   resolved "https://registry.npmjs.org/gl-surface3d/-/gl-surface3d-1.5.2.tgz"
   integrity sha512-rWSQwEQDkB0T5CDEDFJwJc4VgwwJaAyFRSJ92NJlrTSwDlsEsWdzG9+APx6FWJMwkOpIoZGWqv+csswK2kMMLQ==
+  dependencies:
+    binary-search-bounds "^2.0.4"
+    bit-twiddle "^1.0.2"
+    colormap "^2.3.1"
+    dup "^1.0.0"
+    gl-buffer "^2.1.2"
+    gl-mat4 "^1.2.0"
+    gl-shader "^4.2.1"
+    gl-texture2d "^2.1.0"
+    gl-vao "^1.3.0"
+    glsl-out-of-range "^1.0.4"
+    glsl-specular-beckmann "^1.1.2"
+    glslify "^7.0.0"
+    ndarray "^1.0.18"
+    ndarray-gradient "^1.0.0"
+    ndarray-ops "^1.2.2"
+    ndarray-pack "^1.2.1"
+    ndarray-scratch "^1.2.0"
+    surface-nets "^1.0.2"
+    typedarray-pool "^1.1.0"
+
+gl-surface3d@^1.6.0:
+  version "1.6.2"
+  resolved "https://registry.yarnpkg.com/gl-surface3d/-/gl-surface3d-1.6.2.tgz#43a98e5b6e339eaa29eb180e322de3fb27b09fdc"
+  integrity sha512-Duksm4g2XwPVCHGlquEwilMloNTKOnPThVDWELXKRyY01XYmz3IxsyJjuZWaZVOg5ZPnPj0ETrw396GWEf7L5Q==
   dependencies:
     binary-search-bounds "^2.0.4"
     bit-twiddle "^1.0.2"
@@ -7428,6 +7594,11 @@ image-palette@^2.1.0:
     pxls "^2.0.0"
     quantize "^1.0.2"
 
+image-size@^0.7.5:
+  version "0.7.5"
+  resolved "https://registry.yarnpkg.com/image-size/-/image-size-0.7.5.tgz#269f357cf5797cb44683dfa99790e54c705ead04"
+  integrity sha512-Hiyv+mXHfFEP7LzUL/llg9RwFxxY+o9N3JVLIeG5E7iFIFAalxvRU9UZthBdYDEVnzHMgjnKJPPpay5BWf1g9g==
+
 import-cwd@^2.0.0:
   version "2.1.0"
   resolved "https://registry.npmjs.org/import-cwd/-/import-cwd-2.1.0.tgz"
@@ -7567,6 +7738,11 @@ interpret@^1.4.0:
   version "1.4.0"
   resolved "https://registry.npmjs.org/interpret/-/interpret-1.4.0.tgz"
   integrity sha512-agE4QfB2Lkp9uICn7BAqoscw4SZP9kTE2hxiFI3jBPmXJfdqiahTbUuKGsMoN2GtqL9AxhYioAcVvgsb1HvRbA==
+
+intersection-observer@^0.5.0:
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/intersection-observer/-/intersection-observer-0.5.1.tgz#e340fc56ce74290fe2b2394d1ce88c4353ac6dfa"
+  integrity sha512-Zd7Plneq82kiXFixs7bX62YnuZ0BMRci9br7io88LwDyF3V43cQMI+G5IiTlTNTt+LsDUppl19J/M2Fp9UkH6g==
 
 interval-tree-1d@^1.0.1:
   version "1.0.3"
@@ -7879,6 +8055,11 @@ is-mobile@^2.2.0, is-mobile@^2.2.1:
   version "2.2.1"
   resolved "https://registry.npmjs.org/is-mobile/-/is-mobile-2.2.1.tgz"
   integrity sha512-6zELsfVFr326eq2CI53yvqq6YBanOxKBybwDT+MbMS2laBnK6Ez8m5XHSuTQQbnKRfpDzCod1CMWW5q3wZYMvA==
+
+is-mobile@^2.2.2:
+  version "2.2.2"
+  resolved "https://registry.yarnpkg.com/is-mobile/-/is-mobile-2.2.2.tgz#f6c9c5d50ee01254ce05e739bdd835f1ed4e9954"
+  integrity sha512-wW/SXnYJkTjs++tVK5b6kVITZpAZPtUrt9SF80vvxGiF/Oywal+COk1jlRkiVq15RFNEQKQY31TkV24/1T5cVg==
 
 is-mobile@^3.1.1:
   version "3.1.1"
@@ -8924,6 +9105,11 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
+lodash.debounce@^4.0.8:
+  version "4.0.8"
+  resolved "https://registry.yarnpkg.com/lodash.debounce/-/lodash.debounce-4.0.8.tgz#82d79bff30a67c4005ffd5e2515300ad9ca4d7af"
+  integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
+
 lodash.defaultsdeep@^4.6.1:
   version "4.6.1"
   resolved "https://registry.npmjs.org/lodash.defaultsdeep/-/lodash.defaultsdeep-4.6.1.tgz"
@@ -9708,7 +9894,7 @@ ndarray-warp@^1.0.0:
     cwise "^1.0.4"
     ndarray-linear-interpolate "^1.0.0"
 
-ndarray@^1.0.11, ndarray@^1.0.13, ndarray@^1.0.14, ndarray@^1.0.15, ndarray@^1.0.18:
+ndarray@^1.0.11, ndarray@^1.0.13, ndarray@^1.0.14, ndarray@^1.0.15, ndarray@^1.0.18, ndarray@^1.0.19:
   version "1.0.19"
   resolved "https://registry.npmjs.org/ndarray/-/ndarray-1.0.19.tgz"
   integrity sha512-B4JHA4vdyZU30ELBw3g7/p9bZupyew5a7tX1Y/gGeF2hafrPaQZhgrGQfsvgfYbgdFZjYwuEcnaobeM/WMW+HQ==
@@ -10763,6 +10949,80 @@ plotly.js@^1.35.0:
     svg-path-sdf "^1.1.3"
     tinycolor2 "^1.4.1"
     topojson-client "^2.1.0"
+    webgl-context "^2.2.0"
+    world-calendars "^1.0.3"
+
+plotly.js@^1.52.1:
+  version "1.58.5"
+  resolved "https://registry.yarnpkg.com/plotly.js/-/plotly.js-1.58.5.tgz#8f98ddce32c8333fe1e51d22b926324be059db95"
+  integrity sha512-ChTlnFXB4tB0CzcG1mqgUKYnrJsZ8REDGox8BHAa/ltsd48MOAhOmFgjyDxwsXyjjgwOI296GeYDft8g4ftLHQ==
+  dependencies:
+    "@plotly/d3-sankey" "0.7.2"
+    "@plotly/d3-sankey-circular" "0.33.1"
+    "@plotly/point-cluster" "^3.1.9"
+    "@turf/area" "^6.0.1"
+    "@turf/bbox" "^6.0.1"
+    "@turf/centroid" "^6.0.2"
+    alpha-shape "^1.0.0"
+    canvas-fit "^1.5.0"
+    color-alpha "1.0.4"
+    color-normalize "1.5.0"
+    color-parse "1.3.8"
+    color-rgba "2.1.1"
+    convex-hull "^1.0.3"
+    country-regex "^1.1.0"
+    d3 "^3.5.17"
+    d3-force "^1.2.1"
+    d3-hierarchy "^1.1.9"
+    d3-interpolate "^1.4.0"
+    d3-time-format "^2.2.3"
+    delaunay-triangulate "^1.1.6"
+    es6-promise "^4.2.8"
+    fast-isnumeric "^1.1.4"
+    gl-cone3d "^1.5.2"
+    gl-contour2d "^1.1.7"
+    gl-error3d "^1.0.16"
+    gl-heatmap2d "^1.1.0"
+    gl-line3d "1.2.1"
+    gl-mat4 "^1.2.0"
+    gl-mesh3d "^2.3.1"
+    gl-plot2d "^1.4.5"
+    gl-plot3d "^2.4.7"
+    gl-pointcloud2d "^1.0.3"
+    gl-scatter3d "^1.2.3"
+    gl-select-box "^1.0.4"
+    gl-spikes2d "^1.0.2"
+    gl-streamtube3d "^1.4.1"
+    gl-surface3d "^1.6.0"
+    gl-text "^1.1.8"
+    glslify "^7.1.1"
+    has-hover "^1.0.1"
+    has-passive-events "^1.0.0"
+    image-size "^0.7.5"
+    is-mobile "^2.2.2"
+    mapbox-gl "1.10.1"
+    matrix-camera-controller "^2.1.3"
+    mouse-change "^1.4.0"
+    mouse-event-offset "^3.0.2"
+    mouse-wheel "^1.2.0"
+    ndarray "^1.0.19"
+    ndarray-linear-interpolate "^1.0.0"
+    parse-svg-path "^0.1.2"
+    polybooljs "^1.2.0"
+    regl "^1.6.1"
+    regl-error2d "^2.0.11"
+    regl-line2d "^3.0.18"
+    regl-scatter2d "^3.2.1"
+    regl-splom "^1.0.12"
+    right-now "^1.0.0"
+    robust-orientation "^1.1.3"
+    sane-topojson "^4.0.0"
+    strongly-connected-components "^1.0.1"
+    superscript-text "^1.0.0"
+    svg-path-sdf "^1.1.3"
+    tinycolor2 "^1.4.2"
+    to-px "1.0.1"
+    topojson-client "^3.1.0"
     webgl-context "^2.2.0"
     world-calendars "^1.0.3"
 
@@ -11914,7 +12174,7 @@ regjsparser@^0.6.4:
   dependencies:
     jsesc "~0.5.0"
 
-regl-error2d@^2.0.12:
+regl-error2d@^2.0.11, regl-error2d@^2.0.12:
   version "2.0.12"
   resolved "https://registry.yarnpkg.com/regl-error2d/-/regl-error2d-2.0.12.tgz#3b976e13fe641d5242a154fcacc80aecfa0a9881"
   integrity sha512-r7BUprZoPO9AbyqM5qlJesrSRkl+hZnVKWKsVp7YhOl/3RIpi4UDGASGJY0puQ96u5fBYw/OlqV24IGcgJ0McA==
@@ -11959,6 +12219,23 @@ regl-line2d@^3.0.15:
     pick-by-alias "^1.2.0"
     to-float32 "^1.0.1"
 
+regl-line2d@^3.0.18:
+  version "3.1.3"
+  resolved "https://registry.yarnpkg.com/regl-line2d/-/regl-line2d-3.1.3.tgz#03669c676a9e3a06973d34c68ada2400792724a4"
+  integrity sha512-fkgzW+tTn4QUQLpFKsUIE0sgWdCmXAM3ctXcCgoGBZTSX5FE2A0M7aynz7nrZT5baaftLrk9te54B+MEq4QcSA==
+  dependencies:
+    array-bounds "^1.0.1"
+    array-find-index "^1.0.2"
+    array-normalize "^1.1.4"
+    color-normalize "^1.5.0"
+    earcut "^2.1.5"
+    es6-weak-map "^2.0.3"
+    flatten-vertex-data "^1.0.2"
+    object-assign "^4.1.1"
+    parse-rect "^1.2.0"
+    pick-by-alias "^1.2.0"
+    to-float32 "^1.1.0"
+
 regl-line2d@^3.1.2:
   version "3.1.2"
   resolved "https://registry.yarnpkg.com/regl-line2d/-/regl-line2d-3.1.2.tgz#2bedef7f44c1f7fae75c90f9918258723ca84c1c"
@@ -11999,6 +12276,27 @@ regl-scatter2d@^3.1.2, regl-scatter2d@^3.1.7:
     to-float32 "^1.0.1"
     update-diff "^1.1.0"
 
+regl-scatter2d@^3.2.1:
+  version "3.3.1"
+  resolved "https://registry.yarnpkg.com/regl-scatter2d/-/regl-scatter2d-3.3.1.tgz#0956952901ab30743dbdfb4c67fd358075e9b939"
+  integrity sha512-seOmMIVwaCwemSYz/y4WE0dbSO9svNFSqtTh5RE57I7PjGo3tcUYKtH0MTSoshcAsreoqN8HoCtnn8wfHXXfKQ==
+  dependencies:
+    "@plotly/point-cluster" "^3.1.9"
+    array-range "^1.0.1"
+    array-rearrange "^2.2.2"
+    clamp "^1.0.1"
+    color-id "^1.1.0"
+    color-normalize "^1.5.0"
+    color-rgba "^2.1.1"
+    flatten-vertex-data "^1.0.2"
+    glslify "^7.0.0"
+    is-iexplorer "^1.0.0"
+    object-assign "^4.1.1"
+    parse-rect "^1.2.0"
+    pick-by-alias "^1.2.0"
+    to-float32 "^1.1.0"
+    update-diff "^1.1.0"
+
 regl-scatter2d@^3.2.3, regl-scatter2d@^3.2.8:
   version "3.2.8"
   resolved "https://registry.yarnpkg.com/regl-scatter2d/-/regl-scatter2d-3.2.8.tgz#a1360e803e3fdf628ca09a72a435a0b7d4cf5675"
@@ -12021,7 +12319,7 @@ regl-scatter2d@^3.2.3, regl-scatter2d@^3.2.8:
     to-float32 "^1.1.0"
     update-diff "^1.1.0"
 
-regl-splom@^1.0.14:
+regl-splom@^1.0.12, regl-splom@^1.0.14:
   version "1.0.14"
   resolved "https://registry.yarnpkg.com/regl-splom/-/regl-splom-1.0.14.tgz#58800b7bbd7576aa323499a1966868a6c9ea1456"
   integrity sha512-OiLqjmPRYbd7kDlHC6/zDf6L8lxgDC65BhC8JirhP4ykrK4x22ZyS+BnY8EUinXKDeMgmpRwCvUmk7BK4Nweuw==
@@ -12057,6 +12355,11 @@ regl@^1.3.11:
   version "1.4.2"
   resolved "https://registry.npmjs.org/regl/-/regl-1.4.2.tgz"
   integrity sha512-wc/kE6kGmGfQk3G9f1Pai4TZ0K1pWxkD1Jeaj6CxJwEiB1jwHgEpqD84G2t7F0DmNXfQh7IUnoG1opxoONJ7Xg==
+
+regl@^1.6.1:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/regl/-/regl-1.7.0.tgz#0d185431044a356bf80e9b775b11b935ef2746d3"
+  integrity sha512-bEAtp/qrtKucxXSJkD4ebopFZYP0q1+3Vb2WECWv/T8yQEgKxDxJ7ztO285tAMaYZVR6mM1GgI6CCn8FROtL1w==
 
 regl@^2.0.0:
   version "2.1.0"
@@ -13606,6 +13909,13 @@ text-cache@^4.2.2:
   dependencies:
     vectorize-text "^3.2.1"
 
+text-cache@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/text-cache/-/text-cache-4.3.0.tgz#02f8a294e5df02096e03b3c808cb590a6e53386b"
+  integrity sha512-FM1X6SZwuGy5hgTJvl4SyFENUbLrujUUjb9bsLtz54HTqCasidnk7EfXjZkij0dhEFTD8J6LsYbNUN3KpyKYpg==
+  dependencies:
+    vectorize-text "^3.2.1"
+
 text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.npmjs.org/text-table/-/text-table-0.2.0.tgz"
@@ -14038,7 +14348,7 @@ type@^2.0.0:
   resolved "https://registry.npmjs.org/type/-/type-2.0.0.tgz"
   integrity sha512-KBt58xCHry4Cejnc2ISQAF7QY+ORngsWfxezO68+12hKV6lQY8P/psIkcbjeHWn7MqcgciWJyCCevFMJdIXpow==
 
-typedarray-pool@^1.0.0, typedarray-pool@^1.0.2, typedarray-pool@^1.1.0:
+typedarray-pool@^1.0.0, typedarray-pool@^1.0.2, typedarray-pool@^1.1.0, typedarray-pool@^1.2.0:
   version "1.2.0"
   resolved "https://registry.npmjs.org/typedarray-pool/-/typedarray-pool-1.2.0.tgz"
   integrity sha512-YTSQbzX43yvtpfRtIDAYygoYtgT+Rpjuxy9iOpczrjpXLgGoyG7aS5USJXV2d3nn8uHTeb9rXDvzS27zUg5KYQ==
@@ -14477,6 +14787,11 @@ vue-class-component@^7.1.0, vue-class-component@^7.2.2:
   resolved "https://registry.npmjs.org/vue-class-component/-/vue-class-component-7.2.3.tgz"
   integrity sha512-oEqYpXKaFN+TaXU+mRLEx8dX0ah85aAJEe61mpdoUrq0Bhe/6sWhyZX1JjMQLhVsHAkncyhedhmCdDVSasUtDw==
 
+vue-data-ui@^2.1.92:
+  version "2.1.92"
+  resolved "https://registry.yarnpkg.com/vue-data-ui/-/vue-data-ui-2.1.92.tgz#c656964b9fbb24ee3fba478a65ed40e0099893e3"
+  integrity sha512-3OT4hMdCUiZDsEjnBxi/bKCIu1Xo74sGe8+G+VAAkEHhO0xkVu1Prggq6Cs0K8kR/XnX4e9bnpSddAuMUHMffQ==
+
 vue-eslint-parser@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/vue-eslint-parser/-/vue-eslint-parser-7.0.0.tgz"
@@ -14531,6 +14846,16 @@ vue-loader@^15.9.1:
     vue-hot-reload-api "^2.3.0"
     vue-style-loader "^4.1.0"
 
+vue-plotly@^1.1.0:
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/vue-plotly/-/vue-plotly-1.1.0.tgz#2ba9e2735c9124dde4de3eb2658fe7f6c07ce5ec"
+  integrity sha512-GW52p+ZD0AKHgtE7vdkljJ79fiRugkhFkcE+Es5Ok9YWulHq8KxywQdO0rK1ejGIfVv1yAQKiKxhzYcYE/lXyw==
+  dependencies:
+    core-js "^3.6.4"
+    plotly.js "^1.52.1"
+    vue "^2.6.11"
+    vue-resize-directive "^1.2.0"
+
 vue-property-decorator@^8.0.0:
   version "8.5.1"
   resolved "https://registry.yarnpkg.com/vue-property-decorator/-/vue-property-decorator-8.5.1.tgz#571a91cf8d2b507f537d79bf8275af3184572fff"
@@ -14544,6 +14869,15 @@ vue-property-decorator@^8.3.0:
   integrity sha512-8R4Us7DxFO0rwAL/2fv6vaZL8Oa4n/HGanHODYGTcvQHwT0FYJr9UuuFm2GoWAIXQu1mDO03HNeHswFp9vmTVA==
   dependencies:
     vue-class-component "^7.1.0"
+
+vue-resize-directive@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/vue-resize-directive/-/vue-resize-directive-1.2.0.tgz#4214ca8a80a425529b036ea868cad54a38f613e4"
+  integrity sha512-LmpFexQcl1XYyz3DQrTrq3Efgj50MKEON60nR9MMAq1D2ZtXFg1WDcy1wy1T0SeduNtIu9hos2aLTsJUplvjlQ==
+  dependencies:
+    css-element-queries "^1.0.2"
+    intersection-observer "^0.5.0"
+    lodash.debounce "^4.0.8"
 
 vue-router@^3.1.5:
   version "3.1.6"

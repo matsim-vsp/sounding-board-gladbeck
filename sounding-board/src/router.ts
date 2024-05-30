@@ -9,7 +9,7 @@ const routes = [
     name: 'Start-Session',
     component: function() {
       return Promise.resolve().then(function() {
-        return require('@/views/Test.vue')
+        return require('@/views/StartSession.vue')
       })
     },
   },
