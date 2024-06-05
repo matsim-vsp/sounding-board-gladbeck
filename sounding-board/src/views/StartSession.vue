@@ -7,9 +7,12 @@
     .button.sessionOff-btn(@click="toggleSession(false)" v-if="this.SessionOn") Sitzung beenden
    
     br
+    //- h3 letzte Sitzung: {{ this.mostRecentSession }}
+    .button.getSession-btn(@click="getLastSession()") Letzte Sitzung
+    <br>
     input.sessionResults(type='number', name='ergebnisse') 
     <br>
-    .button.sessionResults-btn(@click="getResults()") Ergebnisse des Sitzung
+    .button.sessionResults-btn(@click="getResults()") Ergebnisse der Sitzung
 
     .results
       Plotly(:data="data" :layout="plotlyLayout" :display-mode-bar="false" v-if="this.showResults")
@@ -29,12 +32,36 @@ export default class VueComponent extends Vue {
 
   private apiKey = ''
 
+  private titleGraphSession = null
+
   private plotlyLayout = {
-    title: 'My graph',
+    title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
     barmode: 'stack',
   }
 
   private data = []
+
+  // private mostRecentSession = this.getLastSession()
+
+  private async getLastSession() {
+    var reqURL = 'http://127.0.0.1:5000/getLastSession/'
+    var lastSession = '0'
+    try {
+      let response = await fetch(reqURL, {
+        headers: {
+          Authorization: this.apiKey,
+        },
+        method: 'GET',
+      })
+        .then(response => response.text())
+        .then(text => (lastSession = text))
+    } catch (e) {
+      console.log('Error fetching paths :-(')
+      return
+    }
+    var sessionReq: HTMLInputElement = document.querySelector('.sessionResults')
+    sessionReq.value = lastSession
+  }
 
   getApiAuthorization() {
     let auth = localStorage.getItem('brendan-api-key')
@@ -87,6 +114,12 @@ export default class VueComponent extends Vue {
     } else {
       console.log('Input element not found')
     }
+    this.titleGraphSession = sessionReq.value
+
+    this.plotlyLayout = {
+    title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
+    barmode: 'stack',
+    }
 
     var reqURL = 'http://127.0.0.1:5000/getVotes/' + sessionReq.value
     var sessionVotes = []
@@ -107,7 +140,6 @@ export default class VueComponent extends Vue {
     var sessionVotesData = this.getCounts(sessionVotes)
 
     this.visualizeData(sessionVotesData)
-
   }
 
   private getCounts(sessionVotes) {
@@ -171,21 +203,21 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[0].base],
       name: 'Öpnv - base',
       type: 'bar',
-      legendgroup: "group1"
+      legendgroup: 'group1',
     }
     var trace2_Oepnv = {
       x: ['oepnv'],
       y: [sessionVotesData[0].stark],
       name: 'Öpnv - stark',
       type: 'bar',
-      legendgroup: "group1"
+      legendgroup: 'group1',
     }
     var trace3_Oepnv = {
       x: ['oepnv'],
       y: [sessionVotesData[0].dekarbonisiert],
       name: 'Öpnv - dekarbonisiert',
       type: 'bar',
-      legendgroup: "group1"
+      legendgroup: 'group1',
     }
 
     var trace1_Kiezbloecke = {
@@ -193,14 +225,14 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[1].base],
       name: 'KiezBlöcke - base',
       type: 'bar',
-      legendgroup: "group2"
+      legendgroup: 'group2',
     }
     var trace2_Kiezbloecke = {
       x: ['Kiezbloecke'],
       y: [sessionVotesData[1]['ganze Stadt']],
       name: 'KiezBlöcke - stark',
       type: 'bar',
-      legendgroup: "group2"
+      legendgroup: 'group2',
     }
 
     var trace1_Fahrrad = {
@@ -208,14 +240,14 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[2].base],
       name: 'Fahrrad - base',
       type: 'bar',
-      legendgroup: "group3"
+      legendgroup: 'group3',
     }
     var trace2_Fahrrad = {
       x: ['Fahrrad'],
       y: [sessionVotesData[2].stark],
       name: 'Fahrrad - stark',
       type: 'bar',
-      legendgroup: "group3"
+      legendgroup: 'group3',
     }
 
     var trace1_Parkraum = {
@@ -223,21 +255,21 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[3].base],
       name: 'Parkraum - base',
       type: 'bar',
-      legendgroup: "group4"
+      legendgroup: 'group4',
     }
     var trace2_Parkraum = {
       x: ['Parkraum'],
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
       name: 'Parkraum - Besucher_teuer_Anwohner_preiswert',
       type: 'bar',
-      legendgroup: "group4"
+      legendgroup: 'group4',
     }
     var trace3_Parkraum = {
       x: ['Parkraum'],
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
       name: 'Parkraum - Besucher_teuer_Anwohner_teuer',
       type: 'bar',
-      legendgroup: "group4"
+      legendgroup: 'group4',
     }
 
     var trace1_Autoverkehr = {
@@ -245,21 +277,21 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].base],
       name: 'Autoverkehr - base',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
     var trace2_Autoverkehr = {
       x: ['Autoverkehr'],
       y: [sessionVotesData[4].mautFossil],
       name: 'Autoverkehr - maut Fossil',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
     var trace3_Autoverkehr = {
       x: ['Autoverkehr'],
       y: [sessionVotesData[4].MautFuerAlle],
       name: 'Autoverkehr - maut Für Alle',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
 
     var trace4_Autoverkehr = {
@@ -267,21 +299,21 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].zeroEmissionsZone],
       name: 'Autoverkehr - zero Emissions Zone',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
     var trace5_Autoverkehr = {
       x: ['Autoverkehr'],
       y: [sessionVotesData[4].zeroEmissionsZonePlusMaut],
       name: 'Autoverkehr - zero Emissions Zone Plus Maut',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
     var trace6_Autoverkehr = {
       x: ['Autoverkehr'],
       y: [sessionVotesData[4].autofrei],
       name: 'Autoverkehr - Autofrei',
       type: 'bar',
-      legendgroup: "group5"
+      legendgroup: 'group5',
     }
 
     var trace1_DRT = {
@@ -289,21 +321,21 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[5].base],
       name: 'DRT - base',
       type: 'bar',
-      legendgroup: "group6"
+      legendgroup: 'group6',
     }
     var trace2_DRT = {
       x: ['DRT'],
       y: [sessionVotesData[5].nurAussenbezirke],
       name: 'DRT - stark',
       type: 'bar',
-      legendgroup: "group6"
+      legendgroup: 'group6',
     }
     var trace3_DRT = {
       x: ['DRT'],
       y: [sessionVotesData[5].ganzeStadt],
       name: 'DRT - stark',
       type: 'bar',
-      legendgroup: "group6"
+      legendgroup: 'group6',
     }
 
     this.data = [
@@ -325,7 +357,7 @@ export default class VueComponent extends Vue {
       trace6_Autoverkehr,
       trace1_DRT,
       trace2_DRT,
-      trace3_DRT
+      trace3_DRT,
     ]
 
     this.showResults = true
@@ -351,6 +383,23 @@ export default class VueComponent extends Vue {
 }
 
 .sessionOn-btn:hover {
+  background-color: white;
+  color: #3a76af;
+  border: 1px solid #3a76af;
+}
+
+.getSession-btn {
+  color: white;
+  font-size: 16px;
+  /* margin: 20px 2px; */
+  background-color: #3a76af;
+  font-weight: bold;
+  margin: 15px 0 15px 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.getSession-btn:hover {
   background-color: white;
   color: #3a76af;
   border: 1px solid #3a76af;
@@ -385,7 +434,7 @@ h1 {
   background-color: #3a76af;
   font-weight: bold;
   align-items: center;
-  margin-top: 15px;
+  margin-top: 30px;
   margin-bottom: 25px;
   justify-content: center;
 }
@@ -394,5 +443,19 @@ h1 {
   background-color: white;
   color: #3a76af;
   border: 1px solid #3a76af;
+}
+
+.results {
+  max-width: 80%;
+  margin: auto auto 50px auto;
+}
+
+input[type="number"],
+textarea {
+  font: 1rem / 1.5 sans-serif;
+  display: flex;
+  margin: auto;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
 }
 </style>

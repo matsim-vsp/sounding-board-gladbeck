@@ -52,7 +52,7 @@ export default class VueComponent extends Vue {
 @import '@/styles.scss';
 
 .navbar.is-link {
-  background-color: rgb(58, 118, 175);
+  background-color: #c40d1e;
   font-weight: 600;
   font-size: 1rem;
 }

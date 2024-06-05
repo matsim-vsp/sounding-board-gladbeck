@@ -193,6 +193,18 @@ def get_votes_from_db(session_id):
     
     return json.dumps(votes)
     
-
+@app.route('/getLastSession/', methods=["GET"])
+def get_last_session():
+    if not is_valid_api_key(): return "Invalid API Key", 403
+    
+    con = sqlite3.connect("test.db", check_same_thread=False)
+    cur = con.cursor()
+    cur.execute("SELECT MAX(sessionID) FROM sessions")
+    result = convertTuple(cur.fetchone())
+    if (result == "None"):
+        return "0"
+    else:
+        return result
+    
 if __name__ == "__main__":
     app.run(port=4999, debug=True)

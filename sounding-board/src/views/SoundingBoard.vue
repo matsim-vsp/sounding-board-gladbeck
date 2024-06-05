@@ -25,21 +25,29 @@
 
     .factors
       .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
-        h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
-          .tooltip
-            .top
-              h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
-              p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
-        b-button.is-small.factor-option(
-          v-for="option of factors[key]"
-          :key="option"
-          :class="option == currentConfiguration[key] ? 'is-danger' : ''"
-          @click="setFactor(key, option)"
-        ) {{ option }}
-        p.factor-description {{value.description}}
-    .button.reveal-button(@click="showResults") Ergebnisse anzeigen
-    .button.hide-button(@click="hideResults") Ergebnisse ausblenden
-    .button.hide-button(@click="saveConditions") Stimme abgeben
+        .right-block
+          h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
+            .tooltip
+              .top
+                h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
+                p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
+          b-button.is-small.factor-option(
+            v-for="option of factors[key]"
+            :key="option"
+            :class="option == currentConfiguration[key] ? 'is-danger' : ''"
+            @click="setFactor(key, option)"
+          ) {{ option }}
+        .left-block
+          .text-area
+            .conditionTitle {{ textBlocks[key].description}}
+            .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
+
+
+    .buttons
+      .button.reveal-button(@click="showResults") Ergebnisse anzeigen
+      .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+      .button.hide-button(@click="saveConditions") Stimme abgeben
+      .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
 
 
 
@@ -219,6 +227,11 @@ export default class VueComponent extends Vue {
     cookie: false,
   }
 
+  private voted = false
+  private resultsRequested = false
+
+  private textBlocks = {}
+
   private apiKey = ''
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
@@ -292,7 +305,7 @@ export default class VueComponent extends Vue {
   }
 
   private setFactor(factor: string, option: any) {
-    console.log(factor, option)
+    // console.log(factor, option)
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
@@ -321,6 +334,7 @@ export default class VueComponent extends Vue {
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
     this.getApiAuthorization()
+    // this.setText()
   }
 
   private async buildPageForURL() {
@@ -332,6 +346,60 @@ export default class VueComponent extends Vue {
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
+    this.textBlocks = {
+      OePNV: {
+        description: 'S-Bahn, U-Bahn, Tram, und Bus',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.OePNV.subdescriptions.scenario1,
+          dekarbonisiert: this.yaml.descriptionInput.OePNV.subdescriptions.scenario2,
+          stark: this.yaml.descriptionInput.OePNV.subdescriptions.scenario3,
+        },
+      },
+      kiezblocks: {
+        description: '10 km/h Tempolimit - keine Durchfahrt möglich',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario1,
+          'ganze Stadt': this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario2,
+        },
+      },
+      Fahrrad: {
+        description: 'Radwege sowie Radschnellverbindungen',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.Fahrrad.subdescriptions.scenario1,
+          stark: this.yaml.descriptionInput.Fahrrad.subdescriptions.scenario2,
+        },
+      },
+      Parkraum: {
+        description: 'Für Ganz Berlin',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.Parkraum.subdescriptions.scenario1,
+          Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
+            .scenario2,
+          Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
+            .scenario3,
+        },
+      },
+      fahrenderVerkehr: {
+        description: 'Fahrzeugen auf Straßen zur Personen- oder Güterbeförderung',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario1,
+          mautFossil: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario2,
+          MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario3,
+          zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario4,
+          zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
+            .scenario5,
+          autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario6,
+        },
+      },
+      DRT: {
+        description: 'Digitales Rufbussystem',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.DRT.subdescriptions.scenario1,
+          nurAussenbezirke: this.yaml.descriptionInput.DRT.subdescriptions.scenario2,
+          ganzeStadt: this.yaml.descriptionInput.DRT.subdescriptions.scenario3,
+        },
+      },
+    }
   }
 
   // private parseMarkdown(text: string) {
@@ -419,15 +487,12 @@ export default class VueComponent extends Vue {
     // convert set to array
     for (const factor of Object.keys(f)) {
       this.factors[factor] = Array.from(f[factor])
-
       const definition = this.yaml.inputColumns[factor]
       this.factorTitle[factor] =
         this.lang == 'de'
           ? definition.title_de || definition.title || definition.title_en || factor
           : definition.title_en || definition.title || definition.title_de || factor
     }
-
-    this.factors = Object.assign({}, this.factors)
   }
 
   private buildPresets() {
@@ -565,6 +630,7 @@ export default class VueComponent extends Vue {
   }
 
   private getDescriptionForTooltip(key: string) {
+    // console.log(key)
     for (const value of Object.values(this.yaml.descriptionInput)) {
       if (value.title == key) return value.description
     }
@@ -572,14 +638,17 @@ export default class VueComponent extends Vue {
   }
 
   private showResults() {
-    let results = Array.from(
-      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
-    )
-    results[0].style.display = 'flex'
-    window.scrollTo({
-      top: 600,
-      behavior: 'smooth',
-    })
+    this.resultsRequested = true
+    if (this.voted == true && this.resultsRequested == true) {
+      let results = Array.from(
+        document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+      )
+      results[0].style.display = 'flex'
+      window.scrollTo({
+        top: 600,
+        behavior: 'smooth',
+      })
+    }
   }
 
   private hideResults() {
@@ -615,7 +684,7 @@ export default class VueComponent extends Vue {
     //     const visitorId = result.visitorId
     //     console.log(visitorId)
     //   })
-
+    this.voted = true
     for (const metric of this.metrics) {
       console.log(metric.title + ': ' + metric.value)
     }
@@ -674,12 +743,6 @@ export default class VueComponent extends Vue {
       value.showDescription = true
     }
   }
-
-  /*   private showInformation(text: string) {
-    for (const [key, value] of Object.entries(this.yaml.inputColumns)) {
-      if (text == key) value.showDescription = !value.showDescription
-    }
-  } */
 }
 </script>
 
@@ -857,6 +920,11 @@ li.notes-item {
   //justify-content: center;
 }
 
+.metrics {
+  display: grid;
+  grid-template-columns: 20% 20% 20% 20% 20%;
+}
+
 .metrics .metric {
   border: 1px solid black;
   padding: 1rem;
@@ -908,9 +976,50 @@ li.notes-item {
 }
 
 .factors {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  // flex-wrap: wrap;
+  grid-template-columns: 50% 50%;
 }
+
+.factor {
+  display: grid;
+  // flex-wrap: wrap;
+  grid-template-columns: 50% 50%;
+}
+
+.right-block {
+  display: grid;
+}
+
+.conditionTitle {
+  padding-top: 10px;
+  font-size: 0.8em;
+  font-weight: bold;
+  line-height: 1em;
+  padding-bottom: 5px;
+  border-bottom: 1px #000 solid;
+}
+.conditionDescription {
+  margin-top: 10px;
+  font-size: 0.6em;
+  animation: fadeInAnimation ease 3s;
+  animation-fill-mode: forwards;
+}
+
+@keyframes fadeInAnimation {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+.error-text {
+  color: #c40d1e;
+  font-weight: bold;
+}
+
 .metrics {
   display: flex;
   flex-wrap: nowrap;
@@ -945,7 +1054,13 @@ li.notes-item {
   padding: 0.5rem;
   background-color: white;
   margin: 0.5rem;
-  max-width: fit-content;
+  max-width: 100%;
+  display: grid;
+}
+
+button.is-small.factor-option {
+  width: fit-content;
+  height: 100%;
 }
 
 .preset-option {
@@ -956,7 +1071,7 @@ li.notes-item {
   margin: 0.25rem;
   margin-top: 0rem;
   margin-bottom: 0rem;
-  font-size: 0.8rem;
+  font-size: 0.5rem;
   cursor: pointer;
   font-style: normal;
 }
@@ -1034,6 +1149,35 @@ li.notes-item {
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
+.button.is-danger {
+  background-color: #c40d1e !important;
+}
+
+@media only screen and (max-width: 800px) {
+  .factors {
+  grid-template-columns: 100%;
+}
+}
+
+@media only screen and (max-width: 629px) {
+  .hide-button{
+    margin: 5px;
+    width: fit-content;
+  }
+  .reveal-button{
+    margin: 5px;
+    width: fit-content;
+  }
+  .buttons {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+}
+
+@media only screen and (max-width: 1300px) {
+
+}
+
 @media only screen and (max-width: 1440px) {
   .factor-option {
     font-size: 0.7rem;
@@ -1067,11 +1211,16 @@ li.notes-item {
   }
 }
 
+@media only screen and (min-width: 1080px) {
+  .factors {
+    grid-template-columns: 33.3% 33.3% 33.3%;
+  }
+}
+
 @media only screen and (max-width: 1280px) {
   .factor-option {
     font-size: 0.6rem;
   }
-
   .preset-option {
     font-size: 0.7rem;
   }
