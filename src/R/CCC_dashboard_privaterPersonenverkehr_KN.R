@@ -33,6 +33,7 @@ frame <- expand.grid(OePNV = c("base","dekarbonisiert","stark"),
 ## value in relation (1.00 = 100%)
 CO2 <- c(1.00)
 traffic <- c(1.00)
+drtTraffic <- c(0.00)
 parking <- c(1.00)
 
 Kosten <- c(0.00)
@@ -155,13 +156,15 @@ massnahme <- "fahrenderVerkehr"
 
 auspraegung <- mautFossil
 
-# Erster Schritt: Maut.  40% wechseln vom Auto weg.
+# Erster Schritt: Maut.  40% wechseln vom Auto weg (s.a. unten "MautFuerAlle").
 
-# Zweiter Schritt: Möglichkeit E-Auto.  (a) Von obigen 40%-Pkte wechseln 20%-Pkte wieder zurück.  (b) Von den anderen 60%-Pkten fossiles Auto kaufen sich 2/3 ein elektrisches.
+# Zweiter Schritt: Möglichkeit E-Auto.  
+# (a) Von obigen 40%-Pkte wechseln 20%-Pkte wieder zurück.  
+# (b) Von den anderen 60%-Pkten fossiles Auto kaufen sich 2/3 ein elektrisches.
 
-# Resultat: 20%Pkte plus 40%Pkte = 60%Pkte elektrisch; 20%Pkte plus 60Pkte insgesamt.
+# Resultat: 20%Pkte plus 40%Pkte = 60%Pkte elektrisch; 20%Pkte (fossil) plus 60Pkte (elektrisch) insgesamt.
 
-measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.6,measures$CO2)
+measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$CO2*0.2,measures$CO2)
 measures$"traffic" <- ifelse(measures[[massnahme]]==auspraegung,measures$traffic*0.8,measures$traffic)
 measures$"parking" <- ifelse(measures[[massnahme]]==auspraegung,measures$parking*0.9,measures$parking)
 # nur Hälfte derjenigen, die nicht mehr fahren, schaffen auch das Auto ganz ab
@@ -225,6 +228,8 @@ auspraegung <- "ganzeStadt"
 # "verscheuchte" Autofahrer wir haben, nachdem die obigen Massnahmen eingeführt wurden.  Das ist 1 - measures$traffic.  Davon kommen dann 0.75 wieder
 # dazu.
 measures$traffic <- ifelse(measures[[massnahme]]==auspraegung, measures$traffic + (1.-measures$traffic) * 0.75,measures$traffic)
+measures$drtTraffic <- ifelse(measures[[massnahme]]==auspraegung, (1.-measures$traffic) * 0.75,0)
+
 
 # CO2 kommt keiner hinzu weil elektrisch:
 #measures$"CO2" <- ifelse(measures[[massnahme]]==auspraegung,measures$"CO2" - 0.02,measures$"CO2")
@@ -292,7 +297,7 @@ massnahme <- "Parkraum"
 
 auspraegung <- "BesucherFossilTeuer_alleAnderenPreiswert" 
 
-measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - measures$traffic*0.033*2.5*4*365,     measures$Kosten)
+measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - (measures$traffic-measures$drtTraffic) *0.033*2.5*4*365,     measures$Kosten)
 
 # 1 mio trips.  50% do not pay for parking --> remain.  Other 50% reduced to 10%.  Out of that, 2/3 move to electric.  That is, 3.33% of moving traffic pays for parking.
 
@@ -303,7 +308,7 @@ measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten 
 
 auspraegung <- "Besucher_teuer_Anwohner_preiswert"
 
-measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - measures$traffic*0.1*2.5*4*365,     measures$Kosten)
+measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten - (measures$traffic-measures$drtTraffic) *0.1*2.5*4*365,     measures$Kosten)
 
 # 1 mio trips.  50% do not pay for parking --> remain.  Other 50% reduced to 10%.  That is, 10% of moving traffic pays for parking.
 
@@ -314,7 +319,7 @@ measures$Kosten <- ifelse( measures[[massnahme]]==auspraegung,  measures$Kosten 
 
 auspraegung <- "Besucher_teuer_Anwohner_teuer"
 
-measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,       measures$Kosten - measures$parking*1000 - measures$traffic*0.1*2.5*4*365 ,          measures$Kosten)
+measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,       measures$Kosten - measures$parking*1000 - (measures$traffic-measures$drtTraffic)*0.1*2.5*4*365 ,          measures$Kosten)
 
 
 # OLD The remaining 10pct pay 10Eu per day as above, plus 2.8 Eu per day for "Anwohner".
@@ -366,8 +371,7 @@ auspraegung <- "MautFuerAlle"
 # 20ct/km
 
 measures$Kosten <- ifelse(measures[[massnahme]]==auspraegung,    measures$Kosten - measures$traffic/0.6 * 4*365,    measures$Kosten)
-
-# OLD: 4 Mio Einnahmen pro Tag.  Habe ich jetzt 1:1 eingetragen.  Umrechungen ggf. am Ende.
+# 4 Mio Einnahmen pro Tag.  Bei diesem Szenario ist measures$traffic = 0.6; also müssten die 4 Mio durch 0.6 Verkehr erzeugt werden; daher Division durch 0.6.
 
 # --------------------------------------------
 # --------------------------------------------
@@ -401,7 +405,8 @@ measures$"Kosten" <- ifelse(measures[[massnahme]]==auspraegung,measures$"Kosten"
 ## CO2:      0,20€/km -> ~ -50%, 0,40€/km -> -75%
 ## traffic:  0,20€/km -> ~ -35% FzgKm, 0,40€/km -> -55% FzgKm
 ## Kosten:   3,5 bis 4 Millionen Euro Einnahmen (+) am Tag
-## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars))
+
+## parking:  0,20€/km -> ~ -50% car modal split, 0,40€/km -> -75% car modal split (VSP WP 20-03 does not explicitly confirm but points in the same direction (only cares about nr of drt rides and shift from cars)) ((can't say what this line is saying since it (1) says nothing about parking, and (2) repeats the CO2 results from above.  kai, jun'24))
 
 
 #########################################################################################################
