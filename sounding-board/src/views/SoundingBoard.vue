@@ -6,20 +6,25 @@
   .heading
     h2.section-title: b {{ title }}
 
-  .description
-    .description-subtitle(v-for="item in yaml.descriptionOutput")
-      //p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
-      p.description-text(v-html="'<b>' + item.title + ': </b>' + item.description")
+  .header-description
+    .header-description-subtitle(v-for="item in yaml.descriptionOutput")
+      .headers-hoverText
+        .headers-top
+          h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }} 
+          p.factor-description {{item.description}} 
+      p.header-description-text(v-html="'<b>' + item.title")     
+      .header-images 
+        img(:src="getImagePath(item.title)")
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons.preset-option(
-          v-for="preset in orderedPresets"
-          :class="preset.key == currentPreset ? 'is-success' : ''"
-          @click="setPreset(preset.key)"
+      v-for="preset in orderedPresets"
+      :class="preset.key == currentPreset ? 'is-success' : ''"
+      @click="setPreset(preset.key)"
         ) {{ preset.title }}
 
-      
+
   .configurator
     h2.section-title {{ $t('settings') }}
 
@@ -31,22 +36,23 @@
               .top
                 h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
                 p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
-          b-button.is-small.factor-option(
-            v-for="option of factors[key]"
-            :key="option"
-            :class="option == currentConfiguration[key] ? 'is-danger' : ''"
-            @click="setFactor(key, option)"
-          ) {{ option }}
+          .buttons-div      
+            b-button.is-small.factor-option.expand(
+              v-for="option of factors[key]"
+              :key="option"
+              :class="option == currentConfiguration[key] ? 'is-danger' : ''"
+              @click="setFactor(key, option)"
+            ) {{ option }}
         .left-block
-          .text-area
-            .conditionTitle {{ textBlocks[key].description}}
-            .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
+          .conditionTitle {{ textBlocks[key].description}}
+          .conditionDescriptionTitle Information:
+          .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
 
 
+    .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
     .buttons
       .button.reveal-button(@click="showResults") Ergebnisse anzeigen
       .button.hide-button(@click="hideResults") Ergebnisse ausblenden
-      .button.hide-button(@click="saveConditions") Stimme abgeben
       .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
 
 
@@ -73,7 +79,7 @@
           .metric
             car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
-          
+
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
@@ -227,7 +233,8 @@ export default class VueComponent extends Vue {
     cookie: false,
   }
 
-  private voted = false
+  private voted = false;
+
   private resultsRequested = false
 
   private textBlocks = {}
@@ -270,6 +277,15 @@ export default class VueComponent extends Vue {
     }, 1000)
   }
 
+  private getImagePath(title) {
+    try {
+      return require(`../assets/images/${title}.png`);
+    } catch (e) {
+      console.error(`Image not found: ../assets/images/${title}.png`);
+      return '';
+    }
+  }
+
   private formattedValue(v: number, isCosts: boolean) {
     const nf = new Intl.NumberFormat('de-DE', {
       minimumFractionDigits: 0,
@@ -298,14 +314,23 @@ export default class VueComponent extends Vue {
     }
 
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
+    console.log(this.currentConfiguration.DRT)
+    console.log(this.currentConfiguration.OePNV)
+    this.updateVoteConditions('OePNV', this.currentConfiguration.OePNV)
+    this.updateVoteConditions('kiezblocks', this.currentConfiguration.kiezblocks)
+    this.updateVoteConditions('Fahrrad', this.currentConfiguration.Fahrrad)
+    this.updateVoteConditions('Parkraum', this.currentConfiguration.Parkraum)
+    this.updateVoteConditions('fahrenderVerkehr', this.currentConfiguration.fahrenderVerkehr)
+    this.updateVoteConditions('DRT', this.currentConfiguration.DRT)
+
     this.updateValues()
+
     this.currentPreset = preset
 
     this.setURLQuery()
   }
 
   private setFactor(factor: string, option: any) {
-    // console.log(factor, option)
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
@@ -326,6 +351,7 @@ export default class VueComponent extends Vue {
   }
 
   private mounted() {
+    // localStorage.setItem('LSvoted', 'false')
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
@@ -639,7 +665,8 @@ export default class VueComponent extends Vue {
 
   private showResults() {
     this.resultsRequested = true
-    if (this.voted == true && this.resultsRequested == true) {
+    if (localStorage.getItem('LSvoted') == 'true' && this.resultsRequested == true) {
+      this.voted = true;
       let results = Array.from(
         document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
       )
@@ -684,7 +711,10 @@ export default class VueComponent extends Vue {
     //     const visitorId = result.visitorId
     //     console.log(visitorId)
     //   })
-    this.voted = true
+    localStorage.setItem('LSvoted', 'true')
+    this.voted = true;
+    this.updateVoteConditions;
+  
     for (const metric of this.metrics) {
       console.log(metric.title + ': ' + metric.value)
     }
@@ -753,6 +783,7 @@ export default class VueComponent extends Vue {
   background-color: white;
   color: #224;
 }
+
 .center-area {
   max-width: 70rem;
   padding: 1rem 3rem 1rem 3rem;
@@ -817,7 +848,7 @@ p.factor {
 .reveal-button {
   color: white;
   font-size: 16px;
-  margin: 20px 2px;
+  margin: 10px;
   background-color: #3a76af;
   font-weight: bold;
 }
@@ -831,7 +862,7 @@ p.factor {
 .hide-button {
   color: white;
   font-size: 16px;
-  margin: 20px 2px;
+  margin: 10px;
   background-color: #3a76af;
   font-weight: bold;
 }
@@ -840,6 +871,20 @@ p.factor {
   background-color: white;
   color: #3a76af;
   border: 1px solid #3a76af;
+}
+
+.submit-button {
+  color: white;
+  font-size: 16px;
+  margin: 10px;
+  background-color: #77b255;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: white;
+  color: #77b255;
+  border: 1px solid #77b255;
 }
 
 .header-nav {
@@ -857,6 +902,51 @@ p.factor {
 
 li.notes-item {
   line-height: 1.3rem;
+}
+
+.header-description {
+  font-size: 0.85rem;
+  margin-top: 20px;
+  margin-bottom: 0.25rem;
+  display: flex;
+  flex: 1;
+  width: 80%;
+  padding-bottom: 25px;
+}
+
+
+
+.header-description-subtitle {
+  flex: 1 1 auto;
+  margin: 0.5rem;
+    margin-left: 0.5rem;
+  margin-left: 0.25rem;
+  font-size: 1.2rem;
+  position: relative;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  white-space: nowrap;
+}
+
+.header-images {
+  max-width: 80px;
+  margin: auto;
+  height: 50px;
+  justify-content: center;
+  display: flex;
+
+}
+
+
+
+.header-description-text {
+  margin-bottom: 10;
+  text-align: center;
+
 }
 
 .description {
@@ -903,32 +993,33 @@ li.notes-item {
   padding: 1rem 2rem 2rem 2rem;
 }
 
-.metric {
+.metric[data-v-4aa344e9] {
   background-color: white;
-  //width: max-content;
-  //width: 320px;
-  //padding: 1rem;
-  //margin: 0.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
-  //min-width: 100px;
-  flex: 1;
-  //height: fit-content;
-  //border: 1px solid black;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  -ms-flex-item-align: stretch;
   align-self: stretch;
-
-  //justify-content: center;
+  min-height: 500px;
+  flex: 1;
 }
 
-.metrics {
-  display: grid;
-  grid-template-columns: 20% 20% 20% 20% 20%;
-}
+// .metrics {
+//   display: grid;
+//   grid-template-columns: 20% 20% 20% 20% 20%;
+// }
 
 .metrics .metric {
   border: 1px solid black;
   padding: 1rem;
 }
+
 .metrics .metric:last-of-type {
   border: none;
   padding: 0rem;
@@ -960,7 +1051,7 @@ li.notes-item {
 }
 
 .heading p {
-  color: #33b;
+  color: #3a76af;
   font-size: 1rem;
   text-transform: none;
 }
@@ -970,7 +1061,7 @@ li.notes-item {
 }
 
 .description p {
-  color: #33b;
+  color: #3a76af;
   font-size: 1.2rem;
   text-transform: none;
 }
@@ -987,52 +1078,62 @@ li.notes-item {
   grid-template-columns: 50% 50%;
 }
 
-.right-block {
-  display: grid;
-}
-
 .conditionTitle {
   padding-top: 10px;
   font-size: 0.8em;
   font-weight: bold;
-  line-height: 1em;
+  line-height: 1.2em;
   padding-bottom: 5px;
   border-bottom: 1px #000 solid;
 }
-.conditionDescription {
+
+.conditionDescriptionTitle {
   margin-top: 10px;
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+.conditionDescription {
+  // margin-top: 10px;
   font-size: 0.6em;
-  animation: fadeInAnimation ease 3s;
-  animation-fill-mode: forwards;
+  // animation: fadeInAnimation ease 3s;
+  // animation-fill-mode: forwards;
 }
 
-@keyframes fadeInAnimation {
-  0% {
-    opacity: 0;
-  }
+// @keyframes fadeInAnimation {
+//   0% {
+//     opacity: 0;
+//   }
 
-  100% {
-    opacity: 1;
-  }
-}
+//   100% {
+//     opacity: 1;
+//   }
+// }
 .error-text {
   color: #c40d1e;
   font-weight: bold;
 }
 
+.left-block {
+  height: 100%;
+}
+
 .metrics {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   height: fit-content;
   //justify-content: stretch;
 
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: center;
   align-content: center;
   gap: 20px;
 }
+
+// #car-viz-total {
+//   width: 108%;
+// }
 
 .metric-title {
   margin-bottom: 0.2rem;
@@ -1058,9 +1159,24 @@ li.notes-item {
   display: grid;
 }
 
+.buttons-div {
+  display: flex;
+  flex-wrap: wrap;
+  height: fit-content;
+  font-size: 9px;
+  font-weight: bold;
+}
+
 button.is-small.factor-option {
-  width: fit-content;
-  height: 100%;
+  width: 90%;
+  margin-top: 5px;
+  font-weight: bold;
+  font-size: 8px;
+}
+
+button.is-small.factor-option:hover {
+  color: #fff;
+  background-color: #c40d1e;
 }
 
 .preset-option {
@@ -1074,6 +1190,16 @@ button.is-small.factor-option {
   font-size: 0.5rem;
   cursor: pointer;
   font-style: normal;
+}
+
+button.is-huge.factor-option.preset-buttons {
+  font-size: 0.8em;
+}
+
+button.is-huge.factor-option.preset-buttons:hover {
+  background-color: #48c78e;
+  border-color: transparent;
+  color: #fff;
 }
 
 .factor-description {
@@ -1093,6 +1219,62 @@ button.is-small.factor-option {
 
 .subdescription {
   margin-left: 2rem;
+}
+
+.headers-hoverText {
+  display: inline-block;
+  position: absolute;
+  text-align: left;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.headers-hoverText .headers-top {
+  // min-width: 200px;
+  // max-width: 250px;
+  width: 400px;
+  // top: -20px;
+  // left: 50%;
+  transform: translate(0, -100%);
+  padding: 10px 20px;
+  color: #444444;
+  background-color: white;
+  font-weight: normal;
+  font-size: 13px;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  text-wrap: wrap;
+}
+
+.headers-hoverText:hover .headers-top {
+  display: block;
+}
+
+.headers-hoverText .headers-top i {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.headers-hoverText .headers-top i::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background-color: #eeeeee;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* TOOLTIP */
@@ -1155,27 +1337,59 @@ button.is-small.factor-option {
 
 @media only screen and (max-width: 800px) {
   .factors {
-  grid-template-columns: 100%;
-}
+    grid-template-columns: 100%;
+  }
 }
 
 @media only screen and (max-width: 629px) {
-  .hide-button{
+  .hide-button {
     margin: 5px;
     width: fit-content;
   }
-  .reveal-button{
+
+  .reveal-button {
     margin: 5px;
     width: fit-content;
   }
+
   .buttons {
     display: grid;
     grid-template-columns: 100%;
   }
 }
 
-@media only screen and (max-width: 1300px) {
+@media only screen and (max-width: 1430px) {
+  .metric[data-v-4aa344e9] {
+    flex: 30%;
+  }
 
+  #car-viz-total {
+    scale: 0.98 !important;
+    width: 92%;
+  }
+}
+
+@media only screen and (min-width: 1430px) and (max-width: 1630px) {
+  #car-viz-total {
+    width: 115%;
+  }
+}
+
+@media only screen and (min-width: 1900px) {
+  .factors {
+    width: 75% !important;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .metric[data-v-4aa344e9] {
+    flex: 50%;
+  }
+
+  #car-viz-total {
+    scale: 0.98 !important;
+    width: 100%;
+  }
 }
 
 @media only screen and (max-width: 1440px) {
@@ -1221,6 +1435,7 @@ button.is-small.factor-option {
   .factor-option {
     font-size: 0.6rem;
   }
+
   .preset-option {
     font-size: 0.7rem;
   }
@@ -1273,6 +1488,7 @@ button.is-small.factor-option {
   .presets {
     padding: 1rem 2rem 1rem 2rem;
   }
+
   .factor-option {
     font-size: 0.55rem;
   }

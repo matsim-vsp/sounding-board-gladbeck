@@ -36,8 +36,8 @@ export default class VueComponent extends Vue {
 
   private plotlyLayout = {
     title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
-    barmode: 'stack',
-  }
+    barmode: 'stack'
+    }
 
   private data = []
 
@@ -203,20 +203,31 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[0].base],
       name: 'Öpnv - base',
       type: 'bar',
+      marker: {
+        color: "#B3D9FF"
+      },
       legendgroup: 'group1',
     }
+
     var trace2_Oepnv = {
-      x: ['oepnv'],
-      y: [sessionVotesData[0].stark],
-      name: 'Öpnv - stark',
-      type: 'bar',
-      legendgroup: 'group1',
-    }
-    var trace3_Oepnv = {
       x: ['oepnv'],
       y: [sessionVotesData[0].dekarbonisiert],
       name: 'Öpnv - dekarbonisiert',
       type: 'bar',
+      marker: {
+        color: "#3399FF"
+      },
+      legendgroup: 'group1',
+    }
+
+    var trace3_Oepnv = {
+      x: ['oepnv'],
+      y: [sessionVotesData[0].stark],
+      name: 'Öpnv - stark',
+      type: 'bar',
+      marker: {
+        color: "#00008B"
+      },
       legendgroup: 'group1',
     }
 
@@ -225,12 +236,18 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[1].base],
       name: 'KiezBlöcke - base',
       type: 'bar',
+      marker: {
+        color: "#98FB98"
+      },
       legendgroup: 'group2',
     }
     var trace2_Kiezbloecke = {
       x: ['Kiezbloecke'],
       y: [sessionVotesData[1]['ganze Stadt']],
-      name: 'KiezBlöcke - stark',
+      name: 'KiezBlöcke - ganze Stadt',
+      marker: {
+        color: "#006400"
+      },
       type: 'bar',
       legendgroup: 'group2',
     }
@@ -240,12 +257,18 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[2].base],
       name: 'Fahrrad - base',
       type: 'bar',
+      marker: {
+        color: "#FFA07A"
+      },
       legendgroup: 'group3',
     }
     var trace2_Fahrrad = {
       x: ['Fahrrad'],
       y: [sessionVotesData[2].stark],
       name: 'Fahrrad - stark',
+      marker: {
+        color: "#8B0000"
+      },
       type: 'bar',
       legendgroup: 'group3',
     }
@@ -255,20 +278,39 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[3].base],
       name: 'Parkraum - base',
       type: 'bar',
+      marker: {
+        color: "#E6E6FA"
+      },
       legendgroup: 'group4',
     }
     var trace2_Parkraum = {
       x: ['Parkraum'],
-      y: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
-      name: 'Parkraum - Besucher_teuer_Anwohner_preiswert',
+      y: [sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert],
+      name: 'Parkraum - BesucherFossilTeuer_alleAnderenPreiswert',
       type: 'bar',
+      marker: {
+        color: "#9370DB"
+      },
       legendgroup: 'group4',
     }
     var trace3_Parkraum = {
       x: ['Parkraum'],
+      y: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
+      name: 'Parkraum - Besucher_teuer_Anwohner_preiswert',
+      type: 'bar',
+      marker: {
+        color: "#8A2BE2"
+      },
+      legendgroup: 'group4',
+    }
+    var trace4_Parkraum = {
+      x: ['Parkraum'],
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
       name: 'Parkraum - Besucher_teuer_Anwohner_teuer',
       type: 'bar',
+      marker: {
+        color: "#4B0082"
+      },
       legendgroup: 'group4',
     }
 
@@ -277,6 +319,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].base],
       name: 'Autoverkehr - base',
       type: 'bar',
+      marker: {
+        color: "#FFDAB9"
+      },
       legendgroup: 'group5',
     }
     var trace2_Autoverkehr = {
@@ -284,6 +329,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].mautFossil],
       name: 'Autoverkehr - maut Fossil',
       type: 'bar',
+      marker: {
+        color: "#FFA07A"
+      },
       legendgroup: 'group5',
     }
     var trace3_Autoverkehr = {
@@ -291,6 +339,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].MautFuerAlle],
       name: 'Autoverkehr - maut Für Alle',
       type: 'bar',
+      marker: {
+        color: "#FF7F50"
+      },
       legendgroup: 'group5',
     }
 
@@ -299,6 +350,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].zeroEmissionsZone],
       name: 'Autoverkehr - zero Emissions Zone',
       type: 'bar',
+      marker: {
+        color: "#FF8C00"
+      },
       legendgroup: 'group5',
     }
     var trace5_Autoverkehr = {
@@ -306,6 +360,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].zeroEmissionsZonePlusMaut],
       name: 'Autoverkehr - zero Emissions Zone Plus Maut',
       type: 'bar',
+      marker: {
+        color: "#CC5500"
+      },
       legendgroup: 'group5',
     }
     var trace6_Autoverkehr = {
@@ -313,6 +370,9 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[4].autofrei],
       name: 'Autoverkehr - Autofrei',
       type: 'bar',
+      marker: {
+        color: "#B7410E"
+      },
       legendgroup: 'group5',
     }
 
@@ -321,19 +381,28 @@ export default class VueComponent extends Vue {
       y: [sessionVotesData[5].base],
       name: 'DRT - base',
       type: 'bar',
+      marker: {
+        color: "#FFFFE0"
+      },
       legendgroup: 'group6',
     }
     var trace2_DRT = {
       x: ['DRT'],
       y: [sessionVotesData[5].nurAussenbezirke],
-      name: 'DRT - stark',
+      name: 'DRT - nurAussenbezirke',
+      marker: {
+        color: "#FFD700"
+      },
       type: 'bar',
       legendgroup: 'group6',
     }
     var trace3_DRT = {
       x: ['DRT'],
       y: [sessionVotesData[5].ganzeStadt],
-      name: 'DRT - stark',
+      name: 'DRT - ganzeStadt',
+      marker: {
+        color: "#B8860B"
+      },
       type: 'bar',
       legendgroup: 'group6',
     }
@@ -349,6 +418,7 @@ export default class VueComponent extends Vue {
       trace1_Parkraum,
       trace2_Parkraum,
       trace3_Parkraum,
+      trace4_Parkraum,
       trace1_Autoverkehr,
       trace2_Autoverkehr,
       trace3_Autoverkehr,
