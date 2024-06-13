@@ -199,9 +199,9 @@ export default class VueComponent extends Vue {
 
   private visualizeData(sessionVotesData) {
     var trace1_Oepnv = {
-      x: ['oepnv'],
+      x: ['ÖPNV'],
       y: [sessionVotesData[0].base],
-      name: 'Öpnv - base',
+      name: 'ÖPNV - base',
       type: 'bar',
       marker: {
         color: "#B3D9FF"
@@ -210,9 +210,9 @@ export default class VueComponent extends Vue {
     }
 
     var trace2_Oepnv = {
-      x: ['oepnv'],
+      x: ['ÖPNV'],
       y: [sessionVotesData[0].dekarbonisiert],
-      name: 'Öpnv - dekarbonisiert',
+      name: 'ÖPNV - dekarbonisiert',
       type: 'bar',
       marker: {
         color: "#3399FF"
@@ -221,9 +221,9 @@ export default class VueComponent extends Vue {
     }
 
     var trace3_Oepnv = {
-      x: ['oepnv'],
+      x: ['ÖPNV'],
       y: [sessionVotesData[0].stark],
-      name: 'Öpnv - stark',
+      name: 'ÖPNV - stark',
       type: 'bar',
       marker: {
         color: "#00008B"

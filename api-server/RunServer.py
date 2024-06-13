@@ -153,53 +153,53 @@ def post_vote_to_db():
     check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
     cur.execute(check_if_voter_exists, (1, data['ipAddr']))
     voter_exists = cur.fetchone()
-    if (voter_exists != None): 
-        update_vote = """Update votes 
-                    SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
-                    parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?
-                    WHERE cookie = ? AND  ipAddr = ?"""
-        cur.execute(update_vote, (
-            data['oepnv'],
-            data['kiezBloecke'],
-            data['fahrrad'],
-            data['parkraum'],
-            data['fahrenderAutoVerkehr'],
-            data['drt'],
-            sessionID,
-            1, 
-            data['ipAddr']))
+    # if (voter_exists != None): 
+    #     update_vote = """Update votes 
+    #                 SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
+    #                 parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?
+    #                 WHERE cookie = ? AND  ipAddr = ?"""
+    #     cur.execute(update_vote, (
+    #         data['oepnv'],
+    #         data['kiezBloecke'],
+    #         data['fahrrad'],
+    #         data['parkraum'],
+    #         data['fahrenderAutoVerkehr'],
+    #         data['drt'],
+    #         sessionID,
+    #         1, 
+    #         data['ipAddr']))
         
-        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
-        print(table_list) 
+    #     table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
+    #     print(table_list) 
 
-        con.commit()
-        con.close()
+    #     con.commit()
+    #     con.close()
         
-        return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
+    #     return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
-    else:
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-            
-        cur.execute(db_vote_insert, (
-        data['oepnv'],
-        data['kiezBloecke'],
-        data['fahrrad'],
-        data['parkraum'],
-        data['fahrenderAutoVerkehr'],
-        data['drt'],
-        data['ipAddr'],
-        data['cookie'],
-        sessionID
-        ))
+    # else:
+    db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
         
-        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
-        print(table_list) 
+    cur.execute(db_vote_insert, (
+    data['oepnv'],
+    data['kiezBloecke'],
+    data['fahrrad'],
+    data['parkraum'],
+    data['fahrenderAutoVerkehr'],
+    data['drt'],
+    data['ipAddr'],
+    data['cookie'],
+    sessionID
+    ))
+    
+    table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
+    print(table_list) 
 
-        con.commit()
-        con.close()
+    con.commit()
+    con.close()
 
-        return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
+    return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
 @app.route('/getVotes/<session_id>', methods=["GET"])
 def get_votes_from_db(session_id):

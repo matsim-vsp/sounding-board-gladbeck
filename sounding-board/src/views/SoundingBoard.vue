@@ -11,10 +11,11 @@
       .headers-hoverText
         .headers-top
           h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }} 
-          p.factor-description {{item.description}} 
+          p.header-factor-description {{item.description}} 
       p.header-description-text(v-html="'<b>' + item.title")     
       .header-images 
         img(:src="getImagePath(item.title)")
+      .header-mobile-text {{item.description}} 
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -714,7 +715,7 @@ export default class VueComponent extends Vue {
     localStorage.setItem('LSvoted', 'true')
     this.voted = true;
     this.updateVoteConditions;
-  
+
     for (const metric of this.metrics) {
       console.log(metric.title + ': ' + metric.value)
     }
@@ -910,7 +911,7 @@ li.notes-item {
   margin-bottom: 0.25rem;
   display: flex;
   flex: 1;
-  width: 80%;
+  width: 100%;
   padding-bottom: 25px;
 }
 
@@ -919,7 +920,7 @@ li.notes-item {
 .header-description-subtitle {
   flex: 1 1 auto;
   margin: 0.5rem;
-    margin-left: 0.5rem;
+  margin-left: 0.5rem;
   margin-left: 0.25rem;
   font-size: 1.2rem;
   position: relative;
@@ -941,12 +942,19 @@ li.notes-item {
 
 }
 
-
-
 .header-description-text {
   margin-bottom: 10;
   text-align: center;
 
+}
+
+.header-factor-description {
+  font-size: 12px;
+  padding-right: 20px;
+}
+
+.header-mobile-text {
+  display: none;
 }
 
 .description {
@@ -1232,11 +1240,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 }
 
 .headers-hoverText .headers-top {
-  // min-width: 200px;
-  // max-width: 250px;
   width: 400px;
-  // top: -20px;
-  // left: 50%;
   transform: translate(0, -100%);
   padding: 10px 20px;
   color: #444444;
@@ -1356,6 +1360,7 @@ button.is-huge.factor-option.preset-buttons:hover {
     display: grid;
     grid-template-columns: 100%;
   }
+
 }
 
 @media only screen and (max-width: 1430px) {
@@ -1375,9 +1380,13 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
-@media only screen and (min-width: 1900px) {
+@media only screen and (min-width: 1600px) {
   .factors {
-    width: 75% !important;
+    width: 100% !important;
+  }
+
+  button.is-small.factor-option {
+    font-size: 1.2em;
   }
 }
 
@@ -1391,6 +1400,8 @@ button.is-huge.factor-option.preset-buttons:hover {
     width: 100%;
   }
 }
+
+
 
 @media only screen and (max-width: 1440px) {
   .factor-option {
@@ -1482,6 +1493,39 @@ button.is-huge.factor-option.preset-buttons:hover {
   .description p {
     font-size: 1.1rem;
   }
+
+  .header-description {
+    flex-wrap: wrap;
+    padding-left: 2em;
+  }
+  .header-description-subtitle {
+    width: 48%;
+  }
+
+  .headers-hoverText {
+    display: none;
+  }
+
+  .header-description-text {
+    text-align: left;
+  }
+
+  .header-images {
+    margin: unset;
+    justify-content: left;
+  }
+
+  .header-mobile-text {
+    display: block;
+    left: 80px;
+    position: absolute;
+    text-wrap: wrap;
+    width: 80%;
+    padding-right: 15px;
+    font-size: 11px;
+    text-align: left;
+    top: 42px;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
@@ -1548,6 +1592,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   .description p {
     font-size: 0.9rem;
   }
+
 }
 
 @media only screen and (max-width: 850px) {
