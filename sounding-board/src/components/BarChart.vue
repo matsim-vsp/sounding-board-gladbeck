@@ -30,25 +30,25 @@ export default class VueComponent extends Vue {
   private resizePlot() {
     if (window.innerWidth <= 1024) {
       this.layout.margin = { t: 10, r: 0, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1]
+      this.layout.yaxis.tickvals = [0, 0.25, 0.5, 0.75, 1, 1.2]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 2
       this.layout.xaxis.linewidth = 2
     } else if (window.innerWidth <= 1260) {
       this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 2
       this.layout.xaxis.linewidth = 2
     } else if (window.innerWidth <= 1440) {
       this.layout.margin = { t: 10, r: 10, b: 10, l: 30 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2]
       this.layout.font.size = 10
       this.layout.yaxis.gridwidth = 1
       this.layout.xaxis.linewidth = 1
     } else {
       this.layout.margin = { t: 10, r: 0, b: 10, l: 40 }
-      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1]
+      this.layout.yaxis.tickvals = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2]
       this.layout.font.size = 13
       this.layout.yaxis.gridwidth = 1
       this.layout.xaxis.linewidth = 1
@@ -84,11 +84,11 @@ export default class VueComponent extends Vue {
       gridwidth: 1,
       gridcolor: '#000000',
       fixedrange: true,
-      range: [0, 1.05],
+      range: [0, 1.25],
       tickformat: ',.0%',
-      //tickvals: [0, 0.2, 0.4, 0.6, 0.8, 1],
+      tickvals: [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2],
       title: {
-        //text: '% Diff',
+        // text: '% Diff',
         standoff: 500,
       },
     } as any,

@@ -47,7 +47,7 @@ def setup_auth_keys(authfile):
     print("*** Valid API users:", ", ".join(lookup.values()), '\n')
     return lookup
 
-valid_api_keys = setup_auth_keys(authfile)
+# valid_api_keys = setup_auth_keys(authfile)
 
 def is_valid_api_key():
     apikey = request.headers.get('Authorization')
@@ -63,13 +63,32 @@ def convertTuple(tup):
 
 # ---------- Set up Database -------------------------
 
+
 # DB table - votes
-con = sqlite3.connect("test.db", check_same_thread=False)
-cur = con.cursor()
-cur.execute("DROP TABLE votes")
-cur.execute("DROP TABLE sessions")
-cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID)")
-cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
+# if statment to open db and create tables if they don't exist.
+if (os.path.isfile('test.db')): 
+    con = sqlite3.connect("test.db", check_same_thread=False)
+    cur = con.cursor()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='votes'")
+    votes_exist = cur.fetchone()
+    cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='sessions'")
+    sessions_exist = cur.fetchone()
+    # cur.execute("DROP TABLE sessions")
+    # cur.execute("DROP TABLE votes")
+
+    if votes_exist == None:
+        print("no votes")
+        cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID)")
+
+    if sessions_exist == None:
+        cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
+    con.commit()
+    con.close()
+
+
+# cur.execute("DROP TABLE votes")
+# cur.execute("DROP TABLE sessions")
+
 
 # ---------- Set up Flask ----------------------------
 # Flask API
@@ -153,9 +172,9 @@ def post_vote_to_db():
     check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
     cur.execute(check_if_voter_exists, (1, data['ipAddr']))
     voter_exists = cur.fetchone()
-    # if (voter_exists != None):
-    #     update_vote = """Update votes
-    #                 SET oepnv = ?, kiezBloecke = ?, fahrrad = ?,
+    # if (voter_exists != None): 
+    #     update_vote = """Update votes 
+    #                 SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
     #                 parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?
     #                 WHERE cookie = ? AND  ipAddr = ?"""
     #     cur.execute(update_vote, (
@@ -178,7 +197,9 @@ def post_vote_to_db():
     #     return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     # else:
-    db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID)
+
+    db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
+
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
     cur.execute(db_vote_insert, (
@@ -212,6 +233,9 @@ def get_votes_from_db(session_id):
     votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'session_id': row[8]} for row in results]
     print(votes)
 
+    con.commit()
+    con.close()
+    
     return json.dumps(votes)
 
 @app.route('/getLastSession/', methods=["GET"])
@@ -222,6 +246,10 @@ def get_last_session():
     cur = con.cursor()
     cur.execute("SELECT MAX(sessionID) FROM sessions")
     result = convertTuple(cur.fetchone())
+
+    con.commit()
+    con.close()
+
     if (result == "None"):
         return "0"
     else:

@@ -41,10 +41,13 @@ export default class VueComponent extends Vue {
 
   private data = []
 
+  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private testURL = "http://127.0.0.1:5000/"
+
   // private mostRecentSession = this.getLastSession()
 
   private async getLastSession() {
-    var reqURL = 'http://127.0.0.1:5000/getLastSession/'
+    var reqURL = this.testURL + 'getLastSession/'
     var lastSession = '0'
     try {
       let response = await fetch(reqURL, {
@@ -57,6 +60,7 @@ export default class VueComponent extends Vue {
         .then(text => (lastSession = text))
     } catch (e) {
       console.log('Error fetching paths :-(')
+      this.getApiAuthorization()
       return
     }
     var sessionReq: HTMLInputElement = document.querySelector('.sessionResults')
@@ -64,12 +68,12 @@ export default class VueComponent extends Vue {
   }
 
   getApiAuthorization() {
-    let auth = localStorage.getItem('brendan-api-key')
+    let auth = localStorage.getItem('api-key2')
     if (!auth) auth = prompt('API access key required:')
 
     if (auth) {
       this.apiKey = auth
-      localStorage.setItem('brendan-api-key', auth)
+      localStorage.setItem('2api-key2', auth)
     }
   }
 
@@ -86,7 +90,7 @@ export default class VueComponent extends Vue {
     }
 
     try {
-      let response = await fetch('http://127.0.0.1:5000/sessionOn', {
+      let response = await fetch(this.testURL + 'sessionOn', {
         headers: {
           Authorization: this.apiKey,
           'Content-type': 'text',
@@ -103,6 +107,7 @@ export default class VueComponent extends Vue {
       console.log(json)
     } catch (e) {
       console.log('Error fetching paths :-(')
+      this.getApiAuthorization()
       return
     }
   }
@@ -121,7 +126,7 @@ export default class VueComponent extends Vue {
     barmode: 'stack',
     }
 
-    var reqURL = 'http://127.0.0.1:5000/getVotes/' + sessionReq.value
+    var reqURL = `${this.testURL}getVotes/${sessionReq.value}` 
     var sessionVotes = []
     try {
       let response = await fetch(reqURL, {
@@ -134,6 +139,7 @@ export default class VueComponent extends Vue {
         .then(json => (sessionVotes = json))
     } catch (e) {
       console.log('Error fetching paths :-(')
+      this.getApiAuthorization()
       return
     }
 

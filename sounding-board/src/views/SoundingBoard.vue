@@ -200,6 +200,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
+  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private testURL = "http://127.0.0.1:5000/"
   private badPage = false
   private lang = 'en'
   private mdParser = new MarkdownIt()
@@ -253,6 +255,7 @@ export default class VueComponent extends Vue {
 
   private plotHeight = 1
   private plotWidth = 1
+
 
   private async realHandleResize(c: Event) {
     this.updateWidth()
@@ -341,15 +344,15 @@ export default class VueComponent extends Vue {
     this.setURLQuery()
   }
 
-  getApiAuthorization() {
-    let auth = localStorage.getItem('brendan-api-key')
-    if (!auth) auth = prompt('API access key required:')
+  // getApiAuthorization() {
+  //   let auth = localStorage.getItem('brendan-api-key')
+  //   if (!auth) auth = prompt('API access key required:')
 
-    if (auth) {
-      this.apiKey = auth
-      localStorage.setItem('brendan-api-key', auth)
-    }
-  }
+  //   if (auth) {
+  //     this.apiKey = auth
+  //     localStorage.setItem('brendan-api-key', auth)
+  //   }
+  // }
 
   private mounted() {
     // localStorage.setItem('LSvoted', 'false')
@@ -360,7 +363,8 @@ export default class VueComponent extends Vue {
     this.buildPageForURL()
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
-    this.getApiAuthorization()
+    // this.getApiAuthorization()
+
     // this.setText()
   }
 
@@ -701,17 +705,7 @@ export default class VueComponent extends Vue {
   }
 
   private async saveConditions() {
-    //   const fpPromise = import('https://openfpcdn.io/fingerprintjs/v4')
-    //   .then(FingerprintJS => FingerprintJS.load())
 
-    // // Get the visitor identifier when you need it.
-    // fpPromise
-    //   .then(fp => fp.get())
-    //   .then(result => {
-    //     // This is the visitor identifier:
-    //     const visitorId = result.visitorId
-    //     console.log(visitorId)
-    //   })
     localStorage.setItem('LSvoted', 'true')
     this.voted = true;
     this.updateVoteConditions;
@@ -734,11 +728,11 @@ export default class VueComponent extends Vue {
     try {
       console.log(JSON.stringify(this.voteConditions))
       // this.myState.statusMessage = ''
-      let response = await fetch('http://127.0.0.1:5000/votes', {
+      let response = await fetch(this.testURL + 'votes', {
         headers: {
-          Authorization: this.apiKey,
+          // Authorization: this.apiKey,
           'Content-type': 'application/json; charset=UTF-8',
-          'Access-Control-Allow-Origin': '*',
+          // 'Access-Control-Allow-Origin': '*',
         },
         method: 'POST',
         body: JSON.stringify(this.voteConditions),
@@ -1361,6 +1355,11 @@ button.is-huge.factor-option.preset-buttons:hover {
     grid-template-columns: 100%;
   }
 
+  .submit-button {
+    margin-left: 5px;
+  }
+
+
 }
 
 @media only screen and (max-width: 1430px) {
@@ -1498,6 +1497,7 @@ button.is-huge.factor-option.preset-buttons:hover {
     flex-wrap: wrap;
     padding-left: 2em;
   }
+
   .header-description-subtitle {
     width: 48%;
   }
