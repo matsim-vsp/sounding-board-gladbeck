@@ -10,8 +10,6 @@
       img(alt="TU-Berlin logo" src="@/assets/images/tu-logo.jpg" width=180)
     a(href="https://vsp.berlin")
       img(alt="VSP TU-Berlin logo" src="@/assets/images/vsp-logo.png" width=100)
-    a(href="https://www.tu.berlin/arte")
-      img(alt="ARTE logo" src="@/assets/images/arte-logo.jpg" width=125)
     a(href="https://matsim.org")
       img(alt="MATSim logo" src="@/assets/images/matsim-logo-blue.png" width=200)
 

@@ -1,30 +1,11 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
-    .navbar-brand
-      p.navbar-item(:style="{color: 'white'}") Sounding Board - Berlin
-        //- img(src="https://bulma.io/images/bulma-logo.png" width="112" height="28")
+  .navbar-brand
+    p.navbar-item(:style="{color: 'white'}") Sounding Board - Berlin
 
-      a.navbar-burger.burger(
-        @click='clickedBurger'
-        :class="{'is-active': isBurgerActive}"
-        role="button"
-        aria-label="menu"
-        aria-expanded="false"
-        data-target="navbarBasicExample")
-        span(aria-hidden="true")
-        span(aria-hidden="true")
-        span(aria-hidden="true")
 
-    #navbarBasicExample.navbar-menu(
-      :class="{'is-active': isBurgerActive}"
-      @click='clickedBurger'
-    )
-
-      .navbar-end
-        //- router-link.navbar-item(:to="'/ccc/config'") privater Personenverkehr
-        //- router-link.navbar-item(:to="'/ccc/config'") privater Personenverkehr
-        //- router-link.navbar-item(:to="'/ccc/config_gueter'") Güterverkehr
-        //- router-link.navbar-item(:to="'/ccc/config_kommerziell'") kommerzieller Personenverkehr
+  .navbar-end
+    img(src="@/assets/images/vsp-logo-white.png" width=300)
         
 </template>
 
@@ -74,13 +55,48 @@ export default class VueComponent extends Vue {
   font-size: 0.85rem;
 }
 
-@media only screen and (max-width: 640px) {
-  .home-link {
-    margin-left: 0.25rem;
+.navbar-end {
+  margin-right: 0.75em;
+}
+
+.navbar {
+    min-height: 4rem!important;
   }
 
-  .space {
-    margin: 0 0.6rem;
+.navbar,
+.navbar-menu,
+.navbar-start,
+.navbar-end {
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.navbar-end {
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
+  margin-left: auto;
+  display: flex;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  padding: 10px;
+}
+
+@media screen and (max-width: 600px) {
+  .navbar.is-link {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+  }
+
+  .navbar-end {
+    justify-content: initial;
+    margin-left: initial;
   }
 }
 </style>
