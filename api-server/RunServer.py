@@ -51,7 +51,7 @@ def setup_auth_keys(authfile):
 
 def is_valid_api_key():
     apikey = request.headers.get('Authorization')
-    if apikey in valid_api_keys: 
+    if apikey in valid_api_keys:
         print("-------VALID KEY---------")
         return True
     return False
@@ -103,18 +103,18 @@ valid_api_keys = setup_auth_keys(authfile)
 
 @app.route('/sessionOn', methods=["POST"])
 def turn_session_on():
-    if not is_valid_api_key(): 
+    if not is_valid_api_key():
         return "Invalid API Key", 403
-    
+
     data = request.get_data().decode("utf-8")
-    
+
     con = sqlite3.connect("test.db", check_same_thread=False)
-    cur = con.cursor()  
-    
+    cur = con.cursor()
+
     db_session_insert = "INSERT INTO sessions (sessionActive, sessionID, startTime, endTime) VALUES (?, ?, ?, ?)"
     db_session_end_insert = "UPDATE sessions SET endTime = ? WHERE sessionActive = 1"
     db_session_active_off_insert = "UPDATE sessions SET SessionActive = 0 WHERE sessionActive = 1"
-    
+
     start_time = ""
     end_time = ""
     session_active = None
@@ -126,39 +126,39 @@ def turn_session_on():
     if data == "true":
         start_time = current_time
         session_active = 1
-        
+
         # Get the current maximum sessionID from the table
         cur.execute("SELECT MAX(sessionID) FROM sessions")
         result = cur.fetchone()
         max_sessionID = result[0] if result[0] is not None else 0
-        
+
         # Calculate the next sessionID
         sessionID = max_sessionID + 1
-        
+
         cur.execute(db_session_insert, (session_active, sessionID, start_time, end_time))
-        
+
     elif data == "false":
         end_time = current_time
         cur.execute(db_session_end_insert, (end_time,))
         cur.execute(db_session_active_off_insert)
-        
+
     # Print the content of the 'sessions' table for debugging purposes
     table_list = [a for a in cur.execute("SELECT * FROM sessions ORDER BY ROWID ASC LIMIT 5")]
-    print(table_list) 
-    
+    print(table_list)
+
     con.commit()
     con.close()
-    
+
     return jsonify({"message": "instruction received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
 @app.route('/votes', methods=["POST"])
 def post_vote_to_db():
     # if not is_valid_api_key(): return "Invalid API Key", 403
     data = request.get_json()
-    
+
     con = sqlite3.connect("test.db", check_same_thread=False)
     cur = con.cursor()
-    
+
     cur.execute("SELECT sessionID FROM sessions WHERE EXISTS (SELECT sessionID FROM sessions WHERE sessionActive = 1)")
     result = cur.fetchone()
     if (result == None):
@@ -168,11 +168,10 @@ def post_vote_to_db():
         print("Active session")
         cur.execute("SELECT sessionID FROM sessions WHERE sessionActive = 1")
         sessionID = int(convertTuple(cur.fetchone()))
-        
+
     check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
     cur.execute(check_if_voter_exists, (1, data['ipAddr']))
     voter_exists = cur.fetchone()
-    # print(voter_exists)
     # if (voter_exists != None): 
     #     update_vote = """Update votes 
     #                 SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
@@ -186,22 +185,23 @@ def post_vote_to_db():
     #         data['fahrenderAutoVerkehr'],
     #         data['drt'],
     #         sessionID,
-    #         1, 
+    #         1,
     #         data['ipAddr']))
-        
+
     #     table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
-    #     print(table_list) 
+    #     print(table_list)
 
     #     con.commit()
     #     con.close()
-        
+
     #     return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     # else:
-    print("user already is new")
+
     db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
+
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
-        
+
     cur.execute(db_vote_insert, (
     data['oepnv'],
     data['kiezBloecke'],
@@ -213,9 +213,9 @@ def post_vote_to_db():
     data['cookie'],
     sessionID
     ))
-    
+
     table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
-    print(table_list) 
+    print(table_list)
 
     con.commit()
     con.close()
@@ -225,7 +225,7 @@ def post_vote_to_db():
 @app.route('/getVotes/<session_id>', methods=["GET"])
 def get_votes_from_db(session_id):
     if not is_valid_api_key(): return "Invalid API Key", 403
-    
+
     con = sqlite3.connect("test.db", check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT * FROM votes WHERE sessionID = " + session_id)
@@ -237,11 +237,11 @@ def get_votes_from_db(session_id):
     con.close()
     
     return json.dumps(votes)
-    
+
 @app.route('/getLastSession/', methods=["GET"])
 def get_last_session():
     if not is_valid_api_key(): return "Invalid API Key", 403
-    
+
     con = sqlite3.connect("test.db", check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT MAX(sessionID) FROM sessions")
@@ -254,9 +254,6 @@ def get_last_session():
         return "0"
     else:
         return result
-    
-    
-    
-    
+
 if __name__ == "__main__":
     app.run(port=4999, debug=True)
