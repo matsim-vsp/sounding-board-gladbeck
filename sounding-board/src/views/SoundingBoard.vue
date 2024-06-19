@@ -84,12 +84,12 @@
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
-  .description
-    h2.section-title {{ $t('description') }}
-    .description-subtitle(v-for="item in yaml.descriptionInput")
-      p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
-      .subdescription(v-for="sub in item.subdescriptions")
-        p.description-text {{ sub }}
+  //- .description
+  //-   h2.section-title {{ $t('description') }}
+  //-   .description-subtitle(v-for="item in yaml.descriptionInput")
+  //-     p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+  //-     .subdescription(v-for="sub in item.subdescriptions")
+  //-       p.description-text {{ sub }}
     
 
 </template>
@@ -200,8 +200,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
-  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  private testURL = "http://127.0.0.1:5000/"
+  // private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private serverURL = "http://127.0.0.1:5000/"
   private badPage = false
   private lang = 'en'
   private mdParser = new MarkdownIt()
@@ -381,53 +381,53 @@ export default class VueComponent extends Vue {
       OePNV: {
         description: 'S-Bahn, U-Bahn, Tram, und Bus',
         subdescriptions: {
-          base: this.yaml.descriptionInput.OePNV.subdescriptions.scenario1,
-          dekarbonisiert: this.yaml.descriptionInput.OePNV.subdescriptions.scenario2,
-          stark: this.yaml.descriptionInput.OePNV.subdescriptions.scenario3,
+          base: this.yaml.descriptionInput.OePNV.subdescriptions["scenario1"],
+          dekarbonisiert: this.yaml.descriptionInput.OePNV.subdescriptions["scenario2"],
+          stark: this.yaml.descriptionInput.OePNV.subdescriptions["scenario3"],
         },
       },
       kiezblocks: {
         description: '10 km/h Tempolimit - keine Durchfahrt möglich',
         subdescriptions: {
-          base: this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario1,
-          'ganze Stadt': this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario2,
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
+          'ganze Stadt': this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario2"],
         },
       },
       Fahrrad: {
         description: 'Radwege sowie Radschnellverbindungen',
         subdescriptions: {
-          base: this.yaml.descriptionInput.Fahrrad.subdescriptions.scenario1,
-          stark: this.yaml.descriptionInput.Fahrrad.subdescriptions.scenario2,
+          base: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario1"],
+          stark: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario2"],
         },
       },
       Parkraum: {
         description: 'Für Ganz Berlin',
         subdescriptions: {
-          base: this.yaml.descriptionInput.Parkraum.subdescriptions.scenario1,
+          base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
           Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
-            .scenario2,
+            ["scenario2"],
           Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
-            .scenario3,
+            ["scenario3"],
         },
       },
       fahrenderVerkehr: {
         description: 'Fahrzeugen auf Straßen zur Personen- oder Güterbeförderung',
         subdescriptions: {
-          base: this.yaml.descriptionInput.kiezblocks.subdescriptions.scenario1,
-          mautFossil: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario2,
-          MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario3,
-          zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario4,
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
+          mautFossil: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario2"],
+          MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario3"],
+          zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario4"],
           zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
-            .scenario5,
-          autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions.scenario6,
+            ["scenario5"],
+          autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario6"],
         },
       },
       DRT: {
         description: 'Digitales Rufbussystem',
         subdescriptions: {
-          base: this.yaml.descriptionInput.DRT.subdescriptions.scenario1,
-          nurAussenbezirke: this.yaml.descriptionInput.DRT.subdescriptions.scenario2,
-          ganzeStadt: this.yaml.descriptionInput.DRT.subdescriptions.scenario3,
+          base: this.yaml.descriptionInput.DRT.subdescriptions["scenario1"],
+          nurAussenbezirke: this.yaml.descriptionInput.DRT.subdescriptions["scenario2"],
+          ganzeStadt: this.yaml.descriptionInput.DRT.subdescriptions["scenario3"],
         },
       },
     }
@@ -728,7 +728,7 @@ export default class VueComponent extends Vue {
     try {
       console.log(JSON.stringify(this.voteConditions))
       // this.myState.statusMessage = ''
-      let response = await fetch(this.testURL + 'votes', {
+      let response = await fetch(this.serverURL + 'votes', {
         headers: {
           // Authorization: this.apiKey,
           'Content-type': 'application/json; charset=UTF-8',
@@ -907,6 +907,8 @@ li.notes-item {
   flex: 1;
   width: 100%;
   padding-bottom: 25px;
+  flex-wrap: wrap;
+    padding-left: 2em;
 }
 
 
@@ -925,20 +927,22 @@ li.notes-item {
   height: -moz-min-content;
   height: min-content;
   white-space: nowrap;
+  width: 48%;
 }
 
 .header-images {
-  max-width: 80px;
-  margin: auto;
-  height: 50px;
-  justify-content: center;
+  max-width: 50px;
+  // margin: auto;
+  height: 100%;
+  margin: unset;
+  justify-content: left;
   display: flex;
 
 }
 
 .header-description-text {
   margin-bottom: 10;
-  text-align: center;
+  text-align: left;
 
 }
 
@@ -948,7 +952,15 @@ li.notes-item {
 }
 
 .header-mobile-text {
-  display: none;
+  display: block;
+    left: 80px;
+    position: absolute;
+    text-wrap: wrap;
+    width: 80%;
+    padding-right: 20px;
+    font-size: 11px;
+    text-align: left;
+    top: 42px;
 }
 
 .description {
@@ -1224,7 +1236,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 }
 
 .headers-hoverText {
-  display: inline-block;
+  display: none;
   position: absolute;
   text-align: left;
   top: 0;
@@ -1441,7 +1453,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (min-width: 1280px) {
   .factor-option {
     font-size: 0.6rem;
   }
@@ -1493,38 +1505,42 @@ button.is-huge.factor-option.preset-buttons:hover {
     font-size: 1.1rem;
   }
 
-  .header-description {
-    flex-wrap: wrap;
-    padding-left: 2em;
-  }
+  // .header-description {
+  //   flex-wrap: wrap;
+  //   padding-left: 2em;
+  // }
+
+  // .header-description-subtitle {
+  //   width: 48%;
+  // }
+
+  // .headers-hoverText {
+  //   display: none;
+  // }
+
+  // .header-description-text {
+  //   text-align: left;
+  // }
+
+  // .header-images {
+  //   margin: unset;
+  //   justify-content: left;
+  // }
+
+  // .header-mobile-text {
+  //   display: block;
+  //   left: 80px;
+  //   position: absolute;
+  //   text-wrap: wrap;
+  //   width: 80%;
+  //   padding-right: 15px;
+  //   font-size: 11px;
+  //   text-align: left;
+  //   top: 42px;
+  // }
 
   .header-description-subtitle {
-    width: 48%;
-  }
-
-  .headers-hoverText {
-    display: none;
-  }
-
-  .header-description-text {
-    text-align: left;
-  }
-
-  .header-images {
-    margin: unset;
-    justify-content: left;
-  }
-
-  .header-mobile-text {
-    display: block;
-    left: 80px;
-    position: absolute;
-    text-wrap: wrap;
-    width: 80%;
-    padding-right: 15px;
-    font-size: 11px;
-    text-align: left;
-    top: 42px;
+    width: 24%;
   }
 }
 

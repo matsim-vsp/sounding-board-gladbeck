@@ -1,21 +1,21 @@
 <template lang="pug">
 .session-div 
-    TopNavBar
-    <br>
-    h1 Läuft eine Sitzung: {{ this.SessionOn }}
-    .button.sessionOn-btn(@click="toggleSession(true)" v-if="!this.SessionOn") Neue Sitzung beginnen
-    .button.sessionOff-btn(@click="toggleSession(false)" v-if="this.SessionOn") Sitzung beenden
-   
-    br
-    //- h3 letzte Sitzung: {{ this.mostRecentSession }}
-    .button.getSession-btn(@click="getLastSession()") Letzte Sitzung
-    <br>
-    input.sessionResults(type='number', name='ergebnisse') 
-    <br>
-    .button.sessionResults-btn(@click="getResults()") Ergebnisse der Sitzung
+  TopNavBar
+  <br>
+  h1 Läuft eine Sitzung: {{ this.SessionOn }}
+  .button.sessionOn-btn(@click="toggleSession(true)" v-if="!this.SessionOn") Neue Sitzung beginnen
+  .button.sessionOff-btn(@click="toggleSession(false)" v-if="this.SessionOn") Sitzung beenden
 
-    .results
-      Plotly(:data="data" :layout="plotlyLayout" :display-mode-bar="false" v-if="this.showResults")
+  br
+  //- h3 letzte Sitzung: {{ this.mostRecentSession }}
+  .button.getSession-btn(@click="getLastSession()") Letzte Sitzung
+  <br>
+  input.sessionResults(type='number', name='ergebnisse') 
+  <br>
+  .button.sessionResults-btn(@click="getResults()") Ergebnisse der Sitzung
+
+  .results
+    Plotly(:data="data" :layout="plotlyLayout" :options="options" v-if="this.showResults")
   
 
 </template>
@@ -23,7 +23,8 @@
 <script lang="ts">
 import { Vue, Component, Watch, Prop } from 'vue-property-decorator'
 import TopNavBar from '@/components/TopNavBar.vue'
-import { Plotly } from 'vue-plotly'
+// import { Plotly } from 'vue-plotly'
+import Plotly from '@/components/VuePlotly.vue'
 
 @Component({ components: { TopNavBar, Plotly }, props: {} })
 export default class VueComponent extends Vue {
@@ -34,20 +35,21 @@ export default class VueComponent extends Vue {
 
   private titleGraphSession = null
 
-  private plotlyLayout = {
-    title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
-    barmode: 'stack'
-    }
+  private plotlyLayout = {}
 
   private data = []
 
+  private options = {responsive: true}
+
+  private conditionTotalVotes = 0
+
   private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  private testURL = "http://127.0.0.1:5000/"
+  // private serverURL = "http://127.0.0.1:5000/"
 
   // private mostRecentSession = this.getLastSession()
 
   private async getLastSession() {
-    var reqURL = this.testURL + 'getLastSession/'
+    var reqURL = this.serverURL + 'getLastSession/'
     var lastSession = '0'
     try {
       let response = await fetch(reqURL, {
@@ -90,7 +92,7 @@ export default class VueComponent extends Vue {
     }
 
     try {
-      let response = await fetch(this.testURL + 'sessionOn', {
+      let response = await fetch(this.serverURL + 'sessionOn', {
         headers: {
           Authorization: this.apiKey,
           'Content-type': 'text',
@@ -122,11 +124,14 @@ export default class VueComponent extends Vue {
     this.titleGraphSession = sessionReq.value
 
     this.plotlyLayout = {
-    title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
-    barmode: 'stack',
+      yaxis: { padding: 20 },
+      title: 'Ergebnisse von Sitzung: ' + this.titleGraphSession,
+      barmode: 'stack',
+      showlegend: false,
+      responsive: true
     }
 
-    var reqURL = `${this.testURL}getVotes/${sessionReq.value}` 
+    var reqURL = `${this.serverURL}getVotes/${sessionReq.value}`
     var sessionVotes = []
     try {
       let response = await fetch(reqURL, {
@@ -145,46 +150,53 @@ export default class VueComponent extends Vue {
 
     var sessionVotesData = this.getCounts(sessionVotes)
 
+
+
+    for (const property in sessionVotesData[0]) {
+      this.conditionTotalVotes += sessionVotesData[0][property];
+    }
+
+
     this.visualizeData(sessionVotesData)
   }
 
   private getCounts(sessionVotes) {
-    var countOepnv = sessionVotes.reduce(function(prev, cur) {
+    var countOepnv = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.oepnv)) prev[cur.oepnv] += 1
       else prev[cur.oepnv] = 1
 
       return prev
     }, {})
 
-    var countKiezbloecke = sessionVotes.reduce(function(prev, cur) {
+    var countKiezbloecke = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.kiezBloecke)) prev[cur.kiezBloecke] += 1
       else prev[cur.kiezBloecke] = 1
 
       return prev
     }, {})
 
-    var countFahrrad = sessionVotes.reduce(function(prev, cur) {
+    var countFahrrad = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.fahrrad)) prev[cur.fahrrad] += 1
       else prev[cur.fahrrad] = 1
 
       return prev
     }, {})
 
-    var countParkraum = sessionVotes.reduce(function(prev, cur) {
+    var countParkraum = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.parkraum)) prev[cur.parkraum] += 1
       else prev[cur.parkraum] = 1
 
       return prev
     }, {})
 
-    var countahrenderAutoVerkehr = sessionVotes.reduce(function(prev, cur) {
+    var countahrenderAutoVerkehr = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.fahrenderAutoVerkehr)) prev[cur.fahrenderAutoVerkehr] += 1
       else prev[cur.fahrenderAutoVerkehr] = 1
 
       return prev
     }, {})
 
-    var countDRT = sessionVotes.reduce(function(prev, cur) {
+    var countDRT = sessionVotes.reduce(function (prev, cur) {
       if (prev.hasOwnProperty(cur.drt)) prev[cur.drt] += 1
       else prev[cur.drt] = 1
 
@@ -200,218 +212,704 @@ export default class VueComponent extends Vue {
       countDRT,
     ]
 
+
     return sessionVotesData
   }
 
   private visualizeData(sessionVotesData) {
     var trace1_Oepnv = {
-      x: ['ÖPNV'],
       y: [sessionVotesData[0].base],
+      x: ['ÖPNV  '],
+
       name: 'ÖPNV - base',
       type: 'bar',
       marker: {
         color: "#B3D9FF"
       },
       legendgroup: 'group1',
+      hovertemplate:
+        "<b>ÖPNV - base</b><br>" +
+        "Stimmen " + sessionVotesData[0].base + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[0].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
 
     var trace2_Oepnv = {
-      x: ['ÖPNV'],
       y: [sessionVotesData[0].dekarbonisiert],
+      x: ['ÖPNV  '],
+
       name: 'ÖPNV - dekarbonisiert',
       type: 'bar',
       marker: {
         color: "#3399FF"
       },
       legendgroup: 'group1',
+      hovertemplate:
+        "<b>ÖPNV - dekarbonisiert</b><br>" +
+        "Stimmen " + sessionVotesData[0].dekarbonisiert + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[0].dekarbonisiert / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Dekarbonisiert'
     }
 
     var trace3_Oepnv = {
-      x: ['ÖPNV'],
       y: [sessionVotesData[0].stark],
+      x: ['ÖPNV  '],
+
       name: 'ÖPNV - stark',
       type: 'bar',
       marker: {
         color: "#00008B"
       },
       legendgroup: 'group1',
+      hovertemplate:
+        "<b>ÖPNV - stark</b><br>" +
+        "Stimmen " + sessionVotesData[0].stark + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[0].stark / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Stark'
     }
 
     var trace1_Kiezbloecke = {
-      x: ['Kiezbloecke'],
       y: [sessionVotesData[1].base],
+      x: ['Kiezbloecke  '],
+
       name: 'KiezBlöcke - base',
       type: 'bar',
       marker: {
         color: "#98FB98"
       },
       legendgroup: 'group2',
+      hovertemplate:
+        "<b>KiezBlöcke - base</b><br>" +
+        "Stimmen " + sessionVotesData[1].base + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[1].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
     var trace2_Kiezbloecke = {
-      x: ['Kiezbloecke'],
       y: [sessionVotesData[1]['ganze Stadt']],
+      x: ['Kiezbloecke  '],
+
       name: 'KiezBlöcke - ganze Stadt',
       marker: {
         color: "#006400"
       },
       type: 'bar',
       legendgroup: 'group2',
+      hovertemplate:
+        "<b>KiezBlöcke - ganze Stadt</b><br>" +
+        "Stimmen " + sessionVotesData[1]['ganze Stadt'] + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[1]['ganze Stadt'] / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Ganze Stadt'
     }
 
     var trace1_Fahrrad = {
-      x: ['Fahrrad'],
       y: [sessionVotesData[2].base],
+      x: ['Fahrrad  '],
+
       name: 'Fahrrad - base',
       type: 'bar',
       marker: {
         color: "#FFA07A"
       },
-      legendgroup: 'group3',
+      legendgroup: 'group3', hovertemplate:
+        "<b>Fahrrad - base</b><br>" +
+        "Stimmen " + sessionVotesData[2].base + "<br>" +
+        "Prozent der Stimmen " + Math.round((sessionVotesData[2].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
     var trace2_Fahrrad = {
-      x: ['Fahrrad'],
       y: [sessionVotesData[2].stark],
+      x: ['Fahrrad  '],
+
       name: 'Fahrrad - stark',
       marker: {
         color: "#8B0000"
       },
       type: 'bar',
       legendgroup: 'group3',
+      hovertemplate:
+        "<b>Fahrrad - stark</b><br>" +
+        "Stimmen " + sessionVotesData[2].stark + "<br>" +
+        "Prozent der Stimmen " + Math.round((sessionVotesData[2].stark / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Stark'
     }
 
     var trace1_Parkraum = {
-      x: ['Parkraum'],
       y: [sessionVotesData[3].base],
+      x: ['Parkraum  '],
+
       name: 'Parkraum - base',
       type: 'bar',
       marker: {
         color: "#E6E6FA"
       },
       legendgroup: 'group4',
+      hovertemplate:
+        "<b>Parkraum - base</b><br>" +
+        "Stimmen " + sessionVotesData[3].base + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[3].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
     var trace2_Parkraum = {
-      x: ['Parkraum'],
       y: [sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert],
+      x: ['Parkraum  '],
+
       name: 'Parkraum - BesucherFossilTeuer_alleAnderenPreiswert',
       type: 'bar',
       marker: {
         color: "#9370DB"
       },
       legendgroup: 'group4',
+      hovertemplate:
+        "<b>Parkraum - BesucherFossilTeuer_alleAnderenPreiswert</b><br>" +
+        "Stimmen " + sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'BesucherFossilTeuer_alleAnderenPreiswert'
     }
     var trace3_Parkraum = {
-      x: ['Parkraum'],
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
+      x: ['Parkraum  '],
+
       name: 'Parkraum - Besucher_teuer_Anwohner_preiswert',
       type: 'bar',
       marker: {
         color: "#8A2BE2"
       },
       legendgroup: 'group4',
+      hovertemplate:
+        "<b>Parkraum - Besucher_teuer_Anwohner_preiswert</b><br>" +
+        "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_preiswert + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_preiswert / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Besucher_teuer_Anwohner_preiswert'
     }
     var trace4_Parkraum = {
-      x: ['Parkraum'],
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
+      x: ['Parkraum  '],
+
       name: 'Parkraum - Besucher_teuer_Anwohner_teuer',
       type: 'bar',
       marker: {
         color: "#4B0082"
       },
       legendgroup: 'group4',
+      hovertemplate:
+        "<b>Parkraum - Besucher_teuer_Anwohner_teuer</b><br>" +
+        "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_teuer + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_teuer / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Besucher_teuer_Anwohner_teuer'
     }
 
     var trace1_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].base],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - base',
       type: 'bar',
       marker: {
         color: "#FFDAB9"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - base</b><br>" +
+        "Stimmen " + sessionVotesData[4].base + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
     var trace2_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].mautFossil],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - maut Fossil',
       type: 'bar',
       marker: {
         color: "#FFA07A"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - maut Fossil</b><br>" +
+        "Stimmen " + sessionVotesData[4].mautFossil + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].mautFossil / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Maut Fossil'
     }
     var trace3_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].MautFuerAlle],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - maut Für Alle',
       type: 'bar',
       marker: {
         color: "#FF7F50"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - maut Für Alle</b><br>" +
+        "Stimmen " + sessionVotesData[4].MautFuerAlle + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].MautFuerAlle / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Maut für Alle'
     }
 
     var trace4_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].zeroEmissionsZone],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - zero Emissions Zone',
       type: 'bar',
       marker: {
         color: "#FF8C00"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - zero Emissions Zone</b><br>" +
+        "Stimmen " + sessionVotesData[4].zeroEmissionsZone + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZone / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Zero Emissions Zone'
     }
     var trace5_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].zeroEmissionsZonePlusMaut],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - zero Emissions Zone Plus Maut',
       type: 'bar',
       marker: {
         color: "#CC5500"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - zero Emissions Zone Plus Maut</b><br>" +
+        "Stimmen " + sessionVotesData[4].zeroEmissionsZonePlusMaut + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZonePlusMaut / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Zero Emissions Zone Plus Maut'
     }
     var trace6_Autoverkehr = {
-      x: ['Autoverkehr'],
       y: [sessionVotesData[4].autofrei],
+      x: ['Autoverkehr'],
+
       name: 'Autoverkehr - Autofrei',
       type: 'bar',
       marker: {
         color: "#B7410E"
       },
       legendgroup: 'group5',
+      hovertemplate:
+        "<b>Autoverkehr - Autofrei</b><br>" +
+        "Stimmen " + sessionVotesData[4].autofrei + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[4].autofrei / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Autofrei'
     }
 
     var trace1_DRT = {
-      x: ['DRT'],
       y: [sessionVotesData[5].base],
+      x: ['DRT'],
+
       name: 'DRT - base',
       type: 'bar',
       marker: {
         color: "#FFFFE0"
       },
       legendgroup: 'group6',
+      hovertemplate:
+        "<b>DRT - base</b><br>" +
+        "Stimmen " + sessionVotesData[5].base + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[5].base / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Base'
     }
     var trace2_DRT = {
-      x: ['DRT'],
       y: [sessionVotesData[5].nurAussenbezirke],
+      x: ['DRT'],
+
       name: 'DRT - nurAussenbezirke',
       marker: {
         color: "#FFD700"
       },
       type: 'bar',
       legendgroup: 'group6',
+      hovertemplate:
+        "<b>DRT - nurAussenbezirke</b><br>" +
+        "Stimmen " + sessionVotesData[5].nurAussenbezirke + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[5].nurAussenbezirke / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Nur Aussenbezirke'
     }
     var trace3_DRT = {
-      x: ['DRT'],
       y: [sessionVotesData[5].ganzeStadt],
+      x: ['DRT'],
       name: 'DRT - ganzeStadt',
       marker: {
         color: "#B8860B"
       },
       type: 'bar',
       legendgroup: 'group6',
+      hovertemplate:
+        "<b>DRT - ganzeStadt</b><br>" +
+        "Stimmen " + sessionVotesData[5].ganzeStadt + "<br>" +
+        "Prozent der Stimmen " + Math.floor((sessionVotesData[5].ganzeStadt / this.conditionTotalVotes) * 100) + "%" +
+        "<extra></extra>",
+      text: 'Ganze Stadt'
     }
+    // var trace1_Oepnv = {
+    //   x: [sessionVotesData[0].base],
+    //   y: ['ÖPNV  '],
+    //   orientation: 'h',
+    //   name: 'ÖPNV - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#B3D9FF"
+    //   },
+    //   legendgroup: 'group1',
+    //   hovertemplate:
+    //     "<b>ÖPNV - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[0].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[0].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+
+    // var trace2_Oepnv = {
+    //   x: [sessionVotesData[0].dekarbonisiert],
+    //   y: ['ÖPNV  '],
+    //   orientation: 'h',
+    //   name: 'ÖPNV - dekarbonisiert',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#3399FF"
+    //   },
+    //   legendgroup: 'group1',
+    //   hovertemplate:
+    //     "<b>ÖPNV - dekarbonisiert</b><br>" +
+    //     "Stimmen " + sessionVotesData[0].dekarbonisiert + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[0].dekarbonisiert / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Dekarbonisiert'
+    // }
+
+    // var trace3_Oepnv = {
+    //   x: [sessionVotesData[0].stark],
+    //   y: ['ÖPNV  '],
+    //   orientation: 'h',
+    //   name: 'ÖPNV - stark',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#00008B"
+    //   },
+    //   legendgroup: 'group1',
+    //   hovertemplate:
+    //     "<b>ÖPNV - stark</b><br>" +
+    //     "Stimmen " + sessionVotesData[0].stark + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[0].stark / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Stark'
+    // }
+
+    // var trace1_Kiezbloecke = {
+    //   x: [sessionVotesData[1].base],
+    //   y: ['Kiezbloecke  '],
+    //   orientation: 'h',
+    //   name: 'KiezBlöcke - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#98FB98"
+    //   },
+    //   legendgroup: 'group2',
+    //   hovertemplate:
+    //     "<b>KiezBlöcke - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[1].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[1].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+    // var trace2_Kiezbloecke = {
+    //   x: [sessionVotesData[1]['ganze Stadt']],
+    //   y: ['Kiezbloecke  '],
+    //   orientation: 'h',
+    //   name: 'KiezBlöcke - ganze Stadt',
+    //   marker: {
+    //     color: "#006400"
+    //   },
+    //   type: 'bar',
+    //   legendgroup: 'group2',
+    //   hovertemplate:
+    //     "<b>KiezBlöcke - ganze Stadt</b><br>" +
+    //     "Stimmen " + sessionVotesData[1]['ganze Stadt'] + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[1]['ganze Stadt'] / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Ganze Stadt'
+    // }
+
+    // var trace1_Fahrrad = {
+    //   x: [sessionVotesData[2].base],
+    //   y: ['Fahrrad  '],
+    //   orientation: 'h',
+    //   name: 'Fahrrad - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FFA07A"
+    //   },
+    //   legendgroup: 'group3', hovertemplate:
+    //     "<b>Fahrrad - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[2].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.round((sessionVotesData[2].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+    // var trace2_Fahrrad = {
+    //   x: [sessionVotesData[2].stark],
+    //   y: ['Fahrrad  '],
+    //   orientation: 'h',
+    //   name: 'Fahrrad - stark',
+    //   marker: {
+    //     color: "#8B0000"
+    //   },
+    //   type: 'bar',
+    //   legendgroup: 'group3',
+    //   hovertemplate:
+    //     "<b>Fahrrad - stark</b><br>" +
+    //     "Stimmen " + sessionVotesData[2].stark + "<br>" +
+    //     "Prozent der Stimmen " + Math.round((sessionVotesData[2].stark / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Stark'
+    // }
+
+    // var trace1_Parkraum = {
+    //   x: [sessionVotesData[3].base],
+    //   y: ['Parkraum  '],
+    //   orientation: 'h',
+    //   name: 'Parkraum - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#E6E6FA"
+    //   },
+    //   legendgroup: 'group4',
+    //   hovertemplate:
+    //     "<b>Parkraum - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[3].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+    // var trace2_Parkraum = {
+    //   x: [sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert],
+    //   y: ['Parkraum  '],
+    //   orientation: 'h',
+    //   name: 'Parkraum - BesucherFossilTeuer_alleAnderenPreiswert',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#9370DB"
+    //   },
+    //   legendgroup: 'group4',
+    //   hovertemplate:
+    //     "<b>Parkraum - BesucherFossilTeuer_alleAnderenPreiswert</b><br>" +
+    //     "Stimmen " + sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'BesucherFossilTeuer_alleAnderenPreiswert'
+    // }
+    // var trace3_Parkraum = {
+    //   x: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
+    //   y: ['Parkraum  '],
+    //   orientation: 'h',
+    //   name: 'Parkraum - Besucher_teuer_Anwohner_preiswert',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#8A2BE2"
+    //   },
+    //   legendgroup: 'group4',
+    //   hovertemplate:
+    //     "<b>Parkraum - Besucher_teuer_Anwohner_preiswert</b><br>" +
+    //     "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_preiswert + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_preiswert / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Besucher_teuer_Anwohner_preiswert'
+    // }
+    // var trace4_Parkraum = {
+    //   x: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
+    //   y: ['Parkraum  '],
+    //   orientation: 'h',
+    //   name: 'Parkraum - Besucher_teuer_Anwohner_teuer',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#4B0082"
+    //   },
+    //   legendgroup: 'group4',
+    //   hovertemplate:
+    //     "<b>Parkraum - Besucher_teuer_Anwohner_teuer</b><br>" +
+    //     "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_teuer + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_teuer / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Besucher_teuer_Anwohner_teuer'
+    // }
+
+    // var trace1_Autoverkehr = {
+    //   x: [sessionVotesData[4].base],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FFDAB9"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+    // var trace2_Autoverkehr = {
+    //   x: [sessionVotesData[4].mautFossil],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - maut Fossil',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FFA07A"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - maut Fossil</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].mautFossil + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].mautFossil / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Maut Fossil'
+    // }
+    // var trace3_Autoverkehr = {
+    //   x: [sessionVotesData[4].MautFuerAlle],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - maut Für Alle',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FF7F50"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - maut Für Alle</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].MautFuerAlle + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].MautFuerAlle / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Maut für Alle'
+    // }
+
+    // var trace4_Autoverkehr = {
+    //   x: [sessionVotesData[4].zeroEmissionsZone],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - zero Emissions Zone',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FF8C00"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - zero Emissions Zone</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].zeroEmissionsZone + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZone / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Zero Emissions Zone'
+    // }
+    // var trace5_Autoverkehr = {
+    //   x: [sessionVotesData[4].zeroEmissionsZonePlusMaut],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - zero Emissions Zone Plus Maut',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#CC5500"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - zero Emissions Zone Plus Maut</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].zeroEmissionsZonePlusMaut + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZonePlusMaut / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Zero Emissions Zone Plus Maut'
+    // }
+    // var trace6_Autoverkehr = {
+    //   x: [sessionVotesData[4].autofrei],
+    //   y: ['Autoverkehr'],
+    //   orientation: 'h',
+    //   name: 'Autoverkehr - Autofrei',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#B7410E"
+    //   },
+    //   legendgroup: 'group5',
+    //   hovertemplate:
+    //     "<b>Autoverkehr - Autofrei</b><br>" +
+    //     "Stimmen " + sessionVotesData[4].autofrei + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].autofrei / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Autofrei'
+    // }
+
+    // var trace1_DRT = {
+    //   x: [sessionVotesData[5].base],
+    //   y: ['DRT'],
+    //   orientation: 'h',
+    //   name: 'DRT - base',
+    //   type: 'bar',
+    //   marker: {
+    //     color: "#FFFFE0"
+    //   },
+    //   legendgroup: 'group6',
+    //   hovertemplate:
+    //     "<b>DRT - base</b><br>" +
+    //     "Stimmen " + sessionVotesData[5].base + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[5].base / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Base'
+    // }
+    // var trace2_DRT = {
+    //   x: [sessionVotesData[5].nurAussenbezirke],
+    //   y: ['DRT'],
+    //   orientation: 'h',
+    //   name: 'DRT - nurAussenbezirke',
+    //   marker: {
+    //     color: "#FFD700"
+    //   },
+    //   type: 'bar',
+    //   legendgroup: 'group6',
+    //   hovertemplate:
+    //     "<b>DRT - nurAussenbezirke</b><br>" +
+    //     "Stimmen " + sessionVotesData[5].nurAussenbezirke + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[5].nurAussenbezirke / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Nur Aussenbezirke'
+    // }
+    // var trace3_DRT = {
+    //   x: [sessionVotesData[5].ganzeStadt],
+    //   y: ['DRT'],
+    //   orientation: 'h',
+    //   name: 'DRT - ganzeStadt',
+    //   marker: {
+    //     color: "#B8860B"
+    //   },
+    //   type: 'bar',
+    //   legendgroup: 'group6',
+    //   hovertemplate:
+    //     "<b>DRT - ganzeStadt</b><br>" +
+    //     "Stimmen " + sessionVotesData[5].ganzeStadt + "<br>" +
+    //     "Prozent der Stimmen " + Math.floor((sessionVotesData[5].ganzeStadt / this.conditionTotalVotes) * 100) + "%" +
+    //     "<extra></extra>",
+    //   text: 'Ganze Stadt'
+    // }
 
     this.data = [
       trace1_Oepnv,
@@ -479,6 +977,10 @@ export default class VueComponent extends Vue {
   background-color: white;
   color: #3a76af;
   border: 1px solid #3a76af;
+}
+
+.modebar{
+      display: none !important;
 }
 
 .sessionOff-btn {
