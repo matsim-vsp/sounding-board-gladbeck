@@ -43,7 +43,7 @@
               :key="option"
               :class="option == currentConfiguration[key] ? 'is-danger' : ''"
               @click="setFactor(key, option)"
-            ) {{ option }}
+            ) {{ yaml.buttonLabels && yaml.buttonLabels[option] || option }}
         .left-block
           .conditionTitle {{ textBlocks[key].description}}
           .conditionDescriptionTitle Information:
