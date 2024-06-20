@@ -708,10 +708,18 @@ export default class VueComponent extends Vue {
     )
     results[0].style.display = 'none'
     this.setPreset('base')
+    if (window.innerWidth < 621) {
+      window.scrollTo({
+        top: 1800,
+        behavior: 'smooth',
+      })
+    } else{
       window.scrollTo({
         top: 600,
         behavior: 'smooth',
       })
+    }
+
   }
 
   private updateVoteConditions(factor: string, option: any) {
@@ -1454,8 +1462,8 @@ button.is-huge.factor-option.preset-buttons:hover {
 }
 
 @media only screen and (max-width: 1430px) {
-  .metric[data-v-4aa344e9] {
-    flex: 30%;
+  .metric {
+    flex: 30%!important;
   }
 
   #car-viz-total {
@@ -1481,8 +1489,8 @@ button.is-huge.factor-option.preset-buttons:hover {
 }
 
 @media only screen and (max-width: 620px) {
-  .metric[data-v-4aa344e9] {
-    flex: 50%;
+  .metric {
+    flex: 74%!important;
   }
 
   #car-viz-total {
