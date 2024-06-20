@@ -1,22 +1,22 @@
 <template lang="pug">
 #car-viz-total
-  .row(v-for="n in 10" :id="'row-' + n")
-    .column(style="width: 30%") 
+  .row(v-for="n in 10" :id="'row-' + n" :key="n")
+    .column(style="width: 30%")
       .car-parked-left(id="parked-column")
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" 
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car"
         :class="showParking(getLeftParkingStateArguments(n-1)) ? 'car-parked-left ' + 'grey' : 'car-parked-left ' + 'black'")
-    .column(style="width: 20%") 
+    .column(style="width: 20%")
       .car-driving-left(id="driving-column" v-if="n % 2 == 1")
         img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car"
         :class="showDriving(getDrivingStateArguments(n-1)) ? 'car-driving-left ' + 'grey' : 'car-driving-left ' + 'black'")
     .middle-lines
-    .column(style="width: 20%")  
+    .column(style="width: 20%")
       .car-driving-right(id="driving-column" v-if="n % 2 == 0")
         img(src="../assets/images/car-top-view-icon.svg" alt="Driving Car"
         :class="showDriving(getDrivingStateArguments(n - 1)) ? 'car-driving-right ' + 'grey' : 'car-driving-right ' + 'black'")
-    .column(style="width: 30%") 
+    .column(style="width: 30%")
       .car-parked-right(id="parked-column")
-        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car" 
+        img(src="../assets/images/car-top-view-icon.svg" alt="Parking Car"
         :class="showParking(getRightParkingStateArguments(n-1)) ? 'car-parked-right ' + 'grey' : 'car-parked-right ' + 'black'")
 
 </template>
@@ -140,24 +140,30 @@ export default class VueComponent extends Vue {
 }
 
 .car-parked-left img {
+  width: 46px;
   height: 150%;
   transform: rotate(-90deg);
   display: block;
-  margin: -10px auto auto auto;
+  margin: -14px auto auto auto;
 }
 
 .car-parked-right img {
+  width: 46px;
   height: 150%;
   transform: rotate(90deg);
   display: block;
-  margin: -10px auto auto auto;
+  margin: -14px auto auto auto;
 }
 
 .car-driving-left {
+  margin-left: 5px;
+  width: 46px;
   height: 100%;
 }
 
 .car-driving-right {
+  margin-left: 5px;
+  width: 46px;
   height: 100%;
 }
 
