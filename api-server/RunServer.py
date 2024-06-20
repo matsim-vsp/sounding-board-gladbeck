@@ -63,11 +63,12 @@ def convertTuple(tup):
 
 # ---------- Set up Database -------------------------
 
+db_path = 'test.db'
 
 # DB table - votes
 # if statment to open db and create tables if they don't exist.
-if (os.path.isfile('test.db')): 
-    con = sqlite3.connect("test.db", check_same_thread=False)
+if (os.path.isfile(db_path)):
+    con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='votes'")
     votes_exist = cur.fetchone()
@@ -82,7 +83,7 @@ if (os.path.isfile('test.db')):
         cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
     con.commit()
     con.close()
-# con = sqlite3.connect("test.db", check_same_thread=False)
+# con = sqlite3.connect(db_path, check_same_thread=False)
 # cur = con.cursor()
 # cur.execute("DROP TABLE votes")
 # cur.execute("DROP TABLE sessions")
@@ -111,7 +112,7 @@ def turn_session_on():
 
     data = request.get_data().decode("utf-8")
 
-    con = sqlite3.connect("test.db", check_same_thread=False)
+    con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
 
     db_session_insert = "INSERT INTO sessions (sessionActive, sessionID, startTime, endTime) VALUES (?, ?, ?, ?)"
@@ -159,7 +160,7 @@ def post_vote_to_db():
     # if not is_valid_api_key(): return "Invalid API Key", 403
     data = request.get_json()
 
-    con = sqlite3.connect("test.db", check_same_thread=False)
+    con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
 
     cur.execute("SELECT sessionID FROM sessions WHERE EXISTS (SELECT sessionID FROM sessions WHERE sessionActive = 1)")
@@ -176,9 +177,9 @@ def post_vote_to_db():
     check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
     cur.execute(check_if_voter_exists, (1, data['ipAddr']))
     voter_exists = cur.fetchone()
-    if (voter_exists != None): 
-        update_vote = """Update votes 
-                    SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
+    if (voter_exists != None):
+        update_vote = """Update votes
+                    SET oepnv = ?, kiezBloecke = ?, fahrrad = ?,
                     parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?, timeStamp = ?
                     WHERE cookie = ? AND  ipAddr = ?"""
         cur.execute(update_vote, (
@@ -202,7 +203,7 @@ def post_vote_to_db():
         return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     else:
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timeStamp) 
+        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timeStamp)
 
                         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
@@ -219,7 +220,7 @@ def post_vote_to_db():
         data['timeStamp']
         ))
 
-        # print_table = "SELECT * FROM votes WHERE sessionID = sessionID VALUES (?)" 
+        # print_table = "SELECT * FROM votes WHERE sessionID = sessionID VALUES (?)"
         # table_list = cur.execute(print_table, (sessionID))
         # print(table_list)
         table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 100")]
@@ -234,7 +235,7 @@ def post_vote_to_db():
 def get_votes_from_db(session_id):
     if not is_valid_api_key(): return "Invalid API Key", 403
 
-    con = sqlite3.connect("test.db", check_same_thread=False)
+    con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT * FROM votes WHERE sessionID = " + str(session_id))
     results = cur.fetchall()
@@ -254,18 +255,18 @@ def get_votes_from_db(session_id):
     # results = cur.fetchall()
     # print(results)
     # votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'sessionID': row[8], 'timeStamp': row[9]} for row in results]
-    
+
 
     con.commit()
     con.close()
-    
+
     return json.dumps(votes)
 
 @app.route('/getLastSession/', methods=["GET"])
 def get_last_session():
     if not is_valid_api_key(): return "Invalid API Key", 403
 
-    con = sqlite3.connect("test.db", check_same_thread=False)
+    con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT MAX(sessionID) FROM sessions")
     result = convertTuple(cur.fetchone())
