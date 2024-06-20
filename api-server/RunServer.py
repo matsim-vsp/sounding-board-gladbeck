@@ -199,30 +199,30 @@ def post_vote_to_db():
 
     else:
 
-    db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
+        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
 
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
-    cur.execute(db_vote_insert, (
-    data['oepnv'],
-    data['kiezBloecke'],
-    data['fahrrad'],
-    data['parkraum'],
-    data['fahrenderAutoVerkehr'],
-    data['drt'],
-    data['ipAddr'],
-    data['cookie'],
-    sessionID
-    ))
+        cur.execute(db_vote_insert, (
+        data['oepnv'],
+        data['kiezBloecke'],
+        data['fahrrad'],
+        data['parkraum'],
+        data['fahrenderAutoVerkehr'],
+        data['drt'],
+        data['ipAddr'],
+        data['cookie'],
+        sessionID
+        ))
 
-    # print_table = "SELECT * FROM votes WHERE sessionID = sessionID VALUES (?)" 
-    # table_list = cur.execute(print_table, (sessionID))
-    # print(table_list)
+        # print_table = "SELECT * FROM votes WHERE sessionID = sessionID VALUES (?)" 
+        # table_list = cur.execute(print_table, (sessionID))
+        # print(table_list)
 
-    con.commit()
-    con.close()
+        con.commit()
+        con.close()
 
-    return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
+        return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
 @app.route('/getVotes/<session_id>', methods=["GET"])
 def get_votes_from_db(session_id):
