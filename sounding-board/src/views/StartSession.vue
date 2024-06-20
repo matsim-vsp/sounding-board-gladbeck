@@ -62,6 +62,7 @@ export default class VueComponent extends Vue {
         .then(text => (lastSession = text))
     } catch (e) {
       console.log('Error fetching paths :-(')
+      prompt("incorrect API access key. Please press OK and try again.")
       this.getApiAuthorization()
       return
     }
@@ -109,6 +110,7 @@ export default class VueComponent extends Vue {
       console.log(json)
     } catch (e) {
       console.log('Error fetching paths :-(')
+      prompt("incorrect API access key. Please press OK and try again.")
       this.getApiAuthorization()
       return
     }
@@ -144,6 +146,7 @@ export default class VueComponent extends Vue {
         .then(json => (sessionVotes = json))
     } catch (e) {
       console.log('Error fetching paths :-(')
+      prompt("incorrect API access key. Please press OK and try again.")
       this.getApiAuthorization()
       return
     }
