@@ -51,7 +51,7 @@
 
     .submit-vote-div    
       .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
-      .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre ersten Stimme ersetzt.
+      .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
     .buttons
       .button.reveal-button(@click="showResults") Ergebnisse anzeigen
       .button.hide-button(@click="hideResults") Ergebnisse ausblenden
