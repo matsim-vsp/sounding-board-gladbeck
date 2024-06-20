@@ -1082,6 +1082,7 @@ li.notes-item {
   margin-right: 15px;
   height: fit-content;
   max-height: 600px;
+  max-width: 320px;
 }
 
 .metrics .metric:last-of-type {
@@ -1459,6 +1460,12 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 
 
+}
+
+@media only screen and (min-width: 1431px) {
+  .metric {
+    flex: 17%!important;
+  }
 }
 
 @media only screen and (max-width: 1430px) {
