@@ -63,7 +63,7 @@ def convertTuple(tup):
 
 # ---------- Set up Database -------------------------
 
-db_path = 'test.db'
+db_path = 'sounding-board.db'
 
 # DB table - votes
 # if statment to open db and create tables if they don't exist.
