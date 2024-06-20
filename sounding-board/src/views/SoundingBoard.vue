@@ -4,7 +4,7 @@
   top-nav-bar
 
   .heading
-    h2.section-title: b {{ title }}
+    .sounding-board-description <span style="font-weight:bold">{{ yaml.description.slice(0,38) }}</span> {{ yaml.description.slice(38,400) }}
 
   .header-description
     .header-description-subtitle(v-for="item in yaml.descriptionOutput")
@@ -683,10 +683,22 @@ export default class VueComponent extends Vue {
         document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
       )
       results[0].style.display = 'flex'
+      if (window.innerWidth < 621) {
       window.scrollTo({
-        top: 600,
+        top: 2300,
         behavior: 'smooth',
       })
+    } else if (window.innerWidth < 1200 && window.innerWidth > 620) {
+      window.scrollTo({
+        top: 1300,
+        behavior: 'smooth',
+      })
+    } else {
+      window.scrollTo({
+        top: 1000,
+        behavior: 'smooth',
+      })
+    }
     }
   }
 
@@ -696,10 +708,10 @@ export default class VueComponent extends Vue {
     )
     results[0].style.display = 'none'
     this.setPreset('base')
-    window.scrollTo({
-      top: -600,
-      behavior: 'smooth',
-    })
+      window.scrollTo({
+        top: 600,
+        behavior: 'smooth',
+      })
   }
 
   private updateVoteConditions(factor: string, option: any) {
@@ -987,6 +999,12 @@ li.notes-item {
   font-size: 0.85rem;
   margin-top: 0;
   margin-bottom: 0.25rem;
+}
+
+.sounding-board-description {
+  text-transform: none;
+  font-size: 1.6em;
+
 }
 
 .sticky {
