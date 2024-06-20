@@ -1501,8 +1501,8 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 
   #car-viz-total {
-    scale: 0.98 !important;
-    width: 100%;
+    scale: .78 !important;
+    width: 130%;
   }
 }
 
