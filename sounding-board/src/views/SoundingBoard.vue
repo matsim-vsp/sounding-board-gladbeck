@@ -6,39 +6,56 @@
   .heading
     h2.section-title: b {{ title }}
 
-  .description
-    .description-subtitle(v-for="item in yaml.descriptionOutput")
-      //p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
-      p.description-text(v-html="'<b>' + item.title + ': </b>' + item.description")
+  .header-description
+    .header-description-subtitle(v-for="item in yaml.descriptionOutput")
+      .headers-hoverText
+        .headers-top
+          h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }} 
+          p.header-factor-description {{item.description}} 
+      p.header-description-text(v-html="'<b>' + item.title")     
+      .header-images 
+        img(:src="getImagePath(item.title)")
+      .header-mobile-text {{item.description}} 
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
     b-button.is-huge.factor-option.preset-buttons.preset-option(
-          v-for="preset in orderedPresets"
-          :class="preset.key == currentPreset ? 'is-success' : ''"
-          @click="setPreset(preset.key)"
+      v-for="preset in orderedPresets"
+      :class="preset.key == currentPreset ? 'is-success' : ''"
+      @click="setPreset(preset.key)"
         ) {{ preset.title }}
 
-      
+
   .configurator
     h2.section-title {{ $t('settings') }}
 
     .factors
       .factor(v-for="[key, value] in Object.entries(yaml.inputColumns)")
-        h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
-          .tooltip
-            .top
-              h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
-              p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
-        b-button.is-small.factor-option(
-          v-for="option of factors[key]"
-          :key="option"
-          :class="option == currentConfiguration[key] ? 'is-danger' : ''"
-          @click="setFactor(key, option)"
-        ) {{ option }}
-        p.factor-description {{value.description}}
-    .button.reveal-button(@click="showResults") Ergebnisse anzeigen
-    .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+        .right-block
+          h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
+            .tooltip
+              .top
+                h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
+                p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
+          .buttons-div      
+            b-button.is-small.factor-option.expand(
+              v-for="option of factors[key]"
+              :key="option"
+              :class="option == currentConfiguration[key] ? 'is-danger' : ''"
+              @click="setFactor(key, option)"
+            ) {{ yaml.buttonLabels && yaml.buttonLabels[option] || option }}
+        .left-block
+          .conditionTitle {{ textBlocks[key].description}}
+          .conditionDescriptionTitle Information:
+          .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
+
+
+    .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
+    .buttons
+      .button.reveal-button(@click="showResults") Ergebnisse anzeigen
+      .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+      .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
+
 
 
   .results(:class="!title.startsWith('Güter') ? 'calc-margin' : ''")
@@ -63,16 +80,16 @@
           .metric
             car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
-          
+
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
-  .description
-    h2.section-title {{ $t('description') }}
-    .description-subtitle(v-for="item in yaml.descriptionInput")
-      p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
-      .subdescription(v-for="sub in item.subdescriptions")
-        p.description-text {{ sub }}
+  //- .description
+  //-   h2.section-title {{ $t('description') }}
+  //-   .description-subtitle(v-for="item in yaml.descriptionInput")
+  //-     p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
+  //-     .subdescription(v-for="sub in item.subdescriptions")
+  //-       p.description-text {{ sub }}
     
 
 </template>
@@ -119,6 +136,7 @@ import 'vue-slider-component/theme/default.css'
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
+import { options } from 'marked'
 
 // const PUBLIC_SVN = 'http://localhost:8000'
 const PUBLIC_SVN =
@@ -182,6 +200,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
+  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  // private serverURL = "http://127.0.0.1:5000/"
   private badPage = false
   private lang = 'en'
   private mdParser = new MarkdownIt()
@@ -205,6 +225,26 @@ export default class VueComponent extends Vue {
   private numberOfDrivingCars = 10
   private numberOfParkingCars = 10
 
+  private voteConditions = {
+    oepnv: 'base',
+    kiezBloecke: 'base',
+    fahrrad: 'base',
+    parkraum: 'base',
+    fahrenderAutoVerkehr: 'base',
+    drt: 'base',
+    ipAddr: '',
+    cookie: false,
+    timeStamp: null,
+  }
+
+  private voted = false;
+
+  private resultsRequested = false
+
+  private textBlocks = {}
+
+  private apiKey = ''
+
   @Watch('$route') routeChanged(to: Route, from: Route) {
     if (to.path === from.path) {
     } else {
@@ -216,6 +256,7 @@ export default class VueComponent extends Vue {
 
   private plotHeight = 1
   private plotWidth = 1
+
 
   private async realHandleResize(c: Event) {
     this.updateWidth()
@@ -239,6 +280,15 @@ export default class VueComponent extends Vue {
     window.setInterval(() => {
       this.updateWidth()
     }, 1000)
+  }
+
+  private getImagePath(title) {
+    try {
+      return require(`../assets/images/${title}.png`);
+    } catch (e) {
+      console.error(`Image not found: ../assets/images/${title}.png`);
+      return '';
+    }
   }
 
   private formattedValue(v: number, isCosts: boolean) {
@@ -269,24 +319,44 @@ export default class VueComponent extends Vue {
     }
 
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
+    console.log(this.currentConfiguration.DRT)
+    console.log(this.currentConfiguration.OePNV)
+    this.updateVoteConditions('OePNV', this.currentConfiguration.OePNV)
+    this.updateVoteConditions('kiezblocks', this.currentConfiguration.kiezblocks)
+    this.updateVoteConditions('Fahrrad', this.currentConfiguration.Fahrrad)
+    this.updateVoteConditions('Parkraum', this.currentConfiguration.Parkraum)
+    this.updateVoteConditions('fahrenderVerkehr', this.currentConfiguration.fahrenderVerkehr)
+    this.updateVoteConditions('DRT', this.currentConfiguration.DRT)
+
     this.updateValues()
+
     this.currentPreset = preset
 
     this.setURLQuery()
   }
 
   private setFactor(factor: string, option: any) {
-    console.log(factor, option)
     this.currentConfiguration[factor] = option
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
-
+    this.updateVoteConditions(factor, option)
     // disable the preset if user mucks with the settings
     this.currentPreset = ''
     this.setURLQuery()
   }
 
+  // getApiAuthorization() {
+  //   let auth = localStorage.getItem('brendan-api-key')
+  //   if (!auth) auth = prompt('API access key required:')
+
+  //   if (auth) {
+  //     this.apiKey = auth
+  //     localStorage.setItem('brendan-api-key', auth)
+  //   }
+  // }
+
   private mounted() {
+    // localStorage.setItem('LSvoted', 'false')
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
@@ -294,6 +364,9 @@ export default class VueComponent extends Vue {
     this.buildPageForURL()
     window.addEventListener('resize', this.handleResize)
     this.updateSize()
+    // this.getApiAuthorization()
+
+    // this.setText()
   }
 
   private async buildPageForURL() {
@@ -305,6 +378,60 @@ export default class VueComponent extends Vue {
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
+    this.textBlocks = {
+      OePNV: {
+        description: 'S-Bahn, U-Bahn, Tram, und Bus',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.OePNV.subdescriptions["scenario1"],
+          dekarbonisiert: this.yaml.descriptionInput.OePNV.subdescriptions["scenario2"],
+          stark: this.yaml.descriptionInput.OePNV.subdescriptions["scenario3"],
+        },
+      },
+      kiezblocks: {
+        description: '10 km/h Tempolimit - keine Durchfahrt möglich',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
+          'ganze Stadt': this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario2"],
+        },
+      },
+      Fahrrad: {
+        description: 'Radwege sowie Radschnellverbindungen',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario1"],
+          stark: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario2"],
+        },
+      },
+      Parkraum: {
+        description: 'Für Ganz Berlin',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
+          Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
+            ["scenario2"],
+          Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
+            ["scenario3"],
+        },
+      },
+      fahrenderVerkehr: {
+        description: 'Fahrzeugen auf Straßen zur Personen- oder Güterbeförderung',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
+          mautFossil: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario2"],
+          MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario3"],
+          zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario4"],
+          zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
+            ["scenario5"],
+          autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario6"],
+        },
+      },
+      DRT: {
+        description: 'Digitales Rufbussystem',
+        subdescriptions: {
+          base: this.yaml.descriptionInput.DRT.subdescriptions["scenario1"],
+          nurAussenbezirke: this.yaml.descriptionInput.DRT.subdescriptions["scenario2"],
+          ganzeStadt: this.yaml.descriptionInput.DRT.subdescriptions["scenario3"],
+        },
+      },
+    }
   }
 
   // private parseMarkdown(text: string) {
@@ -392,15 +519,12 @@ export default class VueComponent extends Vue {
     // convert set to array
     for (const factor of Object.keys(f)) {
       this.factors[factor] = Array.from(f[factor])
-
       const definition = this.yaml.inputColumns[factor]
       this.factorTitle[factor] =
         this.lang == 'de'
           ? definition.title_de || definition.title || definition.title_en || factor
           : definition.title_en || definition.title || definition.title_de || factor
     }
-
-    this.factors = Object.assign({}, this.factors)
   }
 
   private buildPresets() {
@@ -538,6 +662,7 @@ export default class VueComponent extends Vue {
   }
 
   private getDescriptionForTooltip(key: string) {
+    // console.log(key)
     for (const value of Object.values(this.yaml.descriptionInput)) {
       if (value.title == key) return value.description
     }
@@ -545,14 +670,18 @@ export default class VueComponent extends Vue {
   }
 
   private showResults() {
-    let results = Array.from(
-      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
-    )
-    results[0].style.display = 'flex'
-    window.scrollTo({
-      top: 600,
-      behavior: 'smooth',
-    })
+    this.resultsRequested = true
+    if (localStorage.getItem('LSvoted') == 'true' && this.resultsRequested == true) {
+      this.voted = true;
+      let results = Array.from(
+        document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+      )
+      results[0].style.display = 'flex'
+      window.scrollTo({
+        top: 600,
+        behavior: 'smooth',
+      })
+    }
   }
 
   private hideResults() {
@@ -567,17 +696,82 @@ export default class VueComponent extends Vue {
     })
   }
 
+  private updateVoteConditions(factor: string, option: any) {
+    if (factor == 'OePNV') this.voteConditions.oepnv = option
+    if (factor == 'kiezblocks') this.voteConditions.kiezBloecke = option
+    if (factor == 'Fahrrad') this.voteConditions.fahrrad = option
+    if (factor == 'Parkraum') this.voteConditions.parkraum = option
+    if (factor == 'fahrenderVerkehr') this.voteConditions.fahrenderAutoVerkehr = option
+    if (factor == 'DRT') this.voteConditions.drt = option
+  }
+
+  private async saveConditions() {
+
+    localStorage.setItem('LSvoted', 'true')
+    this.voted = true;
+    this.updateVoteConditions;
+
+    for (const metric of this.metrics) {
+      console.log(metric.title + ': ' + metric.value)
+    }
+
+    this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
+    fetch('https://api.ipify.org?format=json')
+      .then(x => x.json())
+      .then(({ ip }) => {
+        this.voteConditions.ipAddr = ip
+      })
+      .then(() => {
+        const vote = JSON.stringify(this.voteConditions)
+      })
+
+      this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
+      
+
+    // Get request from python api-server
+    try {
+      console.log(JSON.stringify(this.voteConditions))
+      // this.myState.statusMessage = ''
+      let response = await fetch(this.serverURL + 'votes', {
+        headers: {
+          // Authorization: this.apiKey,
+          'Content-type': 'application/json; charset=UTF-8',
+          // 'Access-Control-Allow-Origin': '*',
+        },
+        method: 'POST',
+        body: JSON.stringify(this.voteConditions),
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+      }
+      let json = await response.json()
+      console.log(this.metrics)
+      console.log(json)
+    } catch (e) {
+      // this.myState.statusMessage = 'Error fetching paths :-('
+      // this.isFiltering = false
+      console.log('Error fetching paths :-(')
+      return
+    }
+  }
+
+  private setCookie(name: string, value: boolean, days: number) {
+    let expires = ''
+    if (days) {
+      let date = new Date()
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
+      expires = '; expires=' + date.toUTCString()
+    }
+    document.cookie = name + '=' + (value || '') + expires + '; path=/'
+    return value
+  }
+
   private addDescriptionToggle() {
     for (const value of Object.values(this.yaml.inputColumns)) {
       value.showDescription = true
     }
   }
-
-  /*   private showInformation(text: string) {
-    for (const [key, value] of Object.entries(this.yaml.inputColumns)) {
-      if (text == key) value.showDescription = !value.showDescription
-    }
-  } */
 }
 </script>
 
@@ -588,6 +782,7 @@ export default class VueComponent extends Vue {
   background-color: white;
   color: #224;
 }
+
 .center-area {
   max-width: 70rem;
   padding: 1rem 3rem 1rem 3rem;
@@ -652,7 +847,7 @@ p.factor {
 .reveal-button {
   color: white;
   font-size: 16px;
-  margin: 20px 2px;
+  margin: 10px;
   background-color: #3a76af;
   font-weight: bold;
 }
@@ -666,7 +861,7 @@ p.factor {
 .hide-button {
   color: white;
   font-size: 16px;
-  margin: 20px 2px;
+  margin: 10px;
   background-color: #3a76af;
   font-weight: bold;
 }
@@ -675,6 +870,20 @@ p.factor {
   background-color: white;
   color: #3a76af;
   border: 1px solid #3a76af;
+}
+
+.submit-button {
+  color: white;
+  font-size: 16px;
+  margin: 10px;
+  background-color: #77b255;
+  font-weight: bold;
+}
+
+.submit-button:hover {
+  background-color: white;
+  color: #77b255;
+  border: 1px solid #77b255;
 }
 
 .header-nav {
@@ -692,6 +901,70 @@ p.factor {
 
 li.notes-item {
   line-height: 1.3rem;
+}
+
+.header-description {
+  font-size: 0.85rem;
+  margin-top: 20px;
+  margin-bottom: 0.25rem;
+  display: flex;
+  flex: 1;
+  width: 100%;
+  padding-bottom: 25px;
+  flex-wrap: wrap;
+    padding-left: 2em;
+}
+
+
+
+.header-description-subtitle {
+  flex: 1 1 auto;
+  margin: 0.5rem;
+  margin-left: 0.5rem;
+  margin-left: 0.25rem;
+  font-size: 1.2rem;
+  position: relative;
+  width: -webkit-min-content;
+  width: -moz-min-content;
+  width: min-content;
+  height: -webkit-min-content;
+  height: -moz-min-content;
+  height: min-content;
+  white-space: nowrap;
+  width: 48%;
+}
+
+.header-images {
+  max-width: 50px;
+  // margin: auto;
+  height: 100%;
+  margin: unset;
+  justify-content: left;
+  display: flex;
+
+}
+
+.header-description-text {
+  margin-bottom: 10;
+  text-align: left;
+
+}
+
+.header-factor-description {
+  font-size: 12px;
+  padding-right: 20px;
+}
+
+.header-mobile-text {
+  display: block;
+    left: 80px;
+    position: absolute;
+    text-wrap: wrap;
+    width: 80%;
+    padding-right: 20px;
+    font-size: 11px;
+    text-align: left;
+    top: 42px;
 }
 
 .description {
@@ -738,27 +1011,33 @@ li.notes-item {
   padding: 1rem 2rem 2rem 2rem;
 }
 
-.metric {
+.metric[data-v-4aa344e9] {
   background-color: white;
-  //width: max-content;
-  //width: 320px;
-  //padding: 1rem;
-  //margin: 0.5rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
-  //min-width: 100px;
-  flex: 1;
-  //height: fit-content;
-  //border: 1px solid black;
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  -ms-flex-item-align: stretch;
   align-self: stretch;
-
-  //justify-content: center;
+  min-height: 500px;
+  flex: 1;
 }
+
+// .metrics {
+//   display: grid;
+//   grid-template-columns: 20% 20% 20% 20% 20%;
+// }
 
 .metrics .metric {
   border: 1px solid black;
   padding: 1rem;
 }
+
 .metrics .metric:last-of-type {
   border: none;
   padding: 0rem;
@@ -790,7 +1069,7 @@ li.notes-item {
 }
 
 .heading p {
-  color: #33b;
+  color: #3a76af;
   font-size: 1rem;
   text-transform: none;
 }
@@ -800,28 +1079,79 @@ li.notes-item {
 }
 
 .description p {
-  color: #33b;
+  color: #3a76af;
   font-size: 1.2rem;
   text-transform: none;
 }
 
 .factors {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  // flex-wrap: wrap;
+  grid-template-columns: 50% 50%;
 }
+
+.factor {
+  display: grid;
+  // flex-wrap: wrap;
+  grid-template-columns: 50% 50%;
+}
+
+.conditionTitle {
+  padding-top: 10px;
+  font-size: 0.8em;
+  font-weight: bold;
+  line-height: 1.2em;
+  padding-bottom: 5px;
+  border-bottom: 1px #000 solid;
+}
+
+.conditionDescriptionTitle {
+  margin-top: 10px;
+  font-size: 0.7em;
+  font-weight: bold;
+}
+
+.conditionDescription {
+  // margin-top: 10px;
+  font-size: 0.6em;
+  // animation: fadeInAnimation ease 3s;
+  // animation-fill-mode: forwards;
+}
+
+// @keyframes fadeInAnimation {
+//   0% {
+//     opacity: 0;
+//   }
+
+//   100% {
+//     opacity: 1;
+//   }
+// }
+.error-text {
+  color: #c40d1e;
+  font-weight: bold;
+}
+
+.left-block {
+  height: 100%;
+}
+
 .metrics {
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   height: fit-content;
   //justify-content: stretch;
 
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: center;
   align-content: center;
   gap: 20px;
 }
+
+// #car-viz-total {
+//   width: 108%;
+// }
 
 .metric-title {
   margin-bottom: 0.2rem;
@@ -843,7 +1173,28 @@ li.notes-item {
   padding: 0.5rem;
   background-color: white;
   margin: 0.5rem;
-  max-width: fit-content;
+  max-width: 100%;
+  display: grid;
+}
+
+.buttons-div {
+  display: flex;
+  flex-wrap: wrap;
+  height: fit-content;
+  font-size: 9px;
+  font-weight: bold;
+}
+
+button.is-small.factor-option {
+  width: 90%;
+  margin-top: 5px;
+  font-weight: bold;
+  font-size: 1.3em;
+}
+
+button.is-small.factor-option:hover {
+  color: #fff;
+  background-color: #c40d1e;
 }
 
 .preset-option {
@@ -854,9 +1205,19 @@ li.notes-item {
   margin: 0.25rem;
   margin-top: 0rem;
   margin-bottom: 0rem;
-  font-size: 0.8rem;
+  font-size: 0.5rem;
   cursor: pointer;
   font-style: normal;
+}
+
+button.is-huge.factor-option.preset-buttons {
+  font-size: 0.8em;
+}
+
+button.is-huge.factor-option.preset-buttons:hover {
+  background-color: #48c78e;
+  border-color: transparent;
+  color: #fff;
 }
 
 .factor-description {
@@ -876,6 +1237,58 @@ li.notes-item {
 
 .subdescription {
   margin-left: 2rem;
+}
+
+.headers-hoverText {
+  display: none;
+  position: absolute;
+  text-align: left;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.headers-hoverText .headers-top {
+  width: 400px;
+  transform: translate(0, -100%);
+  padding: 10px 20px;
+  color: #444444;
+  background-color: white;
+  font-weight: normal;
+  font-size: 13px;
+  border-radius: 2px;
+  position: absolute;
+  z-index: 99999999;
+  box-sizing: border-box;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.2);
+  display: none;
+  text-wrap: wrap;
+}
+
+.headers-hoverText:hover .headers-top {
+  display: block;
+}
+
+.headers-hoverText .headers-top i {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -12px;
+  width: 24px;
+  height: 12px;
+  overflow: hidden;
+}
+
+.headers-hoverText .headers-top i::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(45deg);
+  background-color: #eeeeee;
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
 /* TOOLTIP */
@@ -932,6 +1345,79 @@ li.notes-item {
   box-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
 }
 
+.button.is-danger {
+  background-color: #c40d1e !important;
+}
+
+@media only screen and (max-width: 800px) {
+  .factors {
+    grid-template-columns: 100%;
+  }
+}
+
+@media only screen and (max-width: 629px) {
+  .hide-button {
+    margin: 5px;
+    width: fit-content;
+  }
+
+  .reveal-button {
+    margin: 5px;
+    width: fit-content;
+  }
+
+  .buttons {
+    display: grid;
+    grid-template-columns: 100%;
+  }
+
+  .submit-button {
+    margin-left: 5px;
+  }
+
+
+}
+
+@media only screen and (max-width: 1430px) {
+  .metric[data-v-4aa344e9] {
+    flex: 30%;
+  }
+
+  #car-viz-total {
+    scale: 0.98 !important;
+    width: 92%;
+  }
+}
+
+@media only screen and (min-width: 1430px) and (max-width: 1630px) {
+  #car-viz-total {
+    width: 115%;
+  }
+}
+
+@media only screen and (min-width: 1600px) {
+  .factors {
+    width: 100% !important;
+  }
+
+  button.is-small.factor-option {
+    font-size: 1.4em;
+  }
+}
+
+@media only screen and (max-width: 620px) {
+  .metric[data-v-4aa344e9] {
+    flex: 50%;
+  }
+
+  #car-viz-total {
+    scale: 0.98 !important;
+    width: 100%;
+  }
+}
+
+
+
 @media only screen and (max-width: 1440px) {
   .factor-option {
     font-size: 0.7rem;
@@ -965,7 +1451,13 @@ li.notes-item {
   }
 }
 
-@media only screen and (max-width: 1280px) {
+@media only screen and (min-width: 1080px) {
+  .factors {
+    grid-template-columns: 33.3% 33.3% 33.3%;
+  }
+}
+
+@media only screen and (min-width: 1280px) {
   .factor-option {
     font-size: 0.6rem;
   }
@@ -1016,12 +1508,51 @@ li.notes-item {
   .description p {
     font-size: 1.1rem;
   }
+
+  // .header-description {
+  //   flex-wrap: wrap;
+  //   padding-left: 2em;
+  // }
+
+  // .header-description-subtitle {
+  //   width: 48%;
+  // }
+
+  // .headers-hoverText {
+  //   display: none;
+  // }
+
+  // .header-description-text {
+  //   text-align: left;
+  // }
+
+  // .header-images {
+  //   margin: unset;
+  //   justify-content: left;
+  // }
+
+  // .header-mobile-text {
+  //   display: block;
+  //   left: 80px;
+  //   position: absolute;
+  //   text-wrap: wrap;
+  //   width: 80%;
+  //   padding-right: 15px;
+  //   font-size: 11px;
+  //   text-align: left;
+  //   top: 42px;
+  // }
+
+  .header-description-subtitle {
+    width: 24%;
+  }
 }
 
 @media only screen and (max-width: 1024px) {
   .presets {
     padding: 1rem 2rem 1rem 2rem;
   }
+
   .factor-option {
     font-size: 0.55rem;
   }
@@ -1081,6 +1612,7 @@ li.notes-item {
   .description p {
     font-size: 0.9rem;
   }
+
 }
 
 @media only screen and (max-width: 850px) {

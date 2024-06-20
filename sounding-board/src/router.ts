@@ -5,16 +5,16 @@ Vue.use(VueRouter)
 
 const routes = [
   {
+    path: '/start-session',
+    name: 'Start-Session',
+    component: function() {
+      return Promise.resolve().then(function() {
+        return require('@/views/StartSession.vue')
+      })
+    },
+  },
+  {
     path: '/:runId/:config',
-    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
-  },
-  {
-    path: '/:runId/:config/',
-    component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
-  },
-  {
-    path: '/:runId/',
-    redirect: '/:runId/config',
     component: () => import(/* webpackChunkName: "scenarios" */ '@/views/SoundingBoard.vue'),
   },
   {
@@ -24,7 +24,7 @@ const routes = [
   },
   {
     // catch-all back to home page
-    path: '*',
+    path: '/',
     redirect: '/current/config',
   },
 ]
