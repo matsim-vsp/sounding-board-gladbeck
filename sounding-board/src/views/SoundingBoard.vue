@@ -406,9 +406,9 @@ export default class VueComponent extends Vue {
         subdescriptions: {
           base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
           Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
-            ["scenario2"],
+          ["scenario2"],
           Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
-            ["scenario3"],
+          ["scenario3"],
         },
       },
       fahrenderVerkehr: {
@@ -419,7 +419,7 @@ export default class VueComponent extends Vue {
           MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario3"],
           zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario4"],
           zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
-            ["scenario5"],
+          ["scenario5"],
           autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario6"],
         },
       },
@@ -725,8 +725,8 @@ export default class VueComponent extends Vue {
         const vote = JSON.stringify(this.voteConditions)
       })
 
-      this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
-      
+    this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
+
 
     // Get request from python api-server
     try {
@@ -909,10 +909,10 @@ li.notes-item {
   margin-bottom: 0.25rem;
   display: flex;
   flex: 1;
-  width: 100%;
+  width: 98%;
   padding-bottom: 25px;
   flex-wrap: wrap;
-    padding-left: 2em;
+  padding-left: 2em;
 }
 
 
@@ -957,14 +957,15 @@ li.notes-item {
 
 .header-mobile-text {
   display: block;
-    left: 80px;
-    position: absolute;
-    text-wrap: wrap;
-    width: 80%;
-    padding-right: 20px;
-    font-size: 11px;
-    text-align: left;
-    top: 42px;
+  left: 80px;
+  position: absolute;
+  text-wrap: wrap;
+  width: auto;
+  padding-right: 20px;
+  font-size: 11px;
+  text-align: left;
+  top: 42px;
+  max-width: fit-content;
 }
 
 .description {
@@ -1373,6 +1374,10 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .submit-button {
     margin-left: 5px;
+  }
+
+  button.is-small.factor-option {
+    font-size: 1.1em;
   }
 
 
