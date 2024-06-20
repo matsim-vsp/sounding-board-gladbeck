@@ -73,18 +73,21 @@ if (os.path.isfile('test.db')):
     votes_exist = cur.fetchone()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='sessions'")
     sessions_exist = cur.fetchone()
-    # cur.execute("DROP TABLE sessions")
-    # cur.execute("DROP TABLE votes")
 
     if votes_exist == None:
         print("no votes")
-        cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID)")
+        cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timeStamp)")
 
     if sessions_exist == None:
         cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
     con.commit()
     con.close()
-
+# con = sqlite3.connect("test.db", check_same_thread=False)
+# cur = con.cursor()
+# cur.execute("DROP TABLE votes")
+# cur.execute("DROP TABLE sessions")
+# cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timestamp)")
+# cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
 
 # cur.execute("DROP TABLE votes")
 # cur.execute("DROP TABLE sessions")
@@ -176,7 +179,7 @@ def post_vote_to_db():
     if (voter_exists != None): 
         update_vote = """Update votes 
                     SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
-                    parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?
+                    parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?, timeStamp = ?
                     WHERE cookie = ? AND  ipAddr = ?"""
         cur.execute(update_vote, (
             data['oepnv'],
@@ -186,10 +189,11 @@ def post_vote_to_db():
             data['fahrenderAutoVerkehr'],
             data['drt'],
             sessionID,
+            data['timeStamp'],
             1,
             data['ipAddr']))
 
-        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 37")]
+        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 200")]
         print(table_list)
 
         con.commit()
@@ -198,10 +202,9 @@ def post_vote_to_db():
         return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     else:
+        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timeStamp) 
 
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID) 
-
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
         cur.execute(db_vote_insert, (
         data['oepnv'],
@@ -212,12 +215,15 @@ def post_vote_to_db():
         data['drt'],
         data['ipAddr'],
         data['cookie'],
-        sessionID
+        sessionID,
+        data['timeStamp']
         ))
 
         # print_table = "SELECT * FROM votes WHERE sessionID = sessionID VALUES (?)" 
         # table_list = cur.execute(print_table, (sessionID))
         # print(table_list)
+        table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 100")]
+        print(table_list)
 
         con.commit()
         con.close()
@@ -230,10 +236,25 @@ def get_votes_from_db(session_id):
 
     con = sqlite3.connect("test.db", check_same_thread=False)
     cur = con.cursor()
-    cur.execute("SELECT * FROM votes WHERE sessionID = " + session_id)
+    cur.execute("SELECT * FROM votes WHERE sessionID = " + str(session_id))
     results = cur.fetchall()
-    votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'session_id': row[8]} for row in results]
+    # find_votes = "SELECT * FROM votes WHERE sessionID = ?"
+    # cur.execute(find_votes, (session_id,))
+    # results = cur.fetchall()
+    votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'session_id': row[8], 'timeStamp': row[9]} for row in results]
     print(votes)
+    # print(type(session_id))
+    # cur.execute("PRAGMA table_info(votes)")
+    # schema = cur.fetchall()
+    # print("Schema of the 'votes' table:")
+    # for column in schema:
+    #     print(column)
+    # find_votes = "SELECT * FROM votes WHERE sessionID = ?"
+    # cur.execute(find_votes, (session_id,))
+    # results = cur.fetchall()
+    # print(results)
+    # votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'sessionID': row[8], 'timeStamp': row[9]} for row in results]
+    
 
     con.commit()
     con.close()

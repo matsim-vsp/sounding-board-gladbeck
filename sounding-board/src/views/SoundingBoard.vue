@@ -234,6 +234,7 @@ export default class VueComponent extends Vue {
     drt: 'base',
     ipAddr: '',
     cookie: false,
+    timeStamp: null,
   }
 
   private voted = false;
@@ -724,6 +725,9 @@ export default class VueComponent extends Vue {
         const vote = JSON.stringify(this.voteConditions)
       })
 
+      this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
+      
+
     // Get request from python api-server
     try {
       console.log(JSON.stringify(this.voteConditions))
@@ -1185,7 +1189,7 @@ button.is-small.factor-option {
   width: 90%;
   margin-top: 5px;
   font-weight: bold;
-  font-size: 8px;
+  font-size: 1.3em;
 }
 
 button.is-small.factor-option:hover {
@@ -1397,7 +1401,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 
   button.is-small.factor-option {
-    font-size: 1.2em;
+    font-size: 1.4em;
   }
 }
 

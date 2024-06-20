@@ -43,8 +43,8 @@ export default class VueComponent extends Vue {
 
   private conditionTotalVotes = 0
 
-  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  // private serverURL = "http://127.0.0.1:5000/"
+  // private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private serverURL = "http://127.0.0.1:5000/"
 
   // private mostRecentSession = this.getLastSession()
 
@@ -148,6 +148,7 @@ export default class VueComponent extends Vue {
       return
     }
 
+    console.log(sessionVotes)
     var sessionVotesData = this.getCounts(sessionVotes)
 
 
@@ -155,6 +156,7 @@ export default class VueComponent extends Vue {
     for (const property in sessionVotesData[0]) {
       this.conditionTotalVotes += sessionVotesData[0][property];
     }
+
 
 
     this.visualizeData(sessionVotesData)
@@ -274,7 +276,6 @@ export default class VueComponent extends Vue {
     var trace1_Kiezbloecke = {
       y: [sessionVotesData[1].base],
       x: ['Kiezbloecke  '],
-
       name: 'KiezBlöcke - base',
       type: 'bar',
       marker: {
@@ -291,7 +292,6 @@ export default class VueComponent extends Vue {
     var trace2_Kiezbloecke = {
       y: [sessionVotesData[1]['ganze Stadt']],
       x: ['Kiezbloecke  '],
-
       name: 'KiezBlöcke - ganze Stadt',
       marker: {
         color: "#006400"
@@ -368,11 +368,11 @@ export default class VueComponent extends Vue {
       },
       legendgroup: 'group4',
       hovertemplate:
-        "<b>Parkraum - BesucherFossilTeuer_alleAnderenPreiswert</b><br>" +
+        "<b>Parkraum - Teuer für Besucher (fossil)</b><br>" +
         "Stimmen " + sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
-      text: 'BesucherFossilTeuer_alleAnderenPreiswert'
+      text: 'Teuer für Besucher (fossil)'
     }
     var trace3_Parkraum = {
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
@@ -385,11 +385,11 @@ export default class VueComponent extends Vue {
       },
       legendgroup: 'group4',
       hovertemplate:
-        "<b>Parkraum - Besucher_teuer_Anwohner_preiswert</b><br>" +
+        "<b>Parkraum - Teuer für Besucher</b><br>" +
         "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_preiswert + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_preiswert / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
-      text: 'Besucher_teuer_Anwohner_preiswert'
+      text: 'Teuer für Besucher'
     }
     var trace4_Parkraum = {
       y: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
@@ -402,11 +402,11 @@ export default class VueComponent extends Vue {
       },
       legendgroup: 'group4',
       hovertemplate:
-        "<b>Parkraum - Besucher_teuer_Anwohner_teuer</b><br>" +
+        "<b>Parkraum - Teuer für Alle</b><br>" +
         "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_teuer + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_teuer / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
-      text: 'Besucher_teuer_Anwohner_teuer'
+      text: 'Teuer für Alle'
     }
 
     var trace1_Autoverkehr = {
@@ -437,24 +437,24 @@ export default class VueComponent extends Vue {
       },
       legendgroup: 'group5',
       hovertemplate:
-        "<b>Autoverkehr - maut Fossil</b><br>" +
+        "<b>Autoverkehr - Maut Für Verbrenner</b><br>" +
         "Stimmen " + sessionVotesData[4].mautFossil + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[4].mautFossil / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
-      text: 'Maut Fossil'
+      text: 'Maut Für Verbrenner'
     }
     var trace3_Autoverkehr = {
       y: [sessionVotesData[4].MautFuerAlle],
       x: ['Autoverkehr'],
 
-      name: 'Autoverkehr - maut Für Alle',
+      name: 'Autoverkehr - Maut Für Alle',
       type: 'bar',
       marker: {
         color: "#FF7F50"
       },
       legendgroup: 'group5',
       hovertemplate:
-        "<b>Autoverkehr - maut Für Alle</b><br>" +
+        "<b>Autoverkehr - Maut Für Alle</b><br>" +
         "Stimmen " + sessionVotesData[4].MautFuerAlle + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[4].MautFuerAlle / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
@@ -493,7 +493,7 @@ export default class VueComponent extends Vue {
         "Stimmen " + sessionVotesData[4].zeroEmissionsZonePlusMaut + "<br>" +
         "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZonePlusMaut / this.conditionTotalVotes) * 100) + "%" +
         "<extra></extra>",
-      text: 'Zero Emissions Zone Plus Maut'
+      text: 'ZEZ + Maut'
     }
     var trace6_Autoverkehr = {
       y: [sessionVotesData[4].autofrei],
@@ -714,11 +714,11 @@ export default class VueComponent extends Vue {
     //   },
     //   legendgroup: 'group4',
     //   hovertemplate:
-    //     "<b>Parkraum - BesucherFossilTeuer_alleAnderenPreiswert</b><br>" +
+    //     "<b>Parkraum - Teuer für Besucher (fossil)</b><br>" +
     //     "Stimmen " + sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert + "<br>" +
     //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].BesucherFossilTeuer_alleAnderenPreiswert / this.conditionTotalVotes) * 100) + "%" +
     //     "<extra></extra>",
-    //   text: 'BesucherFossilTeuer_alleAnderenPreiswert'
+    //   text: 'Teuer für Besucher (fossil)'
     // }
     // var trace3_Parkraum = {
     //   x: [sessionVotesData[3].Besucher_teuer_Anwohner_preiswert],
@@ -731,11 +731,11 @@ export default class VueComponent extends Vue {
     //   },
     //   legendgroup: 'group4',
     //   hovertemplate:
-    //     "<b>Parkraum - Besucher_teuer_Anwohner_preiswert</b><br>" +
+    //     "<b>Parkraum - Teuer für Besucher</b><br>" +
     //     "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_preiswert + "<br>" +
     //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_preiswert / this.conditionTotalVotes) * 100) + "%" +
     //     "<extra></extra>",
-    //   text: 'Besucher_teuer_Anwohner_preiswert'
+    //   text: 'Teuer für Besucher'
     // }
     // var trace4_Parkraum = {
     //   x: [sessionVotesData[3].Besucher_teuer_Anwohner_teuer],
@@ -748,11 +748,11 @@ export default class VueComponent extends Vue {
     //   },
     //   legendgroup: 'group4',
     //   hovertemplate:
-    //     "<b>Parkraum - Besucher_teuer_Anwohner_teuer</b><br>" +
+    //     "<b>Parkraum - Teuer für Alle</b><br>" +
     //     "Stimmen " + sessionVotesData[3].Besucher_teuer_Anwohner_teuer + "<br>" +
     //     "Prozent der Stimmen " + Math.floor((sessionVotesData[3].Besucher_teuer_Anwohner_teuer / this.conditionTotalVotes) * 100) + "%" +
     //     "<extra></extra>",
-    //   text: 'Besucher_teuer_Anwohner_teuer'
+    //   text: 'Teuer für Alle'
     // }
 
     // var trace1_Autoverkehr = {
@@ -787,7 +787,7 @@ export default class VueComponent extends Vue {
     //     "Stimmen " + sessionVotesData[4].mautFossil + "<br>" +
     //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].mautFossil / this.conditionTotalVotes) * 100) + "%" +
     //     "<extra></extra>",
-    //   text: 'Maut Fossil'
+    //   text: 'Maut für Verbrenner'
     // }
     // var trace3_Autoverkehr = {
     //   x: [sessionVotesData[4].MautFuerAlle],
@@ -839,7 +839,7 @@ export default class VueComponent extends Vue {
     //     "Stimmen " + sessionVotesData[4].zeroEmissionsZonePlusMaut + "<br>" +
     //     "Prozent der Stimmen " + Math.floor((sessionVotesData[4].zeroEmissionsZonePlusMaut / this.conditionTotalVotes) * 100) + "%" +
     //     "<extra></extra>",
-    //   text: 'Zero Emissions Zone Plus Maut'
+    //   text: 'ZEZ + Maut'
     // }
     // var trace6_Autoverkehr = {
     //   x: [sessionVotesData[4].autofrei],
