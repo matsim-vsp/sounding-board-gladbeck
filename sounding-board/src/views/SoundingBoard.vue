@@ -49,12 +49,14 @@
           .conditionDescriptionTitle Information:
           .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
 
-
-    .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
+    .submit-vote-div    
+      .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
+      .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre ersten Stimme ersetzt.
     .buttons
       .button.reveal-button(@click="showResults") Ergebnisse anzeigen
       .button.hide-button(@click="hideResults") Ergebnisse ausblenden
       .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
+      
 
 
 
@@ -238,6 +240,7 @@ export default class VueComponent extends Vue {
   }
 
   private voted = false;
+  private showVotedText = false;
 
   private resultsRequested = false
 
@@ -360,6 +363,9 @@ export default class VueComponent extends Vue {
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
+    if (localStorage.getItem('LSvoted') == 'true') {
+      this.showVotedText = true;
+    }
 
     this.buildPageForURL()
     window.addEventListener('resize', this.handleResize)
@@ -406,9 +412,9 @@ export default class VueComponent extends Vue {
         subdescriptions: {
           base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
           Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
-          ["scenario2"],
+            ["scenario2"],
           Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
-          ["scenario3"],
+            ["scenario3"],
         },
       },
       fahrenderVerkehr: {
@@ -419,7 +425,7 @@ export default class VueComponent extends Vue {
           MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario3"],
           zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario4"],
           zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
-          ["scenario5"],
+            ["scenario5"],
           autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario6"],
         },
       },
@@ -709,6 +715,7 @@ export default class VueComponent extends Vue {
 
     localStorage.setItem('LSvoted', 'true')
     this.voted = true;
+    this.showVotedText = true;
     this.updateVoteConditions;
 
     for (const metric of this.metrics) {
@@ -725,8 +732,8 @@ export default class VueComponent extends Vue {
         const vote = JSON.stringify(this.voteConditions)
       })
 
-    this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
-
+      this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
+      
 
     // Get request from python api-server
     try {
@@ -912,7 +919,7 @@ li.notes-item {
   width: 98%;
   padding-bottom: 25px;
   flex-wrap: wrap;
-  padding-left: 2em;
+    padding-left: 2em;
 }
 
 
@@ -930,6 +937,7 @@ li.notes-item {
   height: -webkit-min-content;
   height: -moz-min-content;
   height: min-content;
+  min-height: 105px;
   white-space: nowrap;
   width: 48%;
 }
@@ -960,12 +968,19 @@ li.notes-item {
   left: 80px;
   position: absolute;
   text-wrap: wrap;
+  overflow-wrap: break-word;
+  word-break: break-word;
   width: auto;
   padding-right: 20px;
   font-size: 11px;
   text-align: left;
   top: 42px;
   max-width: fit-content;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .description {
@@ -1037,6 +1052,10 @@ li.notes-item {
 .metrics .metric {
   border: 1px solid black;
   padding: 1rem;
+  width: 18%;
+  margin-right: 15px;
+  height: fit-content;
+  max-height: 600px;
 }
 
 .metrics .metric:last-of-type {
@@ -1133,6 +1152,27 @@ li.notes-item {
   font-weight: bold;
 }
 
+.voted-text {
+  font-weight: bold;
+  text-wrap: wrap;
+  max-width: 180px;
+  font-size: 11px;
+  line-height: 1.3;
+  margin-top: 10px;
+  margin-left: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  white-space: normal;
+}
+
+.submit-vote-div {
+  display: flex;
+}
+
 .left-block {
   height: 100%;
 }
@@ -1150,9 +1190,11 @@ li.notes-item {
   gap: 20px;
 }
 
-// #car-viz-total {
-//   width: 108%;
-// }
+#car-viz-total {
+  height: 500px;
+  max-height: 500px;
+  scale: 1 !important;
+}
 
 .metric-title {
   margin-bottom: 0.2rem;
@@ -1229,7 +1271,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 .temp-box {
   //background-color: red;
   width: 100%;
-  height: 100%;
+  height: 420px;
 }
 
 .description-text {
@@ -1356,6 +1398,20 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
+@media only screen and (max-width: 450px) {
+  button.is-small.factor-option {
+  font-size: 1em;
+}
+
+.submit-vote-div[data-v-4aa344e9] {
+  display: table;
+}
+.voted-text {
+  margin-top: auto;
+  margin-left: 5px;
+}
+}
+
 @media only screen and (max-width: 629px) {
   .hide-button {
     margin: 5px;
@@ -1374,10 +1430,6 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .submit-button {
     margin-left: 5px;
-  }
-
-  button.is-small.factor-option {
-    font-size: 1.1em;
   }
 
 
@@ -1640,4 +1692,6 @@ button.is-huge.factor-option.preset-buttons:hover {
     grid-template-columns: repeat(1, 1fr);
   }
 }
+
+
 </style>
