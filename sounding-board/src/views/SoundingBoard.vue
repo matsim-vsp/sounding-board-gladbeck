@@ -359,12 +359,15 @@ export default class VueComponent extends Vue {
   // }
 
   private mounted() {
-    localStorage.setItem('LSvoted', 'false')
-    localStorage.setItem('voter-cookie', '')
+    // brendan - why are you clearing these on every page load? Defeats the purpose.
+    // localStorage.setItem('LSvoted', 'false')
+    // localStorage.setItem('voter-cookie', '')
+
     console.log(localStorage.getItem('voter-cookie'))
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
+
     if (localStorage.getItem('LSvoted') == 'true') {
       this.showVotedText = true;
     }
@@ -745,9 +748,7 @@ export default class VueComponent extends Vue {
       console.log(metric.title + ': ' + metric.value)
     }
 
-    var checkLSCookie = localStorage.getItem('voter-cookie');
-
-    if (checkLSCookie == '') {
+    if (!localStorage.getItem('voter-cookie')) {
       this.voteConditions.cookie = this.setCookie('vote_id', 60)
       localStorage.setItem('voter-cookie', this.voteConditions.cookie);
       console.log(localStorage.getItem('voter-cookie'))
