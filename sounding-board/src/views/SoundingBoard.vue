@@ -56,7 +56,7 @@
     //-   .button.reveal-button(@click="showResults") Ergebnisse anzeigen
     //-   .button.hide-button(@click="hideResults") Ergebnisse ausblenden
     //-   .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
-      
+
 
 
 
@@ -413,9 +413,9 @@ export default class VueComponent extends Vue {
         subdescriptions: {
           base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
           Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
-            ["scenario2"],
+          ["scenario2"],
           Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
-            ["scenario3"],
+          ["scenario3"],
         },
       },
       fahrenderVerkehr: {
@@ -426,7 +426,7 @@ export default class VueComponent extends Vue {
           MautFuerAlle: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario3"],
           zeroEmissionsZone: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario4"],
           zeroEmissionsZonePlusMaut: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions
-            ["scenario5"],
+          ["scenario5"],
           autofrei: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario6"],
         },
       },
@@ -744,7 +744,7 @@ export default class VueComponent extends Vue {
     }
 
     this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
-        // fetch('https://api.ipify.org?format=json')
+    // fetch('https://api.ipify.org?format=json')
     //   .then(x => x.json())
     //   .then(({ ip }) => {
     //     this.voteConditions.ipAddr = ip
@@ -753,8 +753,8 @@ export default class VueComponent extends Vue {
     //     const vote = JSON.stringify(this.voteConditions)
     //   })
 
-      this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
-      
+    this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
+
 
     // Get request from python api-server
     try {
@@ -940,7 +940,7 @@ li.notes-item {
   width: 98%;
   padding-bottom: 25px;
   flex-wrap: wrap;
-    padding-left: 2em;
+  padding-left: 2em;
 }
 
 
@@ -1029,11 +1029,6 @@ li.notes-item {
   padding: 1rem 2rem 2rem 2rem;
 }
 
-.results {
-  padding: 1rem 2rem 1rem 2rem;
-  display: flex;
-  width: 100%;
-}
 
 .left-results {
   width: 100%;
@@ -1197,8 +1192,7 @@ li.notes-item {
   white-space: normal;
 }
 
-.vote-disclaimer 
-{
+.vote-disclaimer {
   font-weight: bold;
   text-wrap: wrap;
   max-width: 280px;
@@ -1446,16 +1440,17 @@ button.is-huge.factor-option.preset-buttons:hover {
 
 @media only screen and (max-width: 450px) {
   button.is-small.factor-option {
-  font-size: 1em;
-}
+    font-size: 1em;
+  }
 
-.submit-vote-div[data-v-4aa344e9] {
-  display: table;
-}
-.voted-text {
-  margin-top: auto;
-  margin-left: 5px;
-}
+  .submit-vote-div[data-v-4aa344e9] {
+    display: table;
+  }
+
+  .voted-text {
+    margin-top: auto;
+    margin-left: 5px;
+  }
 }
 
 @media only screen and (max-width: 629px) {
@@ -1483,13 +1478,13 @@ button.is-huge.factor-option.preset-buttons:hover {
 
 @media only screen and (min-width: 1431px) {
   .metric {
-    flex: 17%!important;
+    flex: 17% !important;
   }
 }
 
 @media only screen and (max-width: 1430px) {
   .metric {
-    flex: 30%!important;
+    flex: 30% !important;
   }
 
   #car-viz-total {
@@ -1516,7 +1511,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 
 @media only screen and (max-width: 620px) {
   .metric {
-    flex: 74%!important;
+    flex: 74% !important;
   }
 
   #car-viz-total {
@@ -1603,6 +1598,10 @@ button.is-huge.factor-option.preset-buttons:hover {
   .results {
     padding-bottom: 0;
     margin-bottom: 1rem;
+    max-width: 100% !important;
+    padding: 1rem 2rem 1rem 3rem;
+    display: flex;
+    width: 100%;
   }
 
   .right-results {
@@ -1700,10 +1699,6 @@ button.is-huge.factor-option.preset-buttons:hover {
     margin-bottom: 0;
   }
 
-  .results {
-    padding-bottom: 0;
-    //margin-bottom: -2rem;
-  }
 
   .right-results {
     height: fit-content;
@@ -1744,6 +1739,4 @@ button.is-huge.factor-option.preset-buttons:hover {
     grid-template-columns: repeat(1, 1fr);
   }
 }
-
-
 </style>
