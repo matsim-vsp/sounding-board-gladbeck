@@ -52,10 +52,10 @@
     .submit-vote-div    
       .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
       .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
-    .buttons
-      .button.reveal-button(@click="showResults") Ergebnisse anzeigen
-      .button.hide-button(@click="hideResults") Ergebnisse ausblenden
-      .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
+    .vote-disclaimer *Wenn die Seite aktualisiert wird, bevor Sie Ihre Stimme abgeben, wählen Sie bitte Ihre Bedingungen erneut aus (auch wenn sie bereits gewählt sind)
+    //-   .button.reveal-button(@click="showResults") Ergebnisse anzeigen
+    //-   .button.hide-button(@click="hideResults") Ergebnisse ausblenden
+    //-   .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
       
 
 
@@ -204,6 +204,8 @@ export default class VueComponent extends Vue {
 
   private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
   // private serverURL = "http://127.0.0.1:5000/"
+
+
   private badPage = false
   private lang = 'en'
   private mdParser = new MarkdownIt()
@@ -234,8 +236,7 @@ export default class VueComponent extends Vue {
     parkraum: 'base',
     fahrenderAutoVerkehr: 'base',
     drt: 'base',
-    ipAddr: '',
-    cookie: false,
+    cookie: '',
     timeStamp: null,
   }
 
@@ -675,52 +676,52 @@ export default class VueComponent extends Vue {
     return ''
   }
 
-  private showResults() {
-    this.resultsRequested = true
-    if (localStorage.getItem('LSvoted') == 'true' && this.resultsRequested == true) {
-      this.voted = true;
-      let results = Array.from(
-        document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
-      )
-      results[0].style.display = 'flex'
-      if (window.innerWidth < 621) {
-      window.scrollTo({
-        top: 2300,
-        behavior: 'smooth',
-      })
-    } else if (window.innerWidth < 1200 && window.innerWidth > 620) {
-      window.scrollTo({
-        top: 1300,
-        behavior: 'smooth',
-      })
-    } else {
-      window.scrollTo({
-        top: 1000,
-        behavior: 'smooth',
-      })
-    }
-    }
-  }
+  // private showResults() {
+  //   this.resultsRequested = true
+  //   if (localStorage.getItem('LSvoted') == 'true' && this.resultsRequested == true) {
+  //     this.voted = true;
+  //     let results = Array.from(
+  //       document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+  //     )
+  //     results[0].style.display = 'flex'
+  //     if (window.innerWidth < 621) {
+  //     window.scrollTo({
+  //       top: 2300,
+  //       behavior: 'smooth',
+  //     })
+  //   } else if (window.innerWidth < 1200 && window.innerWidth > 620) {
+  //     window.scrollTo({
+  //       top: 1300,
+  //       behavior: 'smooth',
+  //     })
+  //   } else {
+  //     window.scrollTo({
+  //       top: 1000,
+  //       behavior: 'smooth',
+  //     })
+  //   }
+  //   }
+  // }
 
-  private hideResults() {
-    let results = Array.from(
-      document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
-    )
-    results[0].style.display = 'none'
-    this.setPreset('base')
-    if (window.innerWidth < 621) {
-      window.scrollTo({
-        top: 1800,
-        behavior: 'smooth',
-      })
-    } else{
-      window.scrollTo({
-        top: 600,
-        behavior: 'smooth',
-      })
-    }
+  // private hideResults() {
+  //   let results = Array.from(
+  //     document.getElementsByClassName('results') as HTMLCollectionOf<HTMLElement>
+  //   )
+  //   results[0].style.display = 'none'
+  //   this.setPreset('base')
+  //   if (window.innerWidth < 621) {
+  //     window.scrollTo({
+  //       top: 1800,
+  //       behavior: 'smooth',
+  //     })
+  //   } else{
+  //     window.scrollTo({
+  //       top: 600,
+  //       behavior: 'smooth',
+  //     })
+  //   }
 
-  }
+  // }
 
   private updateVoteConditions(factor: string, option: any) {
     if (factor == 'OePNV') this.voteConditions.oepnv = option
@@ -743,14 +744,14 @@ export default class VueComponent extends Vue {
     }
 
     this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
-    fetch('https://api.ipify.org?format=json')
-      .then(x => x.json())
-      .then(({ ip }) => {
-        this.voteConditions.ipAddr = ip
-      })
-      .then(() => {
-        const vote = JSON.stringify(this.voteConditions)
-      })
+        // fetch('https://api.ipify.org?format=json')
+    //   .then(x => x.json())
+    //   .then(({ ip }) => {
+    //     this.voteConditions.ipAddr = ip
+    //   })
+    //   .then(() => {
+    //     const vote = JSON.stringify(this.voteConditions)
+    //   })
 
       this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
       
@@ -791,7 +792,7 @@ export default class VueComponent extends Vue {
       expires = '; expires=' + date.toUTCString()
     }
     document.cookie = name + '=' + (value || '') + expires + '; path=/'
-    return value
+    return document.cookie
   }
 
   private addDescriptionToggle() {
@@ -1030,7 +1031,7 @@ li.notes-item {
 
 .results {
   padding: 1rem 2rem 1rem 2rem;
-  display: none;
+  display: flex;
   width: 100%;
 }
 
@@ -1187,6 +1188,24 @@ li.notes-item {
   line-height: 1.3;
   margin-top: 10px;
   margin-left: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  white-space: normal;
+}
+
+.vote-disclaimer 
+{
+  font-weight: bold;
+  text-wrap: wrap;
+  max-width: 280px;
+  font-size: 11px;
+  line-height: 1.3;
+  margin-top: 10px;
+  margin-left: 10px;
   word-wrap: break-word;
   overflow-wrap: break-word;
   word-break: break-word;

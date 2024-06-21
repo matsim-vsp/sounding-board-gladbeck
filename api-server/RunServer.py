@@ -86,7 +86,7 @@ if (os.path.isfile('test.db')):
 # cur = con.cursor()
 # cur.execute("DROP TABLE votes")
 # cur.execute("DROP TABLE sessions")
-# cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timestamp)")
+# cur.execute("CREATE TABLE votes(oepnv, kiezbloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, cookie, sessionID, timestamp)")
 # cur.execute("CREATE TABLE sessions(sessionActive, sessionID, startTime, EndTime)")
 
 # cur.execute("DROP TABLE votes")
@@ -173,14 +173,14 @@ def post_vote_to_db():
         sessionID = int(convertTuple(cur.fetchone()))
         print(sessionID)
 
-    check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ? AND  ipAddr = ?"
-    cur.execute(check_if_voter_exists, (1, data['ipAddr']))
+    check_if_voter_exists = "SELECT * FROM votes WHERE cookie = ?"
+    cur.execute(check_if_voter_exists, (data['cookie'],))
     voter_exists = cur.fetchone()
     if (voter_exists != None): 
         update_vote = """Update votes 
                     SET oepnv = ?, kiezBloecke = ?, fahrrad = ?, 
                     parkraum = ?, fahrenderAutoVerkehr = ?, drt= ?, sessionID = ?, timeStamp = ?
-                    WHERE cookie = ? AND  ipAddr = ?"""
+                    WHERE cookie = ?"""
         cur.execute(update_vote, (
             data['oepnv'],
             data['kiezBloecke'],
@@ -190,8 +190,7 @@ def post_vote_to_db():
             data['drt'],
             sessionID,
             data['timeStamp'],
-            1,
-            data['ipAddr']))
+            data['cookie']))
 
         table_list = [a for a in cur.execute("SELECT * FROM votes ORDER BY ROWID ASC LIMIT 200")]
         print(table_list)
@@ -202,9 +201,9 @@ def post_vote_to_db():
         return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     else:
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, ipAddr, cookie, sessionID, timeStamp) 
+        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, cookie, sessionID, timeStamp) 
 
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"""
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
         cur.execute(db_vote_insert, (
         data['oepnv'],
@@ -213,7 +212,6 @@ def post_vote_to_db():
         data['parkraum'],
         data['fahrenderAutoVerkehr'],
         data['drt'],
-        data['ipAddr'],
         data['cookie'],
         sessionID,
         data['timeStamp']
@@ -241,7 +239,7 @@ def get_votes_from_db(session_id):
     # find_votes = "SELECT * FROM votes WHERE sessionID = ?"
     # cur.execute(find_votes, (session_id,))
     # results = cur.fetchall()
-    votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'ipAddr': row[6], 'cookie': row[7], 'session_id': row[8], 'timeStamp': row[9]} for row in results]
+    votes = [{'oepnv': row[0], 'kiezBloecke': row[1], 'fahrrad': row[2], 'parkraum': row[3], 'fahrenderAutoVerkehr': row[4], 'drt': row[5], 'cookie': row[6], 'session_id': row[7], 'timeStamp': row[8]} for row in results]
     print(votes)
     # print(type(session_id))
     # cur.execute("PRAGMA table_info(votes)")
