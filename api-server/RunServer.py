@@ -66,8 +66,8 @@ def convertTuple(tup):
 
 
 # DB table - votes
-# if statment to open db and create tables if they don't exist.
-if (os.path.isfile(db_path)):
+# if statement to open db and create tables if they don't exist.
+if True: # os.path.isfile(db_path)):
     con = sqlite3.connect(db_path, check_same_thread=False)
     cur = con.cursor()
     cur.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='votes'")
