@@ -4,18 +4,18 @@
   top-nav-bar
 
   .heading
-    .sounding-board-description <span style="font-weight:bold">{{ yaml.description.slice(0,38) }}</span> {{ yaml.description.slice(38,400) }}
+    .sounding-board-description(v-if="yaml.description" v-html="yaml.description")
 
   .header-description
     .header-description-subtitle(v-for="item in yaml.descriptionOutput")
       .headers-hoverText
         .headers-top
-          h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }} 
-          p.header-factor-description {{item.description}} 
-      p.header-description-text(v-html="'<b>' + item.title")     
-      .header-images 
+          h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }}
+          p.header-factor-description {{item.description}}
+      p.header-description-text(v-html="'<b>' + item.title")
+      .header-images
         img(:src="getImagePath(item.title)")
-      .header-mobile-text {{item.description}} 
+      .header-mobile-text {{item.description}}
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -35,21 +35,21 @@
           h4.metric-title.metric-title-factor {{ factorTitle[key]  }}
             .tooltip
               .top
-                h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }} 
-                p.factor-description {{getDescriptionForTooltip(factorTitle[key])}} 
-          .buttons-div      
+                h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ factorTitle[key]  }}
+                p.factor-description {{getDescriptionForTooltip(factorTitle[key])}}
+          .buttons-div
             b-button.is-small.factor-option.expand(
               v-for="option of factors[key]"
               :key="option"
               :class="option == currentConfiguration[key] ? 'is-danger' : ''"
               @click="setFactor(key, option)"
             ) {{ yaml.buttonLabels && yaml.buttonLabels[option] || option }}
-        .left-block
+        .left-block(v-if="textBlocks[key]")
           .conditionTitle {{ textBlocks[key].description}}
           .conditionDescriptionTitle Information:
           .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
 
-    .submit-vote-div    
+    .submit-vote-div
       .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
       .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
     .vote-disclaimer *Wenn die Seite aktualisiert wird, bevor Sie Ihre Stimme abgeben, wählen Sie bitte Ihre Bedingungen erneut aus (auch wenn sie bereits gewählt sind)
@@ -92,7 +92,7 @@
   //-     p.description-text(:style="{'font-weight' : 'bold'}") {{ item.title + ':' }} {{ item.description }}
   //-     .subdescription(v-for="sub in item.subdescriptions")
   //-       p.description-text {{ sub }}
-    
+
 
 </template>
 
@@ -792,7 +792,7 @@ export default class VueComponent extends Vue {
     } catch (e) {
       // this.myState.statusMessage = 'Error fetching paths :-('
       // this.isFiltering = false
-      console.log('Error fetching paths :-(')
+      console.log('Error saveConditions' + e)
       return
     }
   }
