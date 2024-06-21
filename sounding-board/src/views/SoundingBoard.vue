@@ -767,36 +767,39 @@ export default class VueComponent extends Vue {
 
     this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
 
+    // POST vote to api-server
+    let tries=0
+    while (tries < 3) {
+      try {
+        console.log(JSON.stringify(this.voteConditions))
 
-    // Get request from python api-server
-    try {
+        const url = this.serverURL + 'votes'
+        console.log('POSTing', url)
 
-      console.log(JSON.stringify(this.voteConditions))
+        let response = await fetch(url, {
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+            'Access-Control-Allow-Origin': '*',
+            // Authorization: this.apiKey, // no auth needed for voting
+          },
+          method: 'POST',
+          body: JSON.stringify(this.voteConditions),
+        })
 
-      const url = this.serverURL + 'votes'
-      console.log('POSTing', url)
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`)
 
-      let response = await fetch(url, {
-        headers: {
-          'Content-type': 'application/json; charset=UTF-8',
-          // 'Access-Control-Allow-Origin': '*',
-          // Authorization: this.apiKey, // no auth needed for voting
-        },
-        method: 'POST',
-        body: JSON.stringify(this.voteConditions),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`)
+        let json = await response.json()
+        console.log(this.metrics)
+        console.log(json)
+        break // success; break out of loop
+      } catch (e) {
+        // this.myState.statusMessage = 'Error fetching paths :-('
+        // this.isFiltering = false
+        console.log(`Try ${tries}: Error ` + e)
+        tries += 1
+        // wait 2 secs, try again
+        await new Promise(resolve => setTimeout(resolve, 2000))
       }
-      let json = await response.json()
-      console.log(this.metrics)
-      console.log(json)
-    } catch (e) {
-      // this.myState.statusMessage = 'Error fetching paths :-('
-      // this.isFiltering = false
-      console.log('Error saveConditions' + e)
-      return
     }
   }
 
