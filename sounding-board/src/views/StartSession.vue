@@ -55,6 +55,7 @@ export default class VueComponent extends Vue {
       let response = await fetch(reqURL, {
         headers: {
           Authorization: this.apiKey,
+          'Access-Control-Allow-Origin': '*',
         },
         method: 'GET',
       })
@@ -139,6 +140,7 @@ export default class VueComponent extends Vue {
       let response = await fetch(reqURL, {
         headers: {
           Authorization: this.apiKey,
+          'Access-Control-Allow-Origin': '*',
         },
         method: 'GET',
       })
