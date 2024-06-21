@@ -10,7 +10,7 @@ import sqlite3
 import json
 from datetime import datetime
 
-db_path = 'sounding-board.db'
+db_path = '/data/sounding-board.db'
 
 # Set up API keys
 authfile = 'auth-keys.csv'
