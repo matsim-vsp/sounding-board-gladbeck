@@ -202,8 +202,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
-  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  // private serverURL = "http://127.0.0.1:5000/"
+  // private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private serverURL = "http://127.0.0.1:5000/"
 
 
   private badPage = false
@@ -360,7 +360,9 @@ export default class VueComponent extends Vue {
   // }
 
   private mounted() {
-    // localStorage.setItem('LSvoted', 'false')
+    localStorage.setItem('LSvoted', 'false')
+    localStorage.setItem('voter-cookie', '')
+    console.log(localStorage.getItem('voter-cookie'))
     console.log({ locale: this.$i18n.locale })
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
@@ -734,7 +736,8 @@ export default class VueComponent extends Vue {
 
   private async saveConditions() {
 
-    localStorage.setItem('LSvoted', 'true')
+    // localStorage.setItem('LSvoted', 'true')
+
     this.voted = true;
     this.showVotedText = true;
     this.updateVoteConditions;
@@ -743,7 +746,17 @@ export default class VueComponent extends Vue {
       console.log(metric.title + ': ' + metric.value)
     }
 
-    this.voteConditions.cookie = this.setCookie('hasVoted', true, 365)
+    var checkLSCookie = localStorage.getItem('voter-cookie');
+
+    if (checkLSCookie == '') {
+      this.voteConditions.cookie = this.setCookie('vote_id', 60)
+      localStorage.setItem('voter-cookie', this.voteConditions.cookie);
+      console.log(localStorage.getItem('voter-cookie'))
+    } else {
+      this.voteConditions.cookie = localStorage.getItem('voter-cookie')
+    }
+
+
     // fetch('https://api.ipify.org?format=json')
     //   .then(x => x.json())
     //   .then(({ ip }) => {
@@ -784,17 +797,20 @@ export default class VueComponent extends Vue {
     }
   }
 
-  private setCookie(name: string, value: boolean, days: number) {
-    let expires = ''
-    if (days) {
-      let date = new Date()
-      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000)
-      expires = '; expires=' + date.toUTCString()
-    }
-    document.cookie = name + '=' + (value || '') + expires + '; path=/'
+  private setCookie(name, days) {
+    let date = new Date();
+    date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+    let expires = "expires=" + date.toUTCString();
+    document.cookie = name + "=" + this.generateUUID() + ";" + expires + ";path=/;SameSite=Strict";
     return document.cookie
   }
 
+  private generateUUID() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+      let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
   private addDescriptionToggle() {
     for (const value of Object.values(this.yaml.inputColumns)) {
       value.showDescription = true
