@@ -203,8 +203,7 @@ export default class VueComponent extends Vue {
   }
 
   private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  // private serverURL = "http://127.0.0.1:5000/"
-
+  // private serverURL = "http://127.0.0.1:4999/"
 
   private badPage = false
   private lang = 'en'
@@ -771,13 +770,17 @@ export default class VueComponent extends Vue {
 
     // Get request from python api-server
     try {
+
       console.log(JSON.stringify(this.voteConditions))
-      // this.myState.statusMessage = ''
-      let response = await fetch(this.serverURL + 'votes', {
+
+      const url = this.serverURL + 'votes'
+      console.log('POSTing', url)
+
+      let response = await fetch(url, {
         headers: {
-          // Authorization: this.apiKey,
           'Content-type': 'application/json; charset=UTF-8',
           // 'Access-Control-Allow-Origin': '*',
+          // Authorization: this.apiKey, // no auth needed for voting
         },
         method: 'POST',
         body: JSON.stringify(this.voteConditions),
