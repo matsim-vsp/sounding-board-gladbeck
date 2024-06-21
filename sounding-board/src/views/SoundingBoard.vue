@@ -202,8 +202,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
-  // private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  private serverURL = "http://127.0.0.1:5000/"
+  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  // private serverURL = "http://127.0.0.1:5000/"
 
 
   private badPage = false
