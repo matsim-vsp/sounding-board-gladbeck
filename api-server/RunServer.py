@@ -10,6 +10,7 @@ import sqlite3
 import json
 from datetime import datetime
 
+db_path = 'sounding-board.db'
 
 # Set up API keys
 authfile = 'auth-keys.csv'
@@ -63,7 +64,6 @@ def convertTuple(tup):
 
 # ---------- Set up Database -------------------------
 
-db_path = 'sounding-board.db'
 
 # DB table - votes
 # if statment to open db and create tables if they don't exist.
@@ -202,7 +202,7 @@ def post_vote_to_db():
         return jsonify({"message": "Vote received successfully"}), 200, {"Access-Control-Allow-Origin": "*"}
 
     else:
-        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, cookie, sessionID, timeStamp) 
+        db_vote_insert = """INSERT INTO votes (oepnv, kiezBloecke, fahrrad, parkraum, fahrenderAutoVerkehr, drt, cookie, sessionID, timeStamp)
                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)"""
 
         cur.execute(db_vote_insert, (
