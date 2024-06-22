@@ -4,7 +4,9 @@
   top-nav-bar
 
   .heading
-    .sounding-board-description(v-if="yaml.description" v-html="yaml.description")
+    //- .sounding-board-description(v-if="yaml.description" v-html="yaml.description")
+    .sounding-board-description(v-if="yaml.description" v-html="'<b>' + yaml.description.slice(0,132) + '</b>' + yaml.description.slice(132,600)")
+
 
   .header-description
     .header-description-subtitle(v-for="item in yaml.descriptionOutput")
@@ -382,6 +384,7 @@ export default class VueComponent extends Vue {
 
   private async buildPageForURL() {
     this.yaml = await this.getYAML()
+    console.log(this.yaml.descriptionInput['fahrenderVerkehr'].title)
     this.data = await this.loadDataset()
     this.addDescriptionToggle()
     this.buildUI()
@@ -399,21 +402,21 @@ export default class VueComponent extends Vue {
         },
       },
       kiezblocks: {
-        description: '10 km/h Tempolimit - keine Durchfahrt möglich',
+        description: '10 km/h Tempolimit',
         subdescriptions: {
           base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
           'ganze Stadt': this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario2"],
         },
       },
       Fahrrad: {
-        description: 'Radwege sowie Radschnellverbindungen',
+        description: 'Radinfrastruktur',
         subdescriptions: {
           base: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario1"],
           stark: this.yaml.descriptionInput.Fahrrad.subdescriptions["scenario2"],
         },
       },
       Parkraum: {
-        description: 'Für Ganz Berlin',
+        description: 'Parkende Fahrzeuge',
         subdescriptions: {
           base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
           Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
@@ -423,7 +426,7 @@ export default class VueComponent extends Vue {
         },
       },
       fahrenderVerkehr: {
-        description: 'Fahrzeugen auf Straßen zur Personen- oder Güterbeförderung',
+        description: 'Fahrende Fahrzeuge',
         subdescriptions: {
           base: this.yaml.descriptionInput.kiezblocks.subdescriptions["scenario1"],
           mautFossil: this.yaml.descriptionInput.fahrenderVerkehr.subdescriptions["scenario2"],
