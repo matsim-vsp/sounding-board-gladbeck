@@ -14,8 +14,9 @@
   <br>
   .button.sessionResults-btn(@click="getResults()") Ergebnisse der Sitzung
 
-  .results
-    Plotly(:data="data" :layout="plotlyLayout" :options="options" v-if="this.showResults")
+  .results-container
+    .results
+      Plotly(:data="data" :layout="plotlyLayout" :options="options" v-if="this.showResults")
   
 
 </template>
@@ -1031,6 +1032,15 @@ h1 {
 .results {
   max-width: 80%;
   margin: auto auto 50px auto;
+}
+
+.results {
+  max-width: 80%;
+  margin: auto auto 50px auto;
+}
+
+.results-container {
+  min-height: 500px;
 }
 
 input[type="number"],
