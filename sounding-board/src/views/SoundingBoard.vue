@@ -4,9 +4,7 @@
   top-nav-bar
 
   .heading
-    //- .sounding-board-description(v-if="yaml.description" v-html="yaml.description")
-    .sounding-board-description(v-if="yaml.description" v-html="'<b>' + yaml.description.slice(0,132) + '</b>' + yaml.description.slice(132,600)")
-
+    .sounding-board-description(v-if="yaml.description" v-html="yaml.description")
 
   .header-description
     .header-description-subtitle(v-for="item in yaml.descriptionOutput")
