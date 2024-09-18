@@ -8,14 +8,15 @@
 
   .header-description
     .header-description-subtitle(v-for="item in yaml.descriptionOutput")
-      .headers-hoverText
-        .headers-top
-          h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }}
-          p.header-factor-description {{item.description}}
+      //- .headers-hoverText
+      //-   .headers-top
+      //-     h4.metric-title-factor(:style="{'margin-left' : '0'}") {{ item.title }}
+      //-     p.header-factor-description {{item.description}}
       p.header-description-text(v-html="'<b>' + item.title")
-      .header-images
-        img(:src="getImagePath(item.title)")
-      .header-mobile-text {{item.description}}
+      .header-sub-items
+        .header-images
+          img(:src="getImagePath(item.title)")
+        .header-mobile-text {{item.description}}
 
   .presets(v-if="Object.keys(presets).length")
     h2.section-title {{ $t('scenarios')  }}
@@ -49,10 +50,6 @@
           .conditionDescriptionTitle Information:
           .conditionDescription {{ textBlocks[key].subdescriptions[currentConfiguration[key]]}}
 
-    .submit-vote-div
-      .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
-      .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
-    .vote-disclaimer *Wenn die Seite aktualisiert wird, bevor Sie Ihre Stimme abgeben, wählen Sie bitte Ihre Bedingungen erneut aus (auch wenn sie bereits gewählt sind)
     //-   .button.reveal-button(@click="showResults") Ergebnisse anzeigen
     //-   .button.hide-button(@click="hideResults") Ergebnisse ausblenden
     //-   .error-text(v-if="!voted && resultsRequested") Sie müssen erstmal abstimmen
@@ -82,7 +79,11 @@
           .metric
             car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
-
+  .submit-vote-div
+    .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
+    .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
+  .vote-disclaimer *Wenn die Seite aktualisiert wird, bevor Sie Ihre Stimme abgeben, wählen Sie bitte Ihre Bedingungen erneut aus (auch wenn sie bereits gewählt sind)
+           
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
@@ -770,7 +771,7 @@ export default class VueComponent extends Vue {
     this.voteConditions.timeStamp = new Date().toLocaleString('de-DE');
 
     // POST vote to api-server
-    let tries=0
+    let tries = 0
     while (tries < 3) {
       try {
         console.log(JSON.stringify(this.voteConditions))
@@ -926,8 +927,8 @@ p.factor {
 
 .submit-button {
   color: white;
-  font-size: 16px;
-  margin: 10px;
+  font-size: 1.2rem;
+  // margin: 10px;
   background-color: #77b255;
   font-weight: bold;
 }
@@ -989,12 +990,11 @@ li.notes-item {
 
 .header-images {
   max-width: 50px;
-  // margin: auto;
   height: 100%;
-  margin: unset;
-  justify-content: left;
-  display: flex;
-
+  flex: 50%;
+  margin-right: 20px;
+  -webkit-box-pack: left;
+  -ms-flex-pack: left;
 }
 
 .header-description-text {
@@ -1009,15 +1009,13 @@ li.notes-item {
 }
 
 .header-mobile-text {
-  display: block;
-  left: 80px;
-  position: absolute;
+  flex: 50%;
   text-wrap: wrap;
   overflow-wrap: break-word;
   word-break: break-word;
   width: auto;
   padding-right: 20px;
-  font-size: 11px;
+  font-size: 1rem;
   text-align: left;
   top: 42px;
   max-width: fit-content;
@@ -1026,6 +1024,11 @@ li.notes-item {
   word-break: break-word;
   hyphens: auto;
   white-space: normal;
+}
+
+.header-sub-items {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .description {
@@ -1165,7 +1168,7 @@ li.notes-item {
 
 .conditionTitle {
   padding-top: 10px;
-  font-size: 0.8em;
+  font-size: 1.2em;
   font-weight: bold;
   line-height: 1.2em;
   padding-bottom: 5px;
@@ -1174,13 +1177,13 @@ li.notes-item {
 
 .conditionDescriptionTitle {
   margin-top: 10px;
-  font-size: 0.7em;
+  font-size: 1.1em;
   font-weight: bold;
 }
 
 .conditionDescription {
   // margin-top: 10px;
-  font-size: 0.6em;
+  font-size: 1em;
   // animation: fadeInAnimation ease 3s;
   // animation-fill-mode: forwards;
 }
@@ -1201,40 +1204,38 @@ li.notes-item {
 
 .voted-text {
   font-weight: bold;
-  text-wrap: wrap;
-  max-width: 180px;
-  font-size: 11px;
-  line-height: 1.3;
-  margin-top: 10px;
-  margin-left: 20px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
-  white-space: normal;
+    text-wrap: wrap;
+    max-width: max-content;
+    font-size: 1.1rem;
+    line-height: 1.1;
+    margin-top: 10px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    white-space: normal;
 }
 
-.vote-disclaimer {
-  font-weight: bold;
-  text-wrap: wrap;
-  max-width: 280px;
-  font-size: 11px;
-  line-height: 1.3;
-  margin-top: 10px;
-  margin-left: 10px;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
-  white-space: normal;
+.vote-disclaimer{
+    font-weight: bold;
+    text-wrap: wrap;
+    // max-width: 330px;
+    font-size: 1.1rem;
+    line-height: 1.3;
+    margin-top: 10px;
+    padding: 1rem 0rem 1rem 2rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    -ms-hyphens: auto;
+    hyphens: auto;
+    white-space: normal;
 }
 
 .submit-vote-div {
-  display: flex;
+  // display: flex;
+  padding: 1rem 2rem 1rem 2rem;
 }
 
 .left-block {
@@ -1431,6 +1432,17 @@ button.is-huge.factor-option.preset-buttons:hover {
   display: block;
 }
 
+#sounding-board > div.results.calc-margin {
+    padding: 1rem 2rem 2rem 2rem!important;
+    margin-bottom: 0.5rem;
+  }
+
+
+  .right-results {
+    height: fit-content;
+    margin: 3.1rem 0 0 0;
+  }
+
 .tooltip .top i {
   position: absolute;
   top: 100%;
@@ -1456,10 +1468,15 @@ button.is-huge.factor-option.preset-buttons:hover {
   background-color: #c40d1e !important;
 }
 
+
 @media only screen and (max-width: 800px) {
   .factors {
     grid-template-columns: 100%;
   }
+
+  // .submit-button {
+  //   padding: 3rem 2rem 1rem 3rem;
+  // }
 }
 
 @media only screen and (max-width: 450px) {
@@ -1472,7 +1489,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 
   .voted-text {
-    margin-top: auto;
+    margin-top: 10px;
     margin-left: 5px;
   }
 }
@@ -1493,9 +1510,9 @@ button.is-huge.factor-option.preset-buttons:hover {
     grid-template-columns: 100%;
   }
 
-  .submit-button {
-    margin-left: 5px;
-  }
+  // .submit-button {
+  //   margin-left: 5px;
+  // }
 
 
 }
@@ -1542,6 +1559,43 @@ button.is-huge.factor-option.preset-buttons:hover {
     scale: .78 !important;
     width: 130%;
   }
+
+  #sounding-board > div.results.calc-margin {
+    margin-bottom: 0rem!important;
+  }
+}
+
+@media only screen and (min-width: 1800px) {
+  button.is-small.factor-option {
+        font-size: 1.9em;
+    }
+
+    .button.is-huge.factor-option.preset-buttons {
+      font-size: 1.1rem;
+    }
+    .heading {
+      font-size: 1.1rem;
+    }
+
+    .header-description-text {
+      font-size: 1.5rem;
+    }
+
+    .header-mobile-text {
+      font-size: 1.1rem;
+    }
+
+    .conditionDescription {
+      font-size: 1.2rem;
+    }
+
+    .conditionDescriptionTitle {
+      font-size: 1.2rem;
+    }
+
+    .conditionTitle {
+      font-size: 1.3rem;
+    }
 }
 
 
@@ -1594,9 +1648,9 @@ button.is-huge.factor-option.preset-buttons:hover {
     font-size: 0.7rem;
   }
 
-  .section-title {
-    margin-bottom: 0;
-  }
+  // .section-title {
+  //   margin-bottom: 0;
+  // }
 
   .metric-title {
     font-size: 0.8rem;
@@ -1604,7 +1658,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .metric-title-factor {
     height: 1.5rem;
-    font-size: 0.8rem;
+    font-size: 1.3rem;
     margin-bottom: 0.3rem;
   }
 
@@ -1619,19 +1673,16 @@ button.is-huge.factor-option.preset-buttons:hover {
     margin-bottom: 0;
   }
 
-  .results {
-    padding-bottom: 0;
-    margin-bottom: 1rem;
-    max-width: 100% !important;
-    padding: 1rem 2rem 1rem 3rem;
-    display: flex;
-    width: 100%;
-  }
+  // .results {
+  //   padding-bottom: 0;
+  //   margin-bottom: 1rem;
+  //   max-width: 100% !important;
+  //   padding: 1rem 2rem 1rem 3rem;
+  //   display: flex;
+  //   width: 100%;
+  // }
 
-  .right-results {
-    height: fit-content;
-    margin: 3.1rem 0 0 0;
-  }
+ 
 
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
@@ -1704,7 +1755,19 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .metric-title {
     //height: 1.5rem;
-    font-size: 0.7rem;
+    font-size: 1.1rem;
+  }
+
+  .conditionTitle {
+    font-size: 1rem;
+  }
+
+  .conditionDescriptionTitle {
+    font-size: 0.9rem;
+  }
+
+  .conditionDescription {
+    font-size: 0.8rem;
   }
 
   .metric-title-factor {
