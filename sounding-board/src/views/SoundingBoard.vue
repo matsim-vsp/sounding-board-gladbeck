@@ -344,6 +344,7 @@ export default class VueComponent extends Vue {
     this.currentConfiguration = Object.assign({}, this.currentConfiguration)
     this.updateValues()
     this.updateVoteConditions(factor, option)
+    this.currentConfiguration
     // disable the preset if user mucks with the settings
     this.currentPreset = ''
     this.setURLQuery()
@@ -418,10 +419,12 @@ export default class VueComponent extends Vue {
         description: 'Parkende Fahrzeuge',
         subdescriptions: {
           base: this.yaml.descriptionInput.Parkraum.subdescriptions["scenario1"],
-          Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
+          BesucherFossilTeuer_alleAnderenPreiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
           ["scenario2"],
-          Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
+          Besucher_teuer_Anwohner_preiswert: this.yaml.descriptionInput.Parkraum.subdescriptions
           ["scenario3"],
+          Besucher_teuer_Anwohner_teuer: this.yaml.descriptionInput.Parkraum.subdescriptions
+          ["scenario4"],
         },
       },
       fahrenderVerkehr: {
@@ -1204,33 +1207,33 @@ li.notes-item {
 
 .voted-text {
   font-weight: bold;
-    text-wrap: wrap;
-    max-width: max-content;
-    font-size: 1.1rem;
-    line-height: 1.1;
-    margin-top: 10px;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    white-space: normal;
+  text-wrap: wrap;
+  max-width: max-content;
+  font-size: 1.1rem;
+  line-height: 1.1;
+  margin-top: 10px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  white-space: normal;
 }
 
-.vote-disclaimer{
-    font-weight: bold;
-    text-wrap: wrap;
-    // max-width: 330px;
-    font-size: 1.1rem;
-    line-height: 1.3;
-    margin-top: 10px;
-    padding: 1rem 0rem 1rem 2rem;
-    word-wrap: break-word;
-    overflow-wrap: break-word;
-    word-break: break-word;
-    -ms-hyphens: auto;
-    hyphens: auto;
-    white-space: normal;
+.vote-disclaimer {
+  font-weight: bold;
+  text-wrap: wrap;
+  // max-width: 330px;
+  font-size: 1.1rem;
+  line-height: 1.3;
+  margin-top: 10px;
+  padding: 1rem 0rem 1rem 2rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -ms-hyphens: auto;
+  hyphens: auto;
+  white-space: normal;
 }
 
 .submit-vote-div {
@@ -1432,16 +1435,16 @@ button.is-huge.factor-option.preset-buttons:hover {
   display: block;
 }
 
-#sounding-board > div.results.calc-margin {
-    padding: 1rem 2rem 2rem 2rem!important;
-    margin-bottom: 0.5rem;
-  }
+#sounding-board>div.results.calc-margin {
+  padding: 1rem 2rem 2rem 2rem !important;
+  margin-bottom: 0.5rem;
+}
 
 
-  .right-results {
-    height: fit-content;
-    margin: 3.1rem 0 0 0;
-  }
+.right-results {
+  height: fit-content;
+  margin: 3.1rem 0 0 0;
+}
 
 .tooltip .top i {
   position: absolute;
@@ -1560,42 +1563,43 @@ button.is-huge.factor-option.preset-buttons:hover {
     width: 130%;
   }
 
-  #sounding-board > div.results.calc-margin {
-    margin-bottom: 0rem!important;
+  #sounding-board>div.results.calc-margin {
+    margin-bottom: 0rem !important;
   }
 }
 
 @media only screen and (min-width: 1800px) {
   button.is-small.factor-option {
-        font-size: 1.9em;
-    }
+    font-size: 1.9em;
+  }
 
-    .button.is-huge.factor-option.preset-buttons {
-      font-size: 1.1rem;
-    }
-    .heading {
-      font-size: 1.1rem;
-    }
+  .button.is-huge.factor-option.preset-buttons {
+    font-size: 1.1rem;
+  }
 
-    .header-description-text {
-      font-size: 1.5rem;
-    }
+  .heading {
+    font-size: 1.1rem;
+  }
 
-    .header-mobile-text {
-      font-size: 1.1rem;
-    }
+  .header-description-text {
+    font-size: 1.5rem;
+  }
 
-    .conditionDescription {
-      font-size: 1.2rem;
-    }
+  .header-mobile-text {
+    font-size: 1.1rem;
+  }
 
-    .conditionDescriptionTitle {
-      font-size: 1.2rem;
-    }
+  .conditionDescription {
+    font-size: 1.2rem;
+  }
 
-    .conditionTitle {
-      font-size: 1.3rem;
-    }
+  .conditionDescriptionTitle {
+    font-size: 1.2rem;
+  }
+
+  .conditionTitle {
+    font-size: 1.3rem;
+  }
 }
 
 
@@ -1682,7 +1686,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   //   width: 100%;
   // }
 
- 
+
 
   .option-groups {
     grid-template-columns: repeat(2, 1fr);
