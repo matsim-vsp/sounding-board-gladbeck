@@ -1300,7 +1300,7 @@ button.is-small.factor-option {
   width: 90%;
   margin-top: 5px;
   font-weight: bold;
-  font-size: 1.3em;
+  font-size: 1.4em;
 }
 
 button.is-small.factor-option:hover {
@@ -1485,6 +1485,8 @@ button.is-huge.factor-option.preset-buttons:hover {
 @media only screen and (max-width: 450px) {
   button.is-small.factor-option {
     font-size: 1em;
+    text-wrap: wrap;
+    line-height: 1.2em;
   }
 
   .submit-vote-div[data-v-4aa344e9] {
@@ -1620,7 +1622,7 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 
   .metric-title {
-    font-size: 0.9rem;
+    font-size: 1.2rem;
   }
 
   .metric-value {
@@ -1643,6 +1645,20 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
+@media only screen and (min-width: 1280px) and (max-width: 1440px) { 
+  .metric-title {
+    font-size: 1.2rem;
+  }
+}
+
+@media only screen and (min-width: 1441) { 
+  .metric-title {
+    font-size: 1.5rem;
+  }
+}
+
+
+
 @media only screen and (min-width: 1280px) {
   .factor-option {
     font-size: 0.6rem;
@@ -1655,10 +1671,6 @@ button.is-huge.factor-option.preset-buttons:hover {
   // .section-title {
   //   margin-bottom: 0;
   // }
-
-  .metric-title {
-    font-size: 0.8rem;
-  }
 
   .metric-title-factor {
     height: 1.5rem;
@@ -1759,7 +1771,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .metric-title {
     //height: 1.5rem;
-    font-size: 1.1rem;
+    font-size: 1.2rem;
   }
 
   .conditionTitle {
@@ -1776,7 +1788,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .metric-title-factor {
     height: 1.3rem;
-    font-size: 0.7rem;
+    font-size: 1.2rem;
   }
 
   .metric-value {
