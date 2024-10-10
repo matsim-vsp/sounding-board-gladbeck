@@ -1651,9 +1651,9 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
-@media only screen and (min-width: 1441) { 
+@media only screen and (min-width: 1560px) { 
   .metric-title {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
   }
 }
 
@@ -1680,7 +1680,7 @@ button.is-huge.factor-option.preset-buttons:hover {
 
   .metric-value {
     margin-top: 0rem;
-    font-size: 1rem;
+    font-size: 1.2rem;
   }
 
   .factor-description {
@@ -1688,16 +1688,6 @@ button.is-huge.factor-option.preset-buttons:hover {
     margin-top: 0.4rem;
     margin-bottom: 0;
   }
-
-  // .results {
-  //   padding-bottom: 0;
-  //   margin-bottom: 1rem;
-  //   max-width: 100% !important;
-  //   padding: 1rem 2rem 1rem 3rem;
-  //   display: flex;
-  //   width: 100%;
-  // }
-
 
 
   .option-groups {
