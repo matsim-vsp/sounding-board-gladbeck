@@ -66,16 +66,16 @@
             h4.metric-title {{ metric.title }}
             //- The percentage sign is not displayed when it comes to costs
             .metric-value {{ formattedValue(displayedValues[i] + 1, false) }} %
-            bar-chart.temp-box(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
-            bar-chart.temp-box(v-else :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
+            //- bar-chart.temp-box(v-if="metric.title.startsWith('CO')" :data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0', marker: {color:'rgb(221,75,98)'}}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
+            bar-chart.temp-box(:data="[{x: [' '], y: [displayedValues[i]], type: 'bar', base: '0'}]" :plotWidth="plotWidth" :plotHeight="plotHeight")
             //- .temp-box
           .metric(v-if="metrics.length")
-            h4.metric-title {{ metrics[3].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
+            h4.metric-title {{ metrics[2].title }}
+            .metric-value.metric-value-costs(:class="[displayedValues[2] < -0.5 ? 'red-number' : '',displayedValues[3] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[3], true)}} €
+            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[3].title }}
+            .metric-value.metric-value-costs(:class="[displayedValues[3] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
             h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[4].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[4] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[4], true) }} €
-            h4.metric-title(:style="{ 'margin-top': '1.5rem' }") {{ metrics[5].title }}
-            .metric-value.metric-value-costs(:class="[displayedValues[5] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
+            .metric-value.metric-value-costs(:class="[displayedValues[4] < -0.5 ? 'red-number' : '', ,displayedValues[5] >= 0.5 ? 'green-number' : '']") {{ formattedValue(displayedValues[5], true) }} €
           .metric
             car-viz.car-viz-styles(v-if="!title.startsWith('Güter')" :style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars"  :plotWidth="plotWidth" :plotHeight="plotHeight")
 
@@ -203,8 +203,8 @@ export default class VueComponent extends Vue {
     presets: {},
   }
 
-  private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
-  // private serverURL = "http://127.0.0.1:4999/"
+  // private serverURL = "https://vsp-lndw-sounding-board.fly.dev/"
+  private serverURL = "http://127.0.0.1:5000/"
 
   private badPage = false
   private lang = 'en'
@@ -229,6 +229,8 @@ export default class VueComponent extends Vue {
   private numberOfDrivingCars = 10
   private numberOfParkingCars = 10
 
+  private userId = ''
+
   private voteConditions = {
     oepnv: 'base',
     kiezBloecke: 'base',
@@ -238,6 +240,7 @@ export default class VueComponent extends Vue {
     drt: 'base',
     cookie: '',
     timeStamp: null,
+    userId: ''
   }
 
   private voted = false;
@@ -370,6 +373,10 @@ export default class VueComponent extends Vue {
     this.lang = this.$i18n.locale.indexOf('de') > -1 ? 'de' : 'en'
     console.log({ lang: this.lang })
 
+    let params = new URLSearchParams(document.location.search);
+    this.userId = params.get("userId");
+    console.log(this.userId)
+
     if (localStorage.getItem('LSvoted') == 'true') {
       this.showVotedText = true;
     }
@@ -382,13 +389,16 @@ export default class VueComponent extends Vue {
     // this.setText()
   }
 
+
   private async buildPageForURL() {
-    this.yaml = await this.getYAML()
-    console.log(this.yaml.descriptionInput['fahrenderVerkehr'].title)
+    this.yaml = await this.getYAML()    
+    console.log(this.yaml)
     this.data = await this.loadDataset()
+    console.log(this.data)
     this.addDescriptionToggle()
     this.buildUI()
     this.buildOptions()
+    console.log(this.metrics)
     this.buildPresets()
     this.setInitialValues()
     this.updateValues()
@@ -461,7 +471,8 @@ export default class VueComponent extends Vue {
 
     if (!this.allowedConfigs.includes(this.config)) this.config = 'config'
 
-    const url = `${PUBLIC_SVN}/${this.runId}/${this.config}.yaml`
+    // const url = `${PUBLIC_SVN}/${this.runId}/${this.config}.yaml`
+    const url = 'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board/current/config_gladbach_test.yaml'
     console.log({ url })
 
     try {
@@ -602,7 +613,7 @@ export default class VueComponent extends Vue {
   private setURLQuery() {
     // preset is easy
     if (this.currentPreset) {
-      this.$router.replace({ query: { preset: this.currentPreset } })
+      this.$router.replace({ query: { preset: this.currentPreset, userId: "12435" } })
       return
     }
 
@@ -744,6 +755,7 @@ export default class VueComponent extends Vue {
   private async saveConditions() {
 
     // localStorage.setItem('LSvoted', 'true')
+    this.voteConditions.userId = this.userId
 
     this.voted = true;
     this.showVotedText = true;

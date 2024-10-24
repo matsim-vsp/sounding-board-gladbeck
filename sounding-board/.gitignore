@@ -7,6 +7,8 @@ auth-keys.csv
 .env.local
 .env.*.local
 .flaskenv
+.pyc
+.db
 
 # Log files
 npm-debug.log*
