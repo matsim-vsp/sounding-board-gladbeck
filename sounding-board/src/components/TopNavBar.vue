@@ -6,7 +6,7 @@ nav.navbar.is-link(role="navigation" aria-label="main navigation")
 
   .navbar-end
     img(src="@/assets/images/vsp-logo-white.png" width=300)
-        
+
 </template>
 
 <script lang="ts">
@@ -60,8 +60,8 @@ export default class VueComponent extends Vue {
 }
 
 .navbar {
-    min-height: 4rem!important;
-  }
+  min-height: 4rem !important;
+}
 
 .navbar,
 .navbar-menu,
