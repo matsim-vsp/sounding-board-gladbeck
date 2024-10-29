@@ -252,8 +252,7 @@ export default class VueComponent extends Vue {
   private apiKey = ''
 
   @Watch('$route') routeChanged(to: Route, from: Route) {
-    if (to.path === from.path) {
-    } else {
+    if (to.path !== from.path) {
       this.buildPageForURL()
     }
   }

@@ -13,7 +13,7 @@
     a(href="https://matsim.org")
       img(alt="MATSim logo" src="@/assets/images/matsim-logo-blue.png" width=200)
 
-    p: b Sounding Board <br/>&copy; 2023 VSP TU-Berlin
+    p: b Sounding Board <br/>&copy; 2024 VSP TU-Berlin
     p Diese Seite sammelt, speichert oder analysiert keine persönlichen Daten.
       |<br/> Weitere Informationen über VSP an der TU Berlin finden Sie auf unserer Website unter
       a(href="https://vsp.berlin") &nbsp;vsp.berlin

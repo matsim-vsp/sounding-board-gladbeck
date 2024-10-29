@@ -1,4 +1,5 @@
 module.exports = {
+  // this path MUST match path in /public/404.html or GitHub Pages will not redirect URLs properly:
   publicPath: '/sounding-board-gladbeck/',
   productionSourceMap: true,
   chainWebpack: config => {
