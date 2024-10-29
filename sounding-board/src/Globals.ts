@@ -1,6 +1,7 @@
 export const PUBLIC_SVN =
-  'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/episim/'
-//'http://localhost:8000/'
+  'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
+
+export const CONFIG_URL = `${PUBLIC_SVN}/current/config_gladbeck.yaml`
 
 export enum ColorScheme {
   LightMode = 'light',

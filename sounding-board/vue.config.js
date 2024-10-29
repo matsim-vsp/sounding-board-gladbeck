@@ -1,5 +1,5 @@
 module.exports = {
-  publicPath: '/sounding-board/',
+  publicPath: '/sounding-board-gladbeck/',
   productionSourceMap: true,
   chainWebpack: config => {
     /*

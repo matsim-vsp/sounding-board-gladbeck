@@ -83,7 +83,7 @@
     .button.submit-button(@click="saveConditions") &#x2705; Stimme abgeben
     .voted-text(v-if="showVotedText") <span style="color:#77b255">Sie haben abgestimmt.</span> Wenn Sie nochmal abstimmen möchten, wird Ihre erste Stimme ersetzt.
   .vote-disclaimer *Wenn die Seite aktualisiert wird, bevor Sie Ihre Stimme abgeben, wählen Sie bitte Ihre Bedingungen erneut aus (auch wenn sie bereits gewählt sind)
-           
+
     //- .right-results
     //-   car-viz.car-viz-styles(:style="{scale: 2}" :numberOfParkingCars="numberOfParkingCars" :numberOfDrivingCars="numberOfDrivingCars" :plotWidth="plotWidth" :plotHeight="plotHeight")
 
@@ -136,14 +136,13 @@ import VueSlider from 'vue-slider-component'
 import { debounce } from 'debounce'
 import YAML from 'yaml'
 import 'vue-slider-component/theme/default.css'
+
+import { PUBLIC_SVN, CONFIG_URL } from '@/Globals'
+
 import BarChart from '@/components/BarChart.vue'
 import CarViz from '@/components/CarViz.vue'
 import TopNavBar from '@/components/TopNavBar.vue'
-import { options } from 'marked'
 
-// const PUBLIC_SVN = 'http://localhost:8000'
-const PUBLIC_SVN =
-  'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
 
 type ScenarioYaml = {
   data: string
@@ -391,7 +390,7 @@ export default class VueComponent extends Vue {
 
 
   private async buildPageForURL() {
-    this.yaml = await this.getYAML()    
+    this.yaml = await this.getYAML()
     console.log(this.yaml)
     this.data = await this.loadDataset()
     console.log(this.data)
@@ -469,10 +468,10 @@ export default class VueComponent extends Vue {
     this.runId = this.$route.params.runId
     this.config = this.$route.params.config
 
-    if (!this.allowedConfigs.includes(this.config)) this.config = 'config'
+    if (!this.allowedConfigs.includes(this.config)) this.config = 'config_gladbeck'
 
-    // const url = `${PUBLIC_SVN}/${this.runId}/${this.config}.yaml`
-    const url = 'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board/current/config_gladbach_test.yaml'
+
+    const url = CONFIG_URL
     console.log({ url })
 
     try {
@@ -611,9 +610,13 @@ export default class VueComponent extends Vue {
   }
 
   private setURLQuery() {
-    // preset is easy
+    // set preset if we have one
     if (this.currentPreset) {
-      this.$router.replace({ query: { preset: this.currentPreset, userId: "12435" } })
+      let params = new URLSearchParams(document.location.search)
+      const userId = params.get("userId") || ''
+      const query = { preset: this.currentPreset} as any
+      if (userId) query.userId = userId
+      this.$router.replace({ query })
       return
     }
 
@@ -1657,13 +1660,13 @@ button.is-huge.factor-option.preset-buttons:hover {
   }
 }
 
-@media only screen and (min-width: 1280px) and (max-width: 1440px) { 
+@media only screen and (min-width: 1280px) and (max-width: 1440px) {
   .metric-title {
     font-size: 1.2rem;
   }
 }
 
-@media only screen and (min-width: 1560px) { 
+@media only screen and (min-width: 1560px) {
   .metric-title {
     font-size: 1.4rem;
   }
