@@ -1,8 +1,7 @@
 <template lang="pug">
 nav.navbar.is-link(role="navigation" aria-label="main navigation")
   .navbar-brand
-    p.navbar-item(:style="{color: 'white'}") Sounding Board - Berlin
-
+    p.navbar-item(:style="{color: 'white'}") Sounding Board - Gladbeck
 
   .navbar-end
     img(src="@/assets/images/vsp-logo-white.png" width=300)
