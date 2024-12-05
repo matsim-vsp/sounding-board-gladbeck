@@ -633,6 +633,8 @@ export default class VueComponent extends Vue {
       answerRow = answerRow.filter(row => row[factor] === this.currentConfiguration[factor])
     }
     if (answerRow.length !== 1) {
+      console.error('Two CSV rows have the same set of selectors. There can be only one.')
+      console.error(answerRow)
       throw Error('Should have exactly one row:' + answerRow)
     }
 
