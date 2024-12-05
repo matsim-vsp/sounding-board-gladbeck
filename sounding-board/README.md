@@ -8,18 +8,22 @@ Add new boards on the VSP public-svn at
 
 ### Build instructions
 
-Requires NodeJS 16.x and yarn: Install Node for your platform, and then `npm install -g yarn`
+Requires NodeJS 16.x and Python 3.10. Newer versions don't work!
 
 - Clone the repo
-- `yarn install`
-- `yarn serve` to run a local dev server
-- Pushing to `master` branch automatically builds and deploys on URL above.
+- `nvm use 16`  (install nvm first using npm install -g nvm)
+- `pyenv install 3.10` to install Python 3.10
+- `pyenv local 3.10` to use 3.10
+- `npm ci` to install project dependencies
+- `npm run serve` to run your dev server
 
-The code assumes the site `prefix` is set to `/sounding-board`, this is added to every URL. To move
-the site to a different prefix, edit two files:
+We don't have GitHub actions set up. To push a build live:
+- `npm run deploy`
 
-- `public/404.html`
+
+If you move the build to a different URL you need to change the base prefix in
 - `vite.config.js`
+- `public/404.html`
 
 Have fun,
 
