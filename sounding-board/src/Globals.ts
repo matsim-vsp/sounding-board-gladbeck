@@ -1,5 +1,4 @@
-export const PUBLIC_SVN =
-  'https://svn.vsp.tu-berlin.de/repos/public-svn/matsim/scenarios/countries/de/berlin/projects/sounding-board'
+export const PUBLIC_SVN = 'https://svn.vsp.tu-berlin.de/repos/public-svn/shared/sounding-board'
 
 export const CONFIG_URL = `${PUBLIC_SVN}/current/config_gladbeck.yaml`
 
